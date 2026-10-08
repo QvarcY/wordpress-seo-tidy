@@ -10,6 +10,8 @@ final class Bootstrap
 
     public static function init(): void
     {
+        require_once __DIR__ . '/Metadata.php';
+        Metadata::init();
         if (is_admin()) {
             add_action('admin_menu', [self::class, 'registerMenu']);
             add_action('admin_enqueue_scripts', [self::class, 'enqueueAssets']);

@@ -68,3 +68,15 @@ msgstr "SEO-TidY nepieciešama WordPress 6.8 vai jaunāka versija un PHP 8.1 vai
 #: includes/Bootstrap.php
 msgid "SEO-TidY"
 msgstr "SEO-TidY"
+
+#: includes/Metadata.php
+msgid "SEO-TidY Metadata"
+msgstr "SEO-TidY metadati"
+
+#: includes/Metadata.php
+msgid "SEO Title"
+msgstr "SEO virsraksts"
+
+#: includes/Metadata.php
+msgid "Meta Description"
+msgstr "Meta apraksts"

@@ -9,16 +9,16 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-08T22:23:59+00:00\n"
+"POT-Creation-Date: 2026-10-08T23:02:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: seo-tidy\n"
 
 #. Plugin Name of the plugin
 #: seo-tidy.php
-#: includes/Bootstrap.php:22
-#: includes/Bootstrap.php:23
-#: includes/Bootstrap.php:79
+#: includes/Bootstrap.php:24
+#: includes/Bootstrap.php:25
+#: includes/Bootstrap.php:81
 msgid "SEO-TidY"
 msgstr ""
 
@@ -42,12 +42,24 @@ msgstr ""
 msgid "https://github.com/QvarcY"
 msgstr ""
 
-#: includes/Bootstrap.php:75
+#: includes/Bootstrap.php:77
 msgid "Access denied."
 msgstr ""
 
-#: includes/Bootstrap.php:80
+#: includes/Bootstrap.php:82
 msgid "Loading SEO-TidY administration..."
+msgstr ""
+
+#: includes/Metadata.php:22
+msgid "SEO-TidY Metadata"
+msgstr ""
+
+#: includes/Metadata.php:39
+msgid "SEO Title"
+msgstr ""
+
+#: includes/Metadata.php:46
+msgid "Meta Description"
 msgstr ""
 
 #: seo-tidy.php:27
