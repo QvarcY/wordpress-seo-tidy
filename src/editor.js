@@ -2,9 +2,11 @@ import { registerPlugin } from '@wordpress/plugins';
 import {
     PluginSidebar,
     PluginSidebarMoreMenuItem,
+    PluginPostStatusInfo,
 } from '@wordpress/editor';
 import {
     PanelBody,
+    Button,
     TextControl,
     TextareaControl,
 } from '@wordpress/components';
@@ -19,6 +21,7 @@ function SeoTidySidebar() {
     );
 
     const { editPost } = useDispatch('core/editor');
+    const { openGeneralSidebar } = useDispatch('core/edit-post');
 
     const update = (key, value) => {
         editPost({
@@ -30,6 +33,17 @@ function SeoTidySidebar() {
 
     return (
         <>
+            <PluginPostStatusInfo>
+                <Button
+                    variant="link"
+                    onClick={() =>
+                        openGeneralSidebar('seo-tidy-editor/seo-tidy-sidebar')
+                    }
+                >
+                    {__('SEO-TidY Metadata', 'seo-tidy')}
+                </Button>
+            </PluginPostStatusInfo>
+
             <PluginSidebarMoreMenuItem target="seo-tidy-sidebar">
                 {__('SEO-TidY Metadata', 'seo-tidy')}
             </PluginSidebarMoreMenuItem>
