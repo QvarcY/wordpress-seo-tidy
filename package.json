@@ -1,33 +1,35 @@
 {
-  "name": "wordpress-seo-tidy",
-  "version": "0.0.1-dev",
-  "description": "Free WordPress SEO and AI search readiness plugin",
-  "main": "index.js",
-  "scripts": {
-    "test": "wp-scripts test-unit-js",
-    "build": "wp-scripts build",
-    "start": "wp-scripts start",
-    "lint:js": "wp-scripts lint-js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/QvarcY/wordpress-seo-tidy.git"
-  },
-  "keywords": [],
-  "author": "QvarcY",
-  "license": "GPL-2.0-or-later",
-  "bugs": {
-    "url": "https://github.com/QvarcY/wordpress-seo-tidy/issues"
-  },
-  "homepage": "https://github.com/QvarcY/wordpress-seo-tidy#readme",
-  "devDependencies": {
-    "@wordpress/scripts": "^36.1.0"
-  },
-  "dependencies": {
-    "@wordpress/api-fetch": "^7.57.0",
-    "@wordpress/components": "^42.0.0",
-    "@wordpress/element": "^9.0.0",
-    "@wordpress/i18n": "^6.30.0"
-  },
-  "private": true
+    "name":  "wordpress-seo-tidy",
+    "version":  "0.0.1-dev",
+    "description":  "Free WordPress SEO and AI search readiness plugin",
+    "main":  "index.js",
+    "scripts":  {
+                    "test":  "wp-scripts test-unit-js",
+                    "build":  "wp-scripts build src/index.js \u0026\u0026 wp-scripts build src/editor.js --output-path=build/editor",
+                    "start":  "wp-scripts start",
+                    "lint:js":  "wp-scripts lint-js"
+                },
+    "repository":  {
+                       "type":  "git",
+                       "url":  "git+https://github.com/QvarcY/wordpress-seo-tidy.git"
+                   },
+    "keywords":  [
+
+                 ],
+    "author":  "QvarcY",
+    "license":  "GPL-2.0-or-later",
+    "bugs":  {
+                 "url":  "https://github.com/QvarcY/wordpress-seo-tidy/issues"
+             },
+    "homepage":  "https://github.com/QvarcY/wordpress-seo-tidy#readme",
+    "devDependencies":  {
+                            "@wordpress/scripts":  "^36.1.0"
+                        },
+    "dependencies":  {
+                         "@wordpress/api-fetch":  "^7.57.0",
+                         "@wordpress/components":  "^42.0.0",
+                         "@wordpress/element":  "^9.0.0",
+                         "@wordpress/i18n":  "^6.30.0"
+                     },
+    "private":  true
 }

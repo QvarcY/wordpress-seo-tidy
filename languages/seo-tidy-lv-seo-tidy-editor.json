@@ -1,0 +1,22 @@
+{
+    "translation-revision-date":  "2026-10-09",
+    "domain":  "messages",
+    "generator":  "SEO-TidY",
+    "locale_data":  {
+                        "messages":  {
+                                         "SEO Title":  [
+                                                           "SEO virsraksts"
+                                                       ],
+                                         "Meta Description":  [
+                                                                  "Meta apraksts"
+                                                              ],
+                                         "SEO-TidY Metadata":  [
+                                                                   "SEO-TidY metadati"
+                                                               ],
+                                         "":  {
+                                                  "lang":  "lv",
+                                                  "domain":  "messages"
+                                              }
+                                     }
+                    }
+}

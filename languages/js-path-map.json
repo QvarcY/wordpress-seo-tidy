@@ -1,3 +1,4 @@
 {
-    "src/index.js":  "build/index.js"
+    "src/index.js":  "build/index.js",
+    "src/editor.js":  "build/editor/editor.js"
 }
