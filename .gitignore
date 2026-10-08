@@ -1,0 +1,16 @@
+/node_modules/
+/vendor/
+/build/
+/dist/
+/coverage/
+/.playwright/
+/playwright-report/
+/test-results/
+/.env
+/.env.*
+!/.env.example
+/.idea/
+/.vscode/
+.DS_Store
+Thumbs.db
+*.log
