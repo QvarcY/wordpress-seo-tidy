@@ -10,6 +10,7 @@ final class Metadata
     {
         add_action('init', [self::class, 'registerRestFields']);
         add_action('add_meta_boxes', [self::class, 'addMetaBox']);
+        add_action('enqueue_block_editor_assets', [self::class, 'enqueueEditor']);
         add_action('save_post', [self::class, 'save'], 10, 2);
         add_filter('pre_get_document_title', [self::class, 'documentTitle']);
         add_action('wp_head', [self::class, 'description'], 1);
@@ -45,6 +46,42 @@ final class Metadata
             }
         }
     }
+    public static function enqueueEditor(): void
+    {
+        $screen = get_current_screen();
+
+        if (
+            !$screen ||
+            !in_array($screen->post_type, ['post', 'page'], true) ||
+            !$screen->is_block_editor()
+        ) {
+            return;
+        }
+
+        $script = dirname(__DIR__) . '/build/editor/editor.js';
+
+        $manifest = dirname(__DIR__) . '/build/editor/editor.asset.php';
+
+        if (!is_readable($script) || !is_readable($manifest)) {
+            return;
+        }
+
+        $asset = require $manifest;
+
+        wp_enqueue_script(
+            'seo-tidy-editor',
+            plugins_url('build/editor/editor.js', dirname(__DIR__) . '/seo-tidy.php'),
+            $asset['dependencies'],
+            (string) filemtime($script),
+            true
+        );
+
+        wp_set_script_translations(
+            'seo-tidy-editor',
+            'seo-tidy',
+            dirname(__DIR__) . '/languages'
+        );
+    }
     public static function addMetaBox(): void
     {
         foreach (['post', 'page'] as $type) {
@@ -54,7 +91,8 @@ final class Metadata
                 [self::class, 'render'],
                 $type,
                 'normal',
-                'default'
+                'default',
+                ['__back_compat_meta_box' => true]
             );
         }
     }
