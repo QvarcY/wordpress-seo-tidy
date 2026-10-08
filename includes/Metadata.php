@@ -8,12 +8,43 @@ final class Metadata
 {
     public static function init(): void
     {
+        add_action('init', [self::class, 'registerRestFields']);
         add_action('add_meta_boxes', [self::class, 'addMetaBox']);
         add_action('save_post', [self::class, 'save'], 10, 2);
         add_filter('pre_get_document_title', [self::class, 'documentTitle']);
         add_action('wp_head', [self::class, 'description'], 1);
     }
 
+    public static function registerRestFields(): void
+    {
+        foreach (['post', 'page'] as $type) {
+            foreach (['_seo_tidy_title', '_seo_tidy_description'] as $key) {
+                register_post_meta(
+                    $type,
+                    $key,
+                    [
+                        'type' => 'string',
+                        'single' => true,
+                        'default' => '',
+                        'show_in_rest' => [
+                            'schema' => [
+                                'type' => 'string',
+                                'context' => ['view', 'edit'],
+                            ],
+                        ],
+                        'sanitize_callback' => 'sanitize_text_field',
+                        'auth_callback' => static function (
+                            $allowed,
+                            $metaKey,
+                            $postId
+                        ): bool {
+                            return current_user_can('edit_post', (int) $postId);
+                        },
+                    ]
+                );
+            }
+        }
+    }
     public static function addMetaBox(): void
     {
         foreach (['post', 'page'] as $type) {
