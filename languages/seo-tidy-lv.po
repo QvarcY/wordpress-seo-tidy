@@ -1,0 +1,70 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: SEO-TidY 0.0.1-dev\n"
+"Report-Msgid-Bugs-To: https://github.com/QvarcY/wordpress-seo-tidy/issues\n"
+"Language: lv\n"
+"Language-Team: Latvian\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n!=0 ? 1 : 2);\n"
+"X-Domain: seo-tidy\n"
+
+#: src/index.js
+msgid "Dashboard"
+msgstr "Pārskats"
+
+#: src/index.js
+msgid "Metadata"
+msgstr "Metadati"
+
+#: src/index.js
+msgid "Smart Schema"
+msgstr "Viedie strukturētie dati"
+
+#: src/index.js
+msgid "SEO Audit"
+msgstr "SEO audits"
+
+#: src/index.js
+msgid "Answer Readiness"
+msgstr "Gatavība MI atbildēm"
+
+#: src/index.js
+msgid "Migration"
+msgstr "Migrācija"
+
+#: src/index.js
+msgid "Settings"
+msgstr "Iestatījumi"
+
+#: src/index.js
+msgid "SEO and AI search readiness for WordPress."
+msgstr "SEO un gatavība MI meklēšanai WordPress vidē."
+
+#: src/index.js
+msgid "SEO-TidY navigation"
+msgstr "SEO-TidY navigācija"
+
+#: src/index.js
+msgid "SEO-TidY is under development. SEO analysis is not available yet."
+msgstr "SEO-TidY tiek izstrādāts. SEO analīze vēl nav pieejama."
+
+#: src/index.js
+msgid "This feature is planned and not available yet."
+msgstr "Šī funkcija ir plānota un vēl nav pieejama."
+
+#: includes/Bootstrap.php
+msgid "Access denied."
+msgstr "Piekļuve liegta."
+
+#: includes/Bootstrap.php
+msgid "Loading SEO-TidY administration..."
+msgstr "Ielādē SEO-TidY administrācijas paneli..."
+
+#: seo-tidy.php
+msgid "SEO-TidY requires WordPress 6.8 or newer and PHP 8.1 or newer."
+msgstr "SEO-TidY nepieciešama WordPress 6.8 vai jaunāka versija un PHP 8.1 vai jaunāka versija."
+
+#: includes/Bootstrap.php
+msgid "SEO-TidY"
+msgstr "SEO-TidY"
