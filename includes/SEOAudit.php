@@ -41,6 +41,22 @@ final class SEOAudit
         ]);
     }
 
+    public static function classifyIssues(array $issues): string
+    {
+        $attention = [
+            'missing_title',
+            'duplicate_title',
+            'duplicate_description',
+            'site_noindex',
+        ];
+
+        if (array_intersect($attention, $issues) !== []) {
+            return 'attention';
+        }
+
+        return $issues === [] ? 'clear' : 'recommendations';
+    }
+
     private static function length(string $value): int
     {
         return function_exists('mb_strlen')
@@ -639,6 +655,7 @@ final class SEOAudit
                 'title' => get_the_title($id),
                 'type' => $post->post_type,
                 'issues' => $issues,
+                'category' => self::classifyIssues($issues),
                 'seoTitle' => $title,
                 'seoDescription' => $description,
                 'unavailableLinks' => $unavailableLinks,

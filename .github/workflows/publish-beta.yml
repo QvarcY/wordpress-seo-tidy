@@ -84,6 +84,8 @@ jobs:
           tools: none
           coverage: none
 
+      - name: Validate GitHub updater
+        run: npm run test:updater
       - name: Validate PHP syntax
         shell: bash
         run: |

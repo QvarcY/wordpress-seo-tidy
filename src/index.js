@@ -633,6 +633,17 @@ const auditLabels = {
     review_image_alt: __('Review image alternative text', 'seo-tidy'),
 };
 
+const auditAttentionCodes = new Set([
+    'missing_title',
+    'duplicate_title',
+    'duplicate_description',
+    'site_noindex',
+]);
+
+function isAuditAttention(issue) {
+    return auditAttentionCodes.has(issue);
+}
+
 function SEOAuditOverview() {
     const [page, setPage] = useState(1);
     const [data, setData] = useState(null);
@@ -644,8 +655,13 @@ function SEOAuditOverview() {
     const [saving, setSaving] = useState(false);
     const [saveError, setSaveError] = useState(false);
     const [refresh, setRefresh] = useState(0);
+    const [scanKey, setScanKey] = useState(0);
+    const [scan, setScan] = useState(null);
+    const [categoryFilter, setCategoryFilter] = useState('all');
 
     useEffect(() => {
+        if (scan?.status === 'complete') return;
+
         let active = true;
         setData(null);
         setError(false);
@@ -659,7 +675,93 @@ function SEOAuditOverview() {
             });
 
         return () => { active = false; };
-    }, [page, refresh]);
+    }, [page, refresh, scan?.status]);
+
+    useEffect(() => {
+        if (scanKey === 0) return;
+
+        let active = true;
+
+        const run = async () => {
+            const collected = [];
+            const seen = new Set();
+            let total = null;
+            let firstIds = [];
+
+            try {
+                for (let current = 1; current <= 100; ++current) {
+                    const result = await apiFetch({
+                        path: '/seo-tidy/v1/audit?page=' + current,
+                    });
+
+                    if (!active) return;
+
+                    if (total === null) {
+                        total = result.total;
+                        firstIds = result.items.map((item) => item.id);
+
+                        if (result.pages > 100) {
+                            throw Error('scan_limit');
+                        }
+                    }
+
+                    if (result.total !== total ||
+                        result.pages !== Math.ceil(total / 20)) {
+                        throw Error('content_changed');
+                    }
+
+                    for (const item of result.items) {
+                        if (seen.has(item.id)) {
+                            throw Error('duplicate_item');
+                        }
+                        seen.add(item.id);
+                        collected.push(item);
+                    }
+
+                    setScan({
+                        status: 'running',
+                        processed: collected.length,
+                        total,
+                    });
+
+                    if (current >= result.pages) break;
+                }
+
+                if (collected.length !== total) {
+                    throw Error('incomplete_scan');
+                }
+
+                const verify = await apiFetch({
+                    path: '/seo-tidy/v1/audit?page=1',
+                });
+
+                if (!active) return;
+
+                if (verify.total !== total ||
+                    JSON.stringify(verify.items.map((item) => item.id)) !==
+                    JSON.stringify(firstIds)) {
+                    throw Error('content_changed');
+                }
+
+                setPage(1);
+                setCategoryFilter('all');
+                setScan({
+                    status: 'complete',
+                    items: collected,
+                    total,
+                });
+            } catch {
+                if (active) {
+                    setScan({ status: 'error' });
+                }
+            }
+        };
+
+        setScan({ status: 'running', processed: 0, total: 0 });
+        run();
+
+        return () => { active = false; };
+    }, [scanKey, refresh]);
 
     const startEdit = (item) => {
         setEditing(item.id);
@@ -693,11 +795,33 @@ function SEOAuditOverview() {
         }
     };
 
-    const items = data
-        ? data.items.filter((item) =>
-            !issuesOnly || item.issues.length > 0
-        )
-        : [];
+    const scanned = scan?.status === 'complete';
+    const allItems = scanned ? scan.items : (data?.items || []);
+    const filtered = allItems.filter((item) => {
+        if (!scanned && issuesOnly && item.issues.length === 0) {
+            return false;
+        }
+        if (scanned && categoryFilter !== 'all' &&
+            item.category !== categoryFilter) {
+            return false;
+        }
+        return true;
+    });
+
+    const items = scanned
+        ? filtered.slice((page - 1) * 20, page * 20)
+        : filtered;
+
+    const resultPages = scanned
+        ? Math.max(1, Math.ceil(filtered.length / 20))
+        : (data?.pages || 1);
+
+    const counts = scanned
+        ? scan.items.reduce((totals, item) => {
+            totals[item.category] += 1;
+            return totals;
+        }, { attention: 0, recommendations: 0, clear: 0 })
+        : null;
 
     return (
         <div className="tidy-audit">
@@ -717,15 +841,101 @@ function SEOAuditOverview() {
                 </Notice>
             )}
 
+            <div className="tidy-audit-scan-controls">
+                <Button
+                    variant="secondary"
+                    disabled={scan?.status === 'running'}
+                    onClick={() => setScanKey((key) => key + 1)}
+                >
+                    {__('Run full SEO audit', 'seo-tidy')}
+                </Button>
+                {scan?.status === 'running' && (
+                    <>
+                        <span role="status">
+                            {__('Scanning:', 'seo-tidy')}
+                            {' '}{scan.processed} / {scan.total || '?'}
+                        </span>
+                        <Button
+                            variant="tertiary"
+                            onClick={() => {
+                                setScanKey(0);
+                                setScan(null);
+                                setCategoryFilter('all');
+                                setPage(1);
+                            }}
+                        >
+                            {__('Cancel scan', 'seo-tidy')}
+                        </Button>
+                    </>
+                )}
+                {scan?.status === 'error' && (
+                    <Notice status="error" isDismissible={false}>
+                        {__('Scan could not be completed. Results were not saved.', 'seo-tidy')}
+                    </Notice>
+                )}
+            </div>
+
+            {counts && (
+                <div className="tidy-audit-scan-summary">
+                    <strong>{__('Scan complete', 'seo-tidy')}</strong>
+                    <div className="tidy-audit-metrics">
+                        <div className="tidy-audit-metric">
+                            <strong>{scan.total}</strong>
+                            <span>{__('Published content:', 'seo-tidy')}</span>
+                        </div>
+                        <div className="tidy-audit-metric">
+                            <strong>{counts.attention}</strong>
+                            <span>{__('Needs attention', 'seo-tidy')}</span>
+                        </div>
+                        <div className="tidy-audit-metric">
+                            <strong>{counts.recommendations}</strong>
+                            <span>{__('Recommendations', 'seo-tidy')}</span>
+                        </div>
+                        <div className="tidy-audit-metric">
+                            <strong>{counts.clear}</strong>
+                            <span>{__('No findings', 'seo-tidy')}</span>
+                        </div>
+                    </div>
+                    <label>
+                        {__('Filter by priority', 'seo-tidy')}{' '}
+                        <select
+                            value={categoryFilter}
+                            onChange={(event) => {
+                                setCategoryFilter(event.target.value);
+                                setPage(1);
+                            }}
+                        >
+                            <option value="all">
+                                {__('All categories', 'seo-tidy')}
+                            </option>
+                            <option value="attention">
+                                {__('Needs attention', 'seo-tidy')}
+                            </option>
+                            <option value="recommendations">
+                                {__('Recommendations', 'seo-tidy')}
+                            </option>
+                            <option value="clear">
+                                {__('No findings', 'seo-tidy')}
+                            </option>
+                        </select>
+                    </label>
+                </div>
+            )}
+
+            {!scanned && (
             <label className="tidy-audit-filter">
                 <input
                     type="checkbox"
                     checked={issuesOnly}
-                    onChange={(event) => setIssuesOnly(event.target.checked)}
+                    onChange={(event) => {
+                        setIssuesOnly(event.target.checked);
+                        setPage(1);
+                    }}
                 />
                 {' '}
                 {__('Show only items with findings', 'seo-tidy')}
             </label>
+            )}
 
             {error && (
                 <Notice status="error" isDismissible={false}>
@@ -737,11 +947,13 @@ function SEOAuditOverview() {
 
             {data && (
                 <>
-                    <p>
-                        {__('Published content:', 'seo-tidy')}
-                        {' '}
-                        <strong>{data.total}</strong>
-                    </p>
+                    {!scanned && (
+                        <p>
+                            {__('Published content:', 'seo-tidy')}
+                            {' '}
+                            <strong>{data.total}</strong>
+                        </p>
+                    )}
 
                     <div className="tidy-audit-table-wrap">
                     <table className="widefat striped tidy-audit-table">
@@ -758,11 +970,11 @@ function SEOAuditOverview() {
                                     <td className="tidy-audit-title">{item.title || __('Untitled', 'seo-tidy')}</td>
                                     <td className="tidy-audit-findings">
                                         {(() => {
-                                            const missing = item.issues.filter(
-                                                (issue) => issue.startsWith('missing_')
+                                            const attention = item.issues.filter(
+                                                isAuditAttention
                                             );
                                             const advice = item.issues.filter(
-                                                (issue) => !issue.startsWith('missing_')
+                                                (issue) => !isAuditAttention(issue)
                                             );
 
                                             if (!item.issues.length) {
@@ -771,13 +983,13 @@ function SEOAuditOverview() {
 
                                             return (
                                                 <>
-                                                    {missing.length > 0 && (
+                                                    {attention.length > 0 && (
                                                         <div className="tidy-audit-attention">
                                                             <strong>
                                                                 {__('Needs attention', 'seo-tidy')}
                                                             </strong>
                                                             <ul className="tidy-audit-issue-list">
-                                                                {missing.map((issue) => (
+                                                                {attention.map((issue) => (
                                                                     <li key={issue}>
                                                                         {auditLabels[issue]}
                                                                     </li>
@@ -842,7 +1054,7 @@ function SEOAuditOverview() {
                     </div>
 
                     {editing !== null && (() => {
-                        const item = data.items.find((entry) =>
+                        const item = allItems.find((entry) =>
                             entry.id === editing
                         );
                         if (!item) return null;
@@ -898,19 +1110,23 @@ function SEOAuditOverview() {
                     })()}
 
                     {items.length === 0 && (
-                        <p>{__('No findings on this page.', 'seo-tidy')}</p>
+                        <p>
+                            {scanned
+                                ? __('No items in the selected category.', 'seo-tidy')
+                                : __('No findings on this page.', 'seo-tidy')}
+                        </p>
                     )}
 
-                    {data.pages > 1 && (
+                    {resultPages > 1 && (
                         <div className="tidy-audit-pagination">
                             <Button variant="secondary"
                                 disabled={page <= 1}
                                 onClick={() => setPage(page - 1)}>
                                 {__('Previous', 'seo-tidy')}
                             </Button>
-                            <span>{page} / {data.pages}</span>
+                            <span>{page} / {resultPages}</span>
                             <Button variant="secondary"
-                                disabled={page >= data.pages}
+                                disabled={page >= resultPages}
                                 onClick={() => setPage(page + 1)}>
                                 {__('Next', 'seo-tidy')}
                             </Button>
@@ -1301,6 +1517,11 @@ function GeneralSettings() {
             label: __('Enable H1 review suggestions', 'seo-tidy'),
             help: __('Show optional H1 findings in the SEO audit.', 'seo-tidy'),
         },
+        {
+            key: 'seo_tidy_beta_updates',
+            label: __('Enable beta updates', 'seo-tidy'),
+            help: __('Receive experimental SEO-TidY releases from GitHub. Stable updates remain available when disabled.', 'seo-tidy'),
+        },
     ];
 
     const [values, setValues] = useState(null);
@@ -1316,7 +1537,9 @@ function GeneralSettings() {
 
                 const options = {};
                 for (const item of keys) {
-                    options[item.key] = ![false, 0, '0', null].includes(data[item.key]);
+                    options[item.key] = item.key === 'seo_tidy_beta_updates'
+                        ? [true, 1, '1'].includes(data[item.key])
+                        : ![false, 0, '0', null].includes(data[item.key]);
                 }
 
                 setValues(options);
