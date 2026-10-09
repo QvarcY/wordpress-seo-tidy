@@ -430,14 +430,14 @@ function MetadataList({ filter, setFilter }) {
                                 <TextControl
                                     label={__('SEO title', 'seo-tidy')}
                                     value={draftTitle}
-                                    help={String([...draftTitle].length) + ' / 30?65'}
+                                    help={String([...draftTitle].length) + ' / 30-65'}
                                     disabled={saving}
                                     onChange={setDraftTitle}
                                 />
                                 <TextareaControl
                                     label={__('Meta description', 'seo-tidy')}
                                     value={draftDescription}
-                                    help={String([...draftDescription].length) + ' / 70?160'}
+                                    help={String([...draftDescription].length) + ' / 70-160'}
                                     disabled={saving}
                                     onChange={setDraftDescription}
                                 />
@@ -504,6 +504,7 @@ function MetadataList({ filter, setFilter }) {
 
 const auditLabels = {
     missing_title: __('Missing SEO title', 'seo-tidy'),
+    default_title: __('Using the WordPress title. A custom SEO title is optional.', 'seo-tidy'),
     short_title: __('SEO title may be too short', 'seo-tidy'),
     long_title: __('SEO title may be too long', 'seo-tidy'),
     missing_description: __('Missing meta description', 'seo-tidy'),
@@ -713,14 +714,14 @@ function SEOAuditOverview() {
                                 <TextControl
                                     label={__('SEO title', 'seo-tidy')}
                                     value={title}
-                                    help={String([...title].length) + ' / 30?65'}
+                                    help={String([...title].length) + ' / 30-65'}
                                     onChange={setTitle}
                                     disabled={saving}
                                 />
                                 <TextareaControl
                                     label={__('Meta description', 'seo-tidy')}
                                     value={description}
-                                    help={String([...description].length) + ' / 70?160'}
+                                    help={String([...description].length) + ' / 70-160'}
                                     onChange={setDescription}
                                     disabled={saving}
                                 />

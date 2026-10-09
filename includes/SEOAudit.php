@@ -68,7 +68,9 @@ final class SEOAudit
             ));
 
             if ($title === '') {
-                $issues[] = 'missing_title';
+                $issues[] = trim((string) get_the_title($id)) === ''
+                    ? 'missing_title'
+                    : 'default_title';
             } elseif (self::length($title) < 30) {
                 $issues[] = 'short_title';
             } elseif (self::length($title) > 65) {
