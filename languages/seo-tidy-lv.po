@@ -584,3 +584,15 @@ msgstr "Pārskatīt šīs lapas noindex iestatījumu"
 #: src/index.js
 msgid "Consider adding internal links to other pages"
 msgstr "Apsver iespēju pievienot iekšējās saites uz citām lapām"
+
+#: src/index.js
+msgid "No incoming links found from other published content"
+msgstr "Nav atrastas ienākošas saites no cita publicēta satura"
+
+#: src/index.js
+msgid "Incoming link checks cover up to 200 published posts and pages. Links added by themes or dynamic blocks are not included."
+msgstr "Ienākošās saites pārbauda vietnēs ar līdz 200 publicētiem rakstiem un lapām. Tēmas un dinamisko bloku saites netiek ieskaitītas."
+
+#: src/index.js
+msgid "Incoming link check skipped for this site."
+msgstr "Ienākošo saišu pārbaude šai vietnei ir izlaista."

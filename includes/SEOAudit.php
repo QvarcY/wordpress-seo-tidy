@@ -197,6 +197,99 @@ final class SEOAudit
         return false;
     }
 
+
+    private static function incomingContentLinks(): ?array
+    {
+        $ids = get_posts([
+            'post_type' => ['post', 'page'],
+            'post_status' => 'publish',
+            'numberposts' => 201,
+            'fields' => 'ids',
+            'orderby' => 'ID',
+            'order' => 'ASC',
+            'suppress_filters' => true,
+        ]);
+
+        if (count($ids) > 200) {
+            return null;
+        }
+
+        $incoming = array_fill_keys($ids, 0);
+        $home = wp_parse_url(home_url('/'));
+        $scheme = (string) ($home['scheme'] ?? 'https');
+        $host = (string) ($home['host'] ?? '');
+        $port = isset($home['port']) ? ':' . $home['port'] : '';
+        $origin = $scheme . '://' . $host . $port;
+
+        if ($host === '') {
+            return null;
+        }
+
+        foreach ($ids as $sourceId) {
+            $post = get_post($sourceId);
+
+            if (!$post instanceof \WP_Post) {
+                continue;
+            }
+
+            $processor = new \WP_HTML_Tag_Processor(
+                (string) $post->post_content
+            );
+            $linked = [];
+
+            while ($processor->next_tag('A')) {
+                $href = $processor->get_attribute('href');
+
+                if (!is_string($href)) {
+                    continue;
+                }
+
+                $href = trim($href);
+
+                if (
+                    $href === '' ||
+                    str_starts_with($href, '#') ||
+                    str_starts_with($href, '?')
+                ) {
+                    continue;
+                }
+
+                if (str_starts_with($href, '//')) {
+                    $href = $scheme . ':' . $href;
+                } elseif (str_starts_with($href, '/')) {
+                    $href = $origin . $href;
+                } elseif (!preg_match('~^https?://~i', $href)) {
+                    continue;
+                }
+
+                $parts = wp_parse_url($href);
+
+                if (
+                    !is_array($parts) ||
+                    strtolower((string) ($parts['host'] ?? '')) !==
+                        strtolower($host)
+                ) {
+                    continue;
+                }
+
+                $targetId = url_to_postid($href);
+
+                if (
+                    $targetId !== (int) $sourceId &&
+                    array_key_exists($targetId, $incoming)
+                ) {
+                    $linked[$targetId] = true;
+                }
+            }
+
+            foreach (array_keys($linked) as $targetId) {
+                ++$incoming[$targetId];
+            }
+        }
+
+        return $incoming;
+    }
+
     private static function needsAltReview(string $content): bool
     {
         $processor = new \WP_HTML_Tag_Processor($content);
@@ -257,6 +350,7 @@ final class SEOAudit
 
         $items = [];
         $duplicates = self::duplicateMetadata();
+        $incomingLinks = self::incomingContentLinks();
 
         foreach ($query->posts as $id) {
             $post = get_post($id);
@@ -311,6 +405,14 @@ final class SEOAudit
                     : 'review_noindex';
             }
 
+            if (
+                is_array($incomingLinks) &&
+                isset($incomingLinks[$id]) &&
+                $incomingLinks[$id] === 0
+            ) {
+                $issues[] = 'review_incoming_links';
+            }
+
             $content = (string) $post->post_content;
 
             if (
@@ -352,6 +454,7 @@ final class SEOAudit
             'page' => $page,
             'pages' => (int) $query->max_num_pages,
             'total' => (int) $query->found_posts,
+            'incomingCheckSkipped' => $incomingLinks === null,
         ]);
     }
 }

@@ -625,6 +625,7 @@ const auditLabels = {
     site_noindex: __('Search engine indexing is discouraged site-wide', 'seo-tidy'),
     review_noindex: __('Review this page noindex setting', 'seo-tidy'),
     review_internal_links: __('Consider adding internal links to other pages', 'seo-tidy'),
+    review_incoming_links: __('No incoming links found from other published content', 'seo-tidy'),
     review_image_alt: __('Review image alternative text', 'seo-tidy'),
 };
 
@@ -702,6 +703,15 @@ function SEOAuditOverview() {
             <p>
                 {__('H1 and image checks inspect stored content, not the final theme output.', 'seo-tidy')}
             </p>
+
+            <p>
+                {__('Incoming link checks cover up to 200 published posts and pages. Links added by themes or dynamic blocks are not included.', 'seo-tidy')}
+            </p>
+            {data?.incomingCheckSkipped && (
+                <Notice status="warning" isDismissible={false}>
+                    {__('Incoming link check skipped for this site.', 'seo-tidy')}
+                </Notice>
+            )}
 
             <label style={{ display: 'block', marginBottom: '14px' }}>
                 <input

@@ -393,6 +393,15 @@
       ],
       "Consider adding internal links to other pages": [
         "Apsver iespēju pievienot iekšējās saites uz citām lapām"
+      ],
+      "No incoming links found from other published content": [
+        "Nav atrastas ienākošas saites no cita publicēta satura"
+      ],
+      "Incoming link checks cover up to 200 published posts and pages. Links added by themes or dynamic blocks are not included.": [
+        "Ienākošās saites pārbauda vietnēs ar līdz 200 publicētiem rakstiem un lapām. Tēmas un dinamisko bloku saites netiek ieskaitītas."
+      ],
+      "Incoming link check skipped for this site.": [
+        "Ienākošo saišu pārbaude šai vietnei ir izlaista."
       ]
     }
   }
