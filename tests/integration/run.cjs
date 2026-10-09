@@ -6,24 +6,34 @@ const { spawnSync } = require('node:child_process');
 const root = path.resolve(__dirname, '../..');
 
 const cli = process.env.SEO_TIDY_WP_ENV_CLI ||
-    path.join(
-        process.env.LOCALAPPDATA || '',
-        'npm-cache/_npx/96f61048c5eb8a35/node_modules/@wordpress/env/bin/wp-env'
-    );
+    path.join(root, 'node_modules/@wordpress/env/bin/wp-env');
+
+const defaultDns = path.join(
+    os.tmpdir(),
+    'seo-tidy-dns-bootstrap.cjs'
+);
 
 const dns = process.env.SEO_TIDY_DNS_BOOTSTRAP ||
-    path.join(os.tmpdir(), 'seo-tidy-dns-bootstrap.cjs');
+    (fs.existsSync(defaultDns) ? defaultDns : null);
 
-if (!fs.existsSync(cli) || !fs.existsSync(dns)) {
+const baseUrl = (
+    process.env.SEO_TIDY_BASE_URL || 'http://localhost:8898'
+).replace(/\/$/, '');
+
+if (!fs.existsSync(cli)) {
     throw new Error(
-        'wp-env runner unavailable. Set SEO_TIDY_WP_ENV_CLI and SEO_TIDY_DNS_BOOTSTRAP.'
+        'Local wp-env not found. Run npm install first.'
     );
+}
+
+if (dns && !fs.existsSync(dns)) {
+    throw new Error('Configured DNS bootstrap not found: ' + dns);
 }
 
 function wp(args) {
     const result = spawnSync(
         process.execPath,
-        ['--require', dns, cli, 'run', 'cli', 'wp', ...args],
+        [...(dns ? ['--require', dns] : []), cli, 'run', 'cli', 'wp', ...args],
         {
             cwd: root,
             encoding: 'utf8',
@@ -84,7 +94,7 @@ async function runHttpTest() {
         ]);
 
         const response = await fetch(
-            `http://localhost:8898/?p=${id}`,
+            `${baseUrl}/?p=${id}`,
             { signal: AbortSignal.timeout(30000) }
         );
 
