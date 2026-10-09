@@ -1096,7 +1096,35 @@ function SupportLinks() {
                 {__('Report an issue', 'seo-tidy')}
             </a>
             <a href="https://buymeacoffee.com/craftin"
-                target="_blank" rel="noopener noreferrer">
+                target="_blank" rel="noopener noreferrer"
+                style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '7px 12px',
+                    border: '1px solid #e4be46',
+                    borderRadius: '8px',
+                    background: '#fff3c4',
+                    color: '#493711',
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                }}>
+                <svg
+                    width="19"
+                    height="19"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.9"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                >
+                    <path d="M4 8h13v7a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8Z" />
+                    <path d="M17 9h2a3 3 0 0 1 0 6h-2" />
+                    <path d="M8 3v2M12 3v2" />
+                    <path d="M3 22h17" />
+                </svg>
                 Buy Me a Coffee
             </a>
         </div>
