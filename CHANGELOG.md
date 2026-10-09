@@ -4,6 +4,22 @@ All notable changes to SEO-TidY will be documented here.
 
 ## [Unreleased]
 
+### Administration redesign
+- Branded WordPress administration header and navigation
+- Redesigned Dashboard metrics and actions
+- Improved Metadata tables, status indicators and quick editing
+- Clearer SEO Audit findings and recommendations
+- Updated AI Answer Readiness interface
+- Unified Schema and general settings panels
+- Redesigned metadata migration interface
+- Responsive mobile layout and horizontal table navigation
+
+### Release infrastructure
+- Admin stylesheet included in portable WordPress ZIP
+- ZIP workflow enabled on feature branches
+- Desktop and mobile visual validation
+- WordPress integration and translation checks
+
 ## [0.1.0-beta.2] - 2026-10-09
 
 ### Added
