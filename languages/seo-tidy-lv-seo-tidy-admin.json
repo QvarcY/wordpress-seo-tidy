@@ -408,6 +408,30 @@
       ],
       "Affected links:": [
         "Saites, kurām jāpievērš uzmanība:"
+      ],
+      "Scanning:": [
+        "Pārbauda:"
+      ],
+      "Cancel scan": [
+        "Pārtraukt pārbaudi"
+      ],
+      "Scan could not be completed. Results were not saved.": [
+        "Pārbaudi neizdevās pabeigt. Rezultāti netika saglabāti."
+      ],
+      "Scan complete": [
+        "Pārbaude pabeigta"
+      ],
+      "Filter by priority": [
+        "Filtrēt pēc prioritātes"
+      ],
+      "All categories": [
+        "Visas kategorijas"
+      ],
+      "Run full SEO audit": [
+        "Veikt pilnu SEO auditu"
+      ],
+      "No items in the selected category.": [
+        "Izvēlētajā kategorijā nav ierakstu."
       ]
     }
   }
