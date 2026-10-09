@@ -1,5 +1,7 @@
 # SEO-TidY
 
+![SEO-TidY by QvarcY](assets/seo-tidy-hero.webp)
+
 **Free, open-source WordPress SEO and AI search readiness plugin by QvarcY.**
 
 Clean SEO. Smarter discovery. Completely free.

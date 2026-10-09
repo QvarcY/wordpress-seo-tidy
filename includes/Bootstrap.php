@@ -103,6 +103,17 @@ final class Bootstrap
             true
         );
 
+        wp_localize_script(
+            'seo-tidy-admin',
+            'seoTidyBranding',
+            [
+                'heroUrl' => plugins_url(
+                    'assets/seo-tidy-hero.webp',
+                    SEO_TIDY_PATH . 'seo-tidy.php'
+                ),
+            ]
+        );
+
         wp_set_script_translations(
             'seo-tidy-admin',
             'seo-tidy',

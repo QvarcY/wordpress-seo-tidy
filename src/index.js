@@ -1431,6 +1431,20 @@ function App() {
         <div className="wrap seo-tidy-admin">
             <h1>SEO-TidY</h1>
             <p>{__('SEO and AI search readiness for WordPress.', 'seo-tidy')}</p>
+            {active === 'dashboard' && window.seoTidyBranding?.heroUrl && (
+                <img
+                    src={window.seoTidyBranding.heroUrl}
+                    alt="SEO-TidY by QvarcY"
+                    style={{
+                        display: 'block',
+                        width: '100%',
+                        maxWidth: '1200px',
+                        height: 'auto',
+                        borderRadius: '12px',
+                        marginBottom: '20px',
+                    }}
+                />
+            )}
 
             <nav
                 aria-label={__('SEO-TidY navigation', 'seo-tidy')}
