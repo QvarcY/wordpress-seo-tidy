@@ -242,6 +242,58 @@ function DashboardOverview({ onOpenSchema, onOpenMetadata }) {
 }
 
 
+
+function SearchPreview({ title, description, fallbackTitle }) {
+    const shownTitle = title.trim() || fallbackTitle || '';
+    const shownDescription = description.trim();
+
+    return (
+        <div style={{
+            margin: '16px 0',
+            padding: '16px',
+            border: '1px solid #dcdcde',
+            borderRadius: '8px',
+            maxWidth: '650px',
+            background: '#fff',
+        }}>
+            <strong style={{
+                display: 'block',
+                marginBottom: '12px',
+                fontSize: '13px',
+            }}>
+                {__('Search result preview', 'seo-tidy')}
+            </strong>
+            <div style={{
+                color: '#1a0dab',
+                fontSize: '20px',
+                lineHeight: '1.35',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                marginBottom: '6px',
+            }}>
+                {shownTitle || __('Untitled', 'seo-tidy')}
+            </div>
+            <div style={{
+                color: '#4d5156',
+                fontSize: '14px',
+                lineHeight: '1.55',
+                overflowWrap: 'anywhere',
+            }}>
+                {shownDescription ||
+                    __('No custom meta description.', 'seo-tidy')}
+            </div>
+            <p style={{
+                fontSize: '12px',
+                color: '#646970',
+                margin: '12px 0 0',
+            }}>
+                {__('Illustrative only. Search engines may show different text.', 'seo-tidy')}
+            </p>
+        </div>
+    );
+}
+
 function MetadataList({ filter, setFilter }) {
     const [type, setType] = useState('all');
     const [page, setPage] = useState(1);
@@ -440,6 +492,11 @@ function MetadataList({ filter, setFilter }) {
                                     help={String([...draftDescription].length) + ' / 70-160'}
                                     disabled={saving}
                                     onChange={setDraftDescription}
+                                />
+                                <SearchPreview
+                                    title={draftTitle}
+                                    description={draftDescription}
+                                    fallbackTitle={item.title}
                                 />
 
                                 {saveError && (
@@ -724,6 +781,11 @@ function SEOAuditOverview() {
                                     help={String([...description].length) + ' / 70-160'}
                                     onChange={setDescription}
                                     disabled={saving}
+                                />
+                                <SearchPreview
+                                    title={title}
+                                    description={description}
+                                    fallbackTitle={item.title}
                                 />
                                 {saveError && (
                                     <Notice status="error" isDismissible={false}>
