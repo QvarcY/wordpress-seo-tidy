@@ -203,7 +203,7 @@ msgstr "Statistikā iekļauti tikai publicētie raksti un lapas."
 
 #: src/index.js
 msgid "All published content"
-msgstr "Viss public?tais saturs"
+msgstr "Viss publicētais saturs"
 
 #: src/index.js
 msgid "Posts and pages"
@@ -219,7 +219,7 @@ msgstr "Lapas"
 
 #: src/index.js
 msgid "Show"
-msgstr "R?d?t"
+msgstr "Rādīt"
 
 #: src/index.js
 msgid "Content type"
@@ -227,7 +227,7 @@ msgstr "Satura veids"
 
 #: src/index.js
 msgid "Could not load content."
-msgstr "Neizdev?s iel?d?t saturu."
+msgstr "Neizdevās ielādēt saturu."
 
 #: src/index.js
 msgid "Matching items:"
@@ -251,7 +251,7 @@ msgstr "Meta apraksts"
 
 #: src/index.js
 msgid "Action"
-msgstr "Darb?ba"
+msgstr "Darbība"
 
 #: src/index.js
 msgid "Untitled"
@@ -271,20 +271,20 @@ msgstr "Pievienots"
 
 #: src/index.js
 msgid "Missing"
-msgstr "Tr?kst"
+msgstr "Trūkst"
 
 #: src/index.js
 msgid "Edit"
-msgstr "Redi??t"
+msgstr "Rediģēt"
 
 #: src/index.js
 msgid "No matching content found."
-msgstr "Atbilsto?i ieraksti nav atrasti."
+msgstr "Atbilstoši ieraksti nav atrasti."
 
 #: src/index.js
 msgid "Previous"
-msgstr "Iepriek??j?"
+msgstr "Iepriekšējā"
 
 #: src/index.js
 msgid "Next"
-msgstr "N?kam?"
+msgstr "Nākamā"
