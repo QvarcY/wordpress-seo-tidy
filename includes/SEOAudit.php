@@ -9,6 +9,12 @@ final class SEOAudit
     public static function init(): void
     {
         add_action('rest_api_init', [self::class, 'registerRoutes']);
+        add_action('save_post', [self::class, 'clearDuplicateMetadataCache']);
+        add_action('deleted_post', [self::class, 'clearDuplicateMetadataCache']);
+        add_action('transition_post_status', [self::class, 'clearDuplicateMetadataCache']);
+        add_action('added_post_meta', [self::class, 'onSeoMetaChanged'], 10, 3);
+        add_action('updated_post_meta', [self::class, 'onSeoMetaChanged'], 10, 3);
+        add_action('deleted_post_meta', [self::class, 'onSeoMetaChanged'], 10, 3);
         add_action('save_post', [self::class, 'clearIncomingLinksCache']);
         add_action('deleted_post', [self::class, 'clearIncomingLinksCache']);
         add_action('transition_post_status', [self::class, 'clearIncomingLinksCache']);
@@ -43,7 +49,48 @@ final class SEOAudit
     }
 
 
+
+    public static function clearDuplicateMetadataCache(): void
+    {
+        delete_transient('seo_tidy_duplicates_v1');
+    }
+
+    public static function onSeoMetaChanged(
+        $metaId,
+        $postId,
+        $metaKey
+    ): void {
+        if (
+            in_array(
+                $metaKey,
+                ['_seo_tidy_title', '_seo_tidy_description'],
+                true
+            )
+        ) {
+            self::clearDuplicateMetadataCache();
+        }
+    }
+
     private static function duplicateMetadata(): array
+    {
+        $cached = get_transient('seo_tidy_duplicates_v1');
+
+        if (is_array($cached)) {
+            return $cached;
+        }
+
+        $duplicates = self::buildDuplicateMetadata();
+
+        set_transient(
+            'seo_tidy_duplicates_v1',
+            $duplicates,
+            5 * MINUTE_IN_SECONDS
+        );
+
+        return $duplicates;
+    }
+
+    private static function buildDuplicateMetadata(): array
     {
         global $wpdb;
 
