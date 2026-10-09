@@ -1139,7 +1139,7 @@ function MigrationOverview() {
     };
 
     return (
-        <div>
+        <div className="tidy-migration">
             <p>
                 {__('Import SEO metadata from another plugin without deleting its data or replacing populated SEO-TidY fields.', 'seo-tidy')}
             </p>
@@ -1147,7 +1147,7 @@ function MigrationOverview() {
                 {__('Only published posts and pages are included. Unresolved template variables are skipped.', 'seo-tidy')}
             </p>
 
-            <label>
+            <label className="tidy-migration-source">
                 {__('Source plugin', 'seo-tidy')}{' '}
                 <select
                     value={source}
@@ -1160,7 +1160,8 @@ function MigrationOverview() {
             </label>
 
             {preview && (
-                <div style={{ marginTop: '16px' }}>
+                <div className="tidy-migration-preview">
+                    <div className="tidy-migration-stats">
                     <p>
                         {__('Potential SEO titles:', 'seo-tidy')}
                         {' '}<strong>{preview.titles}</strong>
@@ -1169,12 +1170,13 @@ function MigrationOverview() {
                         {__('Potential meta descriptions:', 'seo-tidy')}
                         {' '}<strong>{preview.descriptions}</strong>
                     </p>
-                    <p>
+                    </div>
+                    <p className="tidy-migration-note">
                         {__('Preview counts may include values that are skipped during import.', 'seo-tidy')}
                     </p>
 
                     {!finished && (
-                        <>
+                        <div className="tidy-migration-confirm">
                             <ToggleControl
                                 label={__('I confirm that I want to import the available metadata.', 'seo-tidy')}
                                 checked={confirmed}
@@ -1186,14 +1188,15 @@ function MigrationOverview() {
                                 disabled={!confirmed || busy}
                                 isBusy={busy}
                                 onClick={importNext}
+                                className="tidy-migration-import-button"
                             >
                                 {__('Import next 20 posts or pages', 'seo-tidy')}
                             </Button>
-                        </>
+                        </div>
                     )}
 
                     {processed > 0 && (
-                        <p>
+                        <p className="tidy-migration-progress">
                             {__('Processed:', 'seo-tidy')} {processed}
                             {' | '}
                             {__('Titles imported:', 'seo-tidy')} {titles}

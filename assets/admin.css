@@ -859,3 +859,114 @@
         line-height: 1.5;
     }
 }
+
+
+/* Migration */
+
+.seo-tidy-admin .tidy-migration > p {
+    color: #526579;
+    line-height: 1.65;
+}
+
+.seo-tidy-admin .tidy-migration-source {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    width: min(100%, 440px);
+    margin: 20px 0;
+    padding: 18px;
+    border: 1px solid var(--tidy-border);
+    border-radius: 13px;
+    background: #f8fafc;
+    color: var(--tidy-navy);
+    font-weight: 650;
+}
+
+.seo-tidy-admin .tidy-migration-source select {
+    width: 100%;
+    max-width: 100%;
+    min-height: 40px;
+    margin: 0;
+    border: 1px solid var(--tidy-border);
+    border-radius: 8px;
+    background: #fff;
+    font-weight: 400;
+}
+
+.seo-tidy-admin .tidy-migration-preview {
+    max-width: 900px;
+    margin-top: 20px;
+}
+
+.seo-tidy-admin .tidy-migration-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.seo-tidy-admin .tidy-migration-stats p {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding: 19px;
+    border: 1px solid var(--tidy-border);
+    border-radius: 13px;
+    background: #f8fafc;
+    color: #526579;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.seo-tidy-admin .tidy-migration-stats strong {
+    color: var(--tidy-navy);
+    font-size: 29px;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+
+.seo-tidy-admin .tidy-migration-note {
+    color: #617286;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.seo-tidy-admin .tidy-migration-confirm {
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid #b9dcd0;
+    border-radius: 13px;
+    background: #eff8f4;
+}
+
+.seo-tidy-admin .tidy-migration-confirm .components-toggle-control {
+    margin-bottom: 16px;
+}
+
+.seo-tidy-admin .tidy-migration-import-button {
+    min-height: 40px;
+    border-radius: 9px;
+}
+
+.seo-tidy-admin .tidy-migration-progress {
+    margin-top: 18px;
+    padding: 14px 17px;
+    border: 1px solid var(--tidy-border);
+    border-radius: 10px;
+    background: #f8fafc;
+    color: var(--tidy-navy);
+    font-weight: 600;
+    line-height: 1.8;
+}
+
+@media (max-width: 600px) {
+    .seo-tidy-admin .tidy-migration-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .seo-tidy-admin .tidy-migration-source,
+    .seo-tidy-admin .tidy-migration-confirm {
+        padding: 14px;
+    }
+}
