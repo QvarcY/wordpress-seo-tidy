@@ -119,6 +119,77 @@ final class Metadata
         echo 'id="seo-tidy-description" name="seo_tidy_description">';
         echo esc_textarea($description);
         echo '</textarea>';
+
+        echo '<div id="seo-tidy-classic-preview" ';
+        echo 'style="margin-top:18px;padding:14px;';
+        echo 'border:1px solid #dcdcde;border-radius:8px">';
+        echo '<strong>';
+        echo esc_html__('Search preview', 'seo-tidy');
+        echo '</strong>';
+
+        echo '<p id="seo-tidy-preview-url" ';
+        echo 'style="font-size:12px;color:#555">';
+        echo esc_html(get_permalink($post->ID));
+        echo '</p>';
+
+        echo '<div id="seo-tidy-preview-title" ';
+        echo 'style="font-size:20px;color:#1a0dab;';
+        echo 'overflow-wrap:anywhere"></div>';
+
+        echo '<div id="seo-tidy-preview-description" ';
+        echo 'style="font-size:14px;color:#4d5156;';
+        echo 'overflow-wrap:anywhere;margin-top:6px"></div>';
+
+        echo '<p style="font-size:12px;color:#646970">';
+        echo esc_html__(
+            'Illustrative preview. Search engines may change the result.',
+            'seo-tidy'
+        );
+        echo '</p></div>';
+
+        echo '<script>
+        (function () {
+            const title = document.getElementById("seo-tidy-title");
+            const description = document.getElementById(
+                "seo-tidy-description"
+            );
+            const previewTitle = document.getElementById(
+                "seo-tidy-preview-title"
+            );
+            const previewDescription = document.getElementById(
+                "seo-tidy-preview-description"
+            );
+            const postTitle = document.getElementById("title");
+
+            if (!title || !description ||
+                !previewTitle || !previewDescription) return;
+
+            const fallbackTitle = ' . wp_json_encode(
+                (string) get_the_title($post->ID)
+            ) . ';
+            const emptyDescription = ' . wp_json_encode(
+                __('No custom meta description.', 'seo-tidy')
+            ) . ';
+
+            function updatePreview() {
+                previewTitle.textContent = title.value.trim() ||
+                    (postTitle ? postTitle.value.trim() : "") ||
+                    fallbackTitle;
+                previewDescription.textContent =
+                    description.value.trim() || emptyDescription;
+            }
+
+            title.addEventListener("input", updatePreview);
+            description.addEventListener("input", updatePreview);
+
+            if (postTitle) {
+                postTitle.addEventListener("input", updatePreview);
+            }
+
+            updatePreview();
+        })();
+        </script>';
+
     }
 
     public static function save(int $postId, \WP_Post $post): void
