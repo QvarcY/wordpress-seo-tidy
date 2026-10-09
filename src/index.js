@@ -626,6 +626,7 @@ const auditLabels = {
     review_noindex: __('Review this page noindex setting', 'seo-tidy'),
     review_internal_links: __('Consider adding internal links to other pages', 'seo-tidy'),
     review_incoming_links: __('No incoming links found from other published content', 'seo-tidy'),
+    review_unavailable_post_link: __('Review links to missing or unpublished WordPress content', 'seo-tidy'),
     review_image_alt: __('Review image alternative text', 'seo-tidy'),
 };
 

@@ -402,6 +402,9 @@
       ],
       "Incoming link check skipped for this site.": [
         "Ienākošo saišu pārbaude šai vietnei ir izlaista."
+      ],
+      "Review links to missing or unpublished WordPress content": [
+        "Pārskatīt saites uz neesošiem vai nepublicētiem WordPress ierakstiem"
       ]
     }
   }

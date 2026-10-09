@@ -290,6 +290,106 @@ final class SEOAudit
         return $incoming;
     }
 
+
+    private static function hasUnavailablePostLink(string $content): bool
+    {
+        $home = wp_parse_url(home_url('/'));
+        $homeHost = strtolower((string) ($home['host'] ?? ''));
+
+        if ($homeHost === '') {
+            return false;
+        }
+
+        $homeScheme = strtolower(
+            (string) ($home['scheme'] ?? 'http')
+        );
+        $homePort = (int) ($home['port'] ?? (
+            $homeScheme === 'https' ? 443 : 80
+        ));
+
+        $processor = new \WP_HTML_Tag_Processor($content);
+
+        while ($processor->next_tag('A')) {
+            $href = $processor->get_attribute('href');
+
+            if (!is_string($href)) {
+                continue;
+            }
+
+            $href = trim($href);
+
+            if ($href === '' || str_starts_with($href, '#')) {
+                continue;
+            }
+
+            $parts = wp_parse_url($href);
+
+            if (!is_array($parts)) {
+                continue;
+            }
+
+            $scheme = strtolower((string) ($parts['scheme'] ?? ''));
+
+            if (
+                $scheme !== '' &&
+                !in_array($scheme, ['http', 'https'], true)
+            ) {
+                continue;
+            }
+
+            $host = strtolower((string) ($parts['host'] ?? ''));
+
+            if ($host !== '' && $host !== $homeHost) {
+                continue;
+            }
+
+            if ($host !== '') {
+                $effectiveScheme = $scheme ?: $homeScheme;
+                $port = (int) ($parts['port'] ?? (
+                    $effectiveScheme === 'https' ? 443 : 80
+                ));
+
+                if ($port !== $homePort) {
+                    continue;
+                }
+            }
+
+            if (empty($parts['query'])) {
+                continue;
+            }
+
+            $params = [];
+            parse_str((string) $parts['query'], $params);
+
+            foreach (['p', 'page_id'] as $key) {
+                if (
+                    !isset($params[$key]) ||
+                    !is_scalar($params[$key])
+                ) {
+                    continue;
+                }
+
+                $raw = (string) $params[$key];
+
+                if (!ctype_digit($raw) || (int) $raw < 1) {
+                    continue;
+                }
+
+                $target = get_post((int) $raw);
+
+                if (
+                    !$target instanceof \WP_Post ||
+                    !in_array($target->post_type, ['post', 'page'], true) ||
+                    $target->post_status !== 'publish'
+                ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     private static function needsAltReview(string $content): bool
     {
         $processor = new \WP_HTML_Tag_Processor($content);
@@ -434,6 +534,10 @@ final class SEOAudit
             }
 
             // Pārbaudām tikai saturā esošos HTML attēlus
+            if (self::hasUnavailablePostLink($content)) {
+                $issues[] = 'review_unavailable_post_link';
+            }
+
             if (self::needsAltReview($content)) {
                 $issues[] = 'review_image_alt';
             }

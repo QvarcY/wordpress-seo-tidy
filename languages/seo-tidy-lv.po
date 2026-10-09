@@ -596,3 +596,7 @@ msgstr "Ienākošās saites pārbauda vietnēs ar līdz 200 publicētiem rakstie
 #: src/index.js
 msgid "Incoming link check skipped for this site."
 msgstr "Ienākošo saišu pārbaude šai vietnei ir izlaista."
+
+#: src/index.js
+msgid "Review links to missing or unpublished WordPress content"
+msgstr "Pārskatīt saites uz neesošiem vai nepublicētiem WordPress ierakstiem"
