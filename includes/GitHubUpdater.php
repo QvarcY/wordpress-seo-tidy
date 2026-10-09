@@ -16,6 +16,25 @@ final class GitHubUpdater
             10,
             4
         );
+
+        add_action(
+            'load-update-core.php',
+            [self::class, 'refreshOnManualCheck'],
+            1
+        );
+    }
+
+    public static function refreshOnManualCheck(): void
+    {
+        if (
+            !isset($_GET['force-check']) ||
+            $_GET['force-check'] !== '1' ||
+            !current_user_can('update_plugins')
+        ) {
+            return;
+        }
+
+        delete_transient('seo_tidy_github_releases');
     }
 
     public static function checkUpdate(

@@ -7,6 +7,9 @@ define('HOUR_IN_SECONDS', 3600);
 define('SEO_TIDY_PATH', dirname(__DIR__, 2) . '/');
 
 $GLOBALS['test_hooks'] = [];
+$GLOBALS['test_actions'] = [];
+$GLOBALS['test_can_update'] = false;
+$GLOBALS['test_deleted'] = 0;
 $GLOBALS['test_transient'] = false;
 $GLOBALS['test_option'] = false;
 $GLOBALS['test_response'] = null;
@@ -16,6 +19,34 @@ $GLOBALS['test_cache_seconds'] = 0;
 function add_filter($hook, $callback, $priority, $accepted): void
 {
     $GLOBALS['test_hooks'][$hook] = [$callback, $accepted];
+}
+
+function add_action($hook, $callback, $priority = 10): void
+{
+    $GLOBALS['test_actions'][$hook] = [$callback, $priority];
+}
+
+function hasManualRefreshHook(): bool
+{
+    return isset($GLOBALS['test_actions']['load-update-core.php']) &&
+        $GLOBALS['test_actions']['load-update-core.php'][1] === 1;
+}
+
+function current_user_can($capability): bool
+{
+    return $capability === 'update_plugins' &&
+        $GLOBALS['test_can_update'];
+}
+
+function delete_transient($name): bool
+{
+    if ($name !== 'seo_tidy_github_releases') {
+        throw new RuntimeException('Unexpected cache deletion');
+    }
+
+    ++$GLOBALS['test_deleted'];
+    $GLOBALS['test_transient'] = false;
+    return true;
 }
 
 function plugin_basename($path): string
@@ -129,6 +160,42 @@ function updateFor(string $version = '0.1.0-beta.3')
 }
 
 GitHubUpdater::init();
+
+checkHook(
+    'Manual refresh hook registered',
+    hasManualRefreshHook()
+);
+
+$GLOBALS['test_transient'] = ['cached'];
+$_GET['force-check'] = '1';
+GitHubUpdater::refreshOnManualCheck();
+
+checkHook(
+    'Unauthorized check leaves cache intact',
+    $GLOBALS['test_deleted'] === 0 &&
+    $GLOBALS['test_transient'] === ['cached']
+);
+
+$GLOBALS['test_can_update'] = true;
+unset($_GET['force-check']);
+GitHubUpdater::refreshOnManualCheck();
+
+checkHook(
+    'Normal visit leaves cache intact',
+    $GLOBALS['test_deleted'] === 0 &&
+    $GLOBALS['test_transient'] === ['cached']
+);
+
+$_GET['force-check'] = '1';
+GitHubUpdater::refreshOnManualCheck();
+
+checkHook(
+    'Authorized manual check clears cache',
+    $GLOBALS['test_deleted'] === 1 &&
+    $GLOBALS['test_transient'] === false
+);
+
+unset($_GET['force-check']);
 
 checkHook(
     'WordPress update hook registered',
