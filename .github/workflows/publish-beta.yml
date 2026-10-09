@@ -34,22 +34,9 @@ jobs:
             exit 1
           fi
 
-          export VERSION
+          node scripts/check-release-version.cjs "$RELEASE_TAG"
 
-          node -e "
-            const fs = require('fs');
-            const v = process.env.VERSION;
-            const pkg = require('./package.json');
-            const lock = require('./package-lock.json');
-            const php = fs.readFileSync('seo-tidy.php', 'utf8');
-            if (pkg.version !== v || lock.version !== v ||
-                !php.includes('Version: ' + v) ||
-                !php.includes(\"define('SEO_TIDY_VERSION', '\" + v + \"')\")) {
-              process.exit(1);
-            }
-          "
 
-          echo "Version verified: $VERSION"
 
       - name: Ensure release does not exist
         shell: bash
