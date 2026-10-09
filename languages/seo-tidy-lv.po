@@ -140,3 +140,63 @@ msgstr "Ieslēgt automātiskos strukturētos datus"
 #: src/index.js
 msgid "Posts use BlogPosting; pages use WebPage."
 msgstr "Rakstiem izmanto BlogPosting, lapām — WebPage."
+
+#: src/index.js
+msgid "Could not load dashboard statistics."
+msgstr "Neizdevās ielādēt pārskata statistiku."
+
+#: src/index.js
+msgid "Published posts"
+msgstr "Publicētie raksti"
+
+#: src/index.js
+msgid "Published pages"
+msgstr "Publicētās lapas"
+
+#: src/index.js
+msgid "SEO titles completed"
+msgstr "Aizpildītie SEO virsraksti"
+
+#: src/index.js
+msgid "Meta descriptions completed"
+msgstr "Aizpildītie meta apraksti"
+
+#: src/index.js
+msgid "Missing SEO titles"
+msgstr "Trūkst SEO virsrakstu"
+
+#: src/index.js
+msgid "Missing meta descriptions"
+msgstr "Trūkst meta aprakstu"
+
+#: src/index.js
+msgid "Published posts and pages:"
+msgstr "Publicētie raksti un lapas:"
+
+#: src/index.js
+msgid "Smart Schema:"
+msgstr "Viedie strukturētie dati:"
+
+#: src/index.js
+msgid "Enabled"
+msgstr "Ieslēgts"
+
+#: src/index.js
+msgid "Disabled"
+msgstr "Izslēgts"
+
+#: src/index.js
+msgid "Manage Schema"
+msgstr "Pārvaldīt strukturētos datus"
+
+#: src/index.js
+msgid "Edit posts"
+msgstr "Rediģēt rakstus"
+
+#: src/index.js
+msgid "Edit pages"
+msgstr "Rediģēt lapas"
+
+#: src/index.js
+msgid "Counts include published posts and pages only."
+msgstr "Statistikā iekļauti tikai publicētie raksti un lapas."

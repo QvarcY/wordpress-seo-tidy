@@ -103,6 +103,133 @@ function SchemaSettings() {
     );
 }
 
+
+function DashboardOverview({ onOpenSchema }) {
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(false);
+
+    useEffect(() => {
+        let active = true;
+
+        apiFetch({ path: '/seo-tidy/v1/dashboard' })
+            .then((result) => {
+                if (active) {
+                    setData(result);
+                }
+            })
+            .catch(() => {
+                if (active) {
+                    setError(true);
+                }
+            });
+
+        return () => {
+            active = false;
+        };
+    }, []);
+
+    if (error) {
+        return (
+            <Notice status="error" isDismissible={false}>
+                {__('Could not load dashboard statistics.', 'seo-tidy')}
+            </Notice>
+        );
+    }
+
+    if (!data) {
+        return <Spinner />;
+    }
+
+    const metrics = [
+        {
+            label: __('Published posts', 'seo-tidy'),
+            value: data.posts,
+        },
+        {
+            label: __('Published pages', 'seo-tidy'),
+            value: data.pages,
+        },
+        {
+            label: __('SEO titles completed', 'seo-tidy'),
+            value: data.titles,
+        },
+        {
+            label: __('Meta descriptions completed', 'seo-tidy'),
+            value: data.descriptions,
+        },
+        {
+            label: __('Missing SEO titles', 'seo-tidy'),
+            value: data.missingTitles,
+        },
+        {
+            label: __('Missing meta descriptions', 'seo-tidy'),
+            value: data.missingDescriptions,
+        },
+    ];
+
+    return (
+        <div>
+            <p>
+                {__('Published posts and pages:', 'seo-tidy')}
+                {' '}
+                <strong>{data.total}</strong>
+            </p>
+
+            <div
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(185px, 1fr))',
+                    gap: '12px',
+                    marginBottom: '20px',
+                }}
+            >
+                {metrics.map((metric) => (
+                    <div
+                        key={metric.label}
+                        style={{
+                            border: '1px solid #ddd',
+                            borderRadius: '6px',
+                            padding: '14px',
+                        }}
+                    >
+                        <div style={{ fontSize: '13px', marginBottom: '8px' }}>
+                            {metric.label}
+                        </div>
+                        <strong style={{ fontSize: '25px' }}>
+                            {metric.value}
+                        </strong>
+                    </div>
+                ))}
+            </div>
+
+            <p>
+                <strong>{__('Smart Schema:', 'seo-tidy')}</strong>
+                {' '}
+                {data.schemaEnabled
+                    ? __('Enabled', 'seo-tidy')
+                    : __('Disabled', 'seo-tidy')}
+                {' '}
+                <Button variant="link" onClick={onOpenSchema}>
+                    {__('Manage Schema', 'seo-tidy')}
+                </Button>
+            </p>
+
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                <Button variant="secondary" href={data.links.posts}>
+                    {__('Edit posts', 'seo-tidy')}
+                </Button>
+                <Button variant="secondary" href={data.links.pages}>
+                    {__('Edit pages', 'seo-tidy')}
+                </Button>
+            </div>
+
+            <p style={{ marginTop: '18px', color: '#666' }}>
+                {__('Counts include published posts and pages only.', 'seo-tidy')}
+            </p>
+        </div>
+    );
+}
+
 function App() {
     const [active, setActive] = useState('dashboard');
     const current = sections.find((item) => item.id === active);
@@ -135,9 +262,7 @@ function App() {
                     {active === 'schema' ? (
                         <SchemaSettings />
                     ) : active === 'dashboard' ? (
-                        <Notice status="info" isDismissible={false}>
-                            {__('SEO-TidY is under development. SEO analysis is not available yet.', 'seo-tidy')}
-                        </Notice>
+                        <DashboardOverview onOpenSchema={() => setActive('schema')} />
                     ) : (
                         <p>
                             {__('This feature is planned and not available yet.', 'seo-tidy')}
