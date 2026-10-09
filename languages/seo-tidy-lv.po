@@ -80,3 +80,15 @@ msgstr "SEO virsraksts"
 #: includes/Metadata.php
 msgid "Meta Description"
 msgstr "Meta apraksts"
+
+#: src/editor.js
+msgid "Search preview"
+msgstr "Meklēšanas priekšskatījums"
+
+#: src/editor.js
+msgid "characters"
+msgstr "rakstzīmes"
+
+#: src/editor.js
+msgid "Illustrative preview. Search engines may change the result."
+msgstr "Ilustratīvs priekšskatījums. Meklētājprogrammas var mainīt rezultāta attēlojumu."

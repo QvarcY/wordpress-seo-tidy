@@ -1,22 +1,31 @@
 {
-    "translation-revision-date":  "2026-10-09",
-    "domain":  "messages",
-    "generator":  "SEO-TidY",
-    "locale_data":  {
-                        "messages":  {
-                                         "SEO Title":  [
-                                                           "SEO virsraksts"
-                                                       ],
-                                         "Meta Description":  [
-                                                                  "Meta apraksts"
-                                                              ],
-                                         "SEO-TidY Metadata":  [
-                                                                   "SEO-TidY metadati"
-                                                               ],
-                                         "":  {
-                                                  "lang":  "lv",
-                                                  "domain":  "messages"
-                                              }
-                                     }
-                    }
+  "translation-revision-date": "2026-10-09",
+  "domain": "messages",
+  "generator": "SEO-TidY",
+  "locale_data": {
+    "messages": {
+      "SEO Title": [
+        "SEO virsraksts"
+      ],
+      "Meta Description": [
+        "Meta apraksts"
+      ],
+      "SEO-TidY Metadata": [
+        "SEO-TidY metadati"
+      ],
+      "": {
+        "lang": "lv",
+        "domain": "messages"
+      },
+      "Search preview": [
+        "Meklēšanas priekšskatījums"
+      ],
+      "characters": [
+        "rakstzīmes"
+      ],
+      "Illustrative preview. Search engines may change the result.": [
+        "Ilustratīvs priekšskatījums. Meklētājprogrammas var mainīt rezultāta attēlojumu."
+      ]
+    }
+  }
 }
