@@ -110,6 +110,8 @@ final class SEOAudit
                 'title' => get_the_title($id),
                 'type' => $post->post_type,
                 'issues' => $issues,
+                'seoTitle' => $title,
+                'seoDescription' => $description,
                 'editUrl' => get_edit_post_link($id, 'raw'),
             ];
         }

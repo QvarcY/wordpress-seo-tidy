@@ -368,3 +368,11 @@ msgstr "Nav atradumu"
 #: src/index.js
 msgid "No findings on this page."
 msgstr "Šajā lapā nav atradumu."
+
+#: src/index.js
+msgid "Needs attention"
+msgstr "Jānovērš"
+
+#: src/index.js
+msgid "Recommendations"
+msgstr "Ieteikumi"
