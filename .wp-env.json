@@ -1,6 +1,8 @@
 {
   "core": "WordPress/WordPress#6.8",
   "plugins": ["."],
+  "mariadbVersion": "10.11",
+  "phpmyadmin": false,
   "port": 8898,
   "testsPort": 8899,
   "config": {
