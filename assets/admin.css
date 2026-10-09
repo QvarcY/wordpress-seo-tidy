@@ -643,3 +643,80 @@
         padding: 15px;
     }
 }
+
+
+/* Settings */
+
+.seo-tidy-admin .tidy-settings-panel {
+    max-width: 900px;
+}
+
+.seo-tidy-admin .tidy-settings-panel > p {
+    color: #526579;
+    line-height: 1.65;
+}
+
+.seo-tidy-admin .tidy-settings-list {
+    display: grid;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.seo-tidy-admin .tidy-setting-row {
+    padding: 20px;
+    margin: 16px 0;
+    border: 1px solid var(--tidy-border);
+    border-radius: 13px;
+    background: #f8fafc;
+}
+
+.seo-tidy-admin .tidy-settings-list .tidy-setting-row {
+    margin: 0;
+}
+
+.seo-tidy-admin .tidy-setting-row:hover {
+    border-color: #b9dcd0;
+}
+
+.seo-tidy-admin .tidy-setting-row .components-base-control {
+    margin-bottom: 0;
+}
+
+.seo-tidy-admin .tidy-setting-row .components-toggle-control {
+    margin-bottom: 0;
+}
+
+.seo-tidy-admin .tidy-setting-row .components-toggle-control__label {
+    color: var(--tidy-navy);
+    font-weight: 650;
+}
+
+.seo-tidy-admin .tidy-setting-row .components-base-control__help {
+    color: #526579;
+    line-height: 1.5;
+}
+
+.seo-tidy-admin .tidy-settings-save {
+    min-height: 40px;
+    padding-inline: 20px;
+    border-radius: 9px;
+}
+
+.seo-tidy-admin .tidy-settings-save.components-button.is-primary {
+    background: var(--tidy-navy);
+}
+
+.seo-tidy-admin .tidy-settings-save.components-button.is-primary:hover {
+    background: #1c3b5b;
+}
+
+@media (max-width: 782px) {
+    .seo-tidy-admin .tidy-setting-row {
+        padding: 15px;
+    }
+
+    .seo-tidy-admin .tidy-settings-save {
+        width: 100%;
+        justify-content: center;
+    }
+}

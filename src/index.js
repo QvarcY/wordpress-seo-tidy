@@ -72,7 +72,7 @@ function SchemaSettings() {
     };
 
     return (
-        <div>
+        <div className="tidy-settings-panel">
             <p>
                 {__('Automatically add structured data to published posts and pages.', 'seo-tidy')}
             </p>
@@ -80,6 +80,7 @@ function SchemaSettings() {
             {loading ? (
                 <Spinner />
             ) : (
+                <div className="tidy-setting-row">
                 <ToggleControl
                     label={__('Enable automatic Schema', 'seo-tidy')}
                     help={__('Posts use BlogPosting; pages use WebPage.', 'seo-tidy')}
@@ -87,6 +88,7 @@ function SchemaSettings() {
                     disabled={saving || message?.text === __('Could not load Schema settings.', 'seo-tidy')}
                     onChange={save}
                 />
+                </div>
             )}
 
             {saving && <Spinner />}
@@ -1355,7 +1357,7 @@ function GeneralSettings() {
         keys.some((item) => values[item.key] !== saved[item.key]);
 
     return (
-        <div>
+        <div className="tidy-settings-panel tidy-general-settings">
             <p>
                 {__('Manage SEO-TidY output and audit preferences.', 'seo-tidy')}
             </p>
@@ -1373,9 +1375,10 @@ function GeneralSettings() {
 
             {values && (
                 <>
+                    <div className="tidy-settings-list">
                     {keys.map((item) => (
+                        <div className="tidy-setting-row" key={item.key}>
                         <ToggleControl
-                            key={item.key}
                             label={item.label}
                             help={item.help}
                             checked={values[item.key]}
@@ -1387,10 +1390,13 @@ function GeneralSettings() {
                                 }));
                             }}
                         />
+                        </div>
                     ))}
+                    </div>
 
                     <Button
                         variant="primary"
+                        className="tidy-settings-save"
                         disabled={!changed || busy}
                         isBusy={busy}
                         onClick={save}
