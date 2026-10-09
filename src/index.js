@@ -620,6 +620,8 @@ const auditLabels = {
     short_description: __('Meta description may be too short', 'seo-tidy'),
     long_description: __('Meta description may be too long', 'seo-tidy'),
     review_h1: __('Review H1 heading (theme may provide it)', 'seo-tidy'),
+    duplicate_title: __('Duplicate SEO title', 'seo-tidy'),
+    duplicate_description: __('Duplicate meta description', 'seo-tidy'),
     review_image_alt: __('Review image alternative text', 'seo-tidy'),
 };
 

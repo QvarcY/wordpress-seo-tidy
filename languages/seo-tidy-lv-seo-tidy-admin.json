@@ -378,6 +378,12 @@
       ],
       "Using the WordPress title. A custom SEO title is optional.": [
         "Tiek izmantots WordPress virsraksts. Pielāgots SEO virsraksts nav obligāts."
+      ],
+      "Duplicate SEO title": [
+        "Dublēts SEO virsraksts"
+      ],
+      "Duplicate meta description": [
+        "Dublēts meta apraksts"
       ]
     }
   }

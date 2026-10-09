@@ -37,6 +37,38 @@ final class SEOAudit
             : strlen($value);
     }
 
+
+    private static function duplicateMetadata(): array
+    {
+        global $wpdb;
+
+        $sql = $wpdb->prepare(
+            "SELECT pm.meta_key,
+                    TRIM(pm.meta_value) AS value
+             FROM {$wpdb->postmeta} pm
+             INNER JOIN {$wpdb->posts} p
+                ON p.ID = pm.post_id
+             WHERE p.post_status = 'publish'
+               AND p.post_type IN ('post', 'page')
+               AND pm.meta_key IN (%s, %s)
+               AND TRIM(pm.meta_value) <> ''
+             GROUP BY pm.meta_key,
+                      BINARY TRIM(pm.meta_value)
+             HAVING COUNT(DISTINCT pm.post_id) > 1",
+            '_seo_tidy_title',
+            '_seo_tidy_description'
+        );
+
+        $rows = $wpdb->get_results($sql);
+        $duplicates = [];
+
+        foreach ((array) $rows as $row) {
+            $duplicates[$row->meta_key][(string) $row->value] = true;
+        }
+
+        return $duplicates;
+    }
+
     private static function needsAltReview(string $content): bool
     {
         $processor = new \WP_HTML_Tag_Processor($content);
@@ -96,6 +128,7 @@ final class SEOAudit
         ]);
 
         $items = [];
+        $duplicates = self::duplicateMetadata();
 
         foreach ($query->posts as $id) {
             $post = get_post($id);
@@ -121,12 +154,24 @@ final class SEOAudit
                 $issues[] = 'long_title';
             }
 
+            if (isset(
+                $duplicates['_seo_tidy_title'][$title]
+            )) {
+                $issues[] = 'duplicate_title';
+            }
+
             if ($description === '') {
                 $issues[] = 'missing_description';
             } elseif (self::length($description) < 70) {
                 $issues[] = 'short_description';
             } elseif (self::length($description) > 160) {
                 $issues[] = 'long_description';
+            }
+
+            if (isset(
+                $duplicates['_seo_tidy_description'][$description]
+            )) {
+                $issues[] = 'duplicate_description';
             }
 
             $content = (string) $post->post_content;

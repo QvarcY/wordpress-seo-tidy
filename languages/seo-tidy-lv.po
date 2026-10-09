@@ -564,3 +564,11 @@ msgstr "Tikai ilustratīvs priekšskatījums. Meklētājprogrammas var rādīt c
 #: src/index.js
 msgid "Using the WordPress title. A custom SEO title is optional."
 msgstr "Tiek izmantots WordPress virsraksts. Pielāgots SEO virsraksts nav obligāts."
+
+#: src/index.js
+msgid "Duplicate SEO title"
+msgstr "Dublēts SEO virsraksts"
+
+#: src/index.js
+msgid "Duplicate meta description"
+msgstr "Dublēts meta apraksts"
