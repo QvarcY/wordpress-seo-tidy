@@ -4,6 +4,37 @@ All notable changes to SEO-TidY will be documented here.
 
 ## [Unreleased]
 
+## [0.1.0-beta.2] - 2026-10-09
+
+### Added
+- Live search previews and metadata length guidance in WordPress editors
+  and the SEO-TidY administration panel
+- Duplicate SEO title and meta description detection
+- Site-wide, Yoast SEO and Rank Math noindex review
+- Outgoing and incoming internal content link recommendations
+- Review of missing or unpublished WordPress post-ID link targets
+- Affected link URL details in SEO Audit
+- Improved image alternative text checks
+- Automated Latvian translation validation and runtime loading
+
+### Improved
+- Incoming link analysis and duplicate metadata caching with invalidation
+- Audit response consistency and pagination checks
+- Latvian administration translations
+
+### Validation
+- WordPress functional tests for noindex, metadata duplicates and links
+- Cold and cached audit comparison on a small test site
+- Audit pagination and incoming-link cutoff tested with 201 published items
+
+### Known limitations
+- Incoming content link checks are skipped above 200 published posts/pages
+- Link analysis does not cover every dynamically rendered link
+- Unsupported custom URLs are not classified as broken links
+- Clean WordPress ZIP installation remains to be verified before release
+
+
+
 ### Added
 - Initial project documentation in English and Latvian
 - GPL-2.0-or-later licensing

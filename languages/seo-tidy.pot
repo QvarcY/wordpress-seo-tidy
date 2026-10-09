@@ -1,0 +1,111 @@
+# Copyright (C) 2026 QvarcY
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: SEO-TidY 0.0.1-dev\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wordpress-seo-tidy\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-08T23:02:53+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: seo-tidy\n"
+
+#. Plugin Name of the plugin
+#: seo-tidy.php
+#: includes/Bootstrap.php:24
+#: includes/Bootstrap.php:25
+#: includes/Bootstrap.php:81
+msgid "SEO-TidY"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: seo-tidy.php
+msgid "https://github.com/QvarcY/wordpress-seo-tidy"
+msgstr ""
+
+#. Description of the plugin
+#: seo-tidy.php
+msgid "Free SEO and AI search readiness tools for WordPress."
+msgstr ""
+
+#. Author of the plugin
+#: seo-tidy.php
+msgid "QvarcY"
+msgstr ""
+
+#. Author URI of the plugin
+#: seo-tidy.php
+msgid "https://github.com/QvarcY"
+msgstr ""
+
+#: includes/Bootstrap.php:77
+msgid "Access denied."
+msgstr ""
+
+#: includes/Bootstrap.php:82
+msgid "Loading SEO-TidY administration..."
+msgstr ""
+
+#: includes/Metadata.php:22
+msgid "SEO-TidY Metadata"
+msgstr ""
+
+#: includes/Metadata.php:39
+msgid "SEO Title"
+msgstr ""
+
+#: includes/Metadata.php:46
+msgid "Meta Description"
+msgstr ""
+
+#: seo-tidy.php:27
+msgid "SEO-TidY requires WordPress 6.8 or newer and PHP 8.1 or newer."
+msgstr ""
+
+#: src/index.js:6
+msgid "Dashboard"
+msgstr ""
+
+#: src/index.js:7
+msgid "Metadata"
+msgstr ""
+
+#: src/index.js:8
+msgid "Smart Schema"
+msgstr ""
+
+#: src/index.js:9
+msgid "SEO Audit"
+msgstr ""
+
+#: src/index.js:10
+msgid "Answer Readiness"
+msgstr ""
+
+#: src/index.js:11
+msgid "Migration"
+msgstr ""
+
+#: src/index.js:12
+msgid "Settings"
+msgstr ""
+
+#: src/index.js:22
+msgid "SEO and AI search readiness for WordPress."
+msgstr ""
+
+#: src/index.js:25
+msgid "SEO-TidY navigation"
+msgstr ""
+
+#: src/index.js:46
+msgid "SEO-TidY is under development. SEO analysis is not available yet."
+msgstr ""
+
+#: src/index.js:50
+msgid "This feature is planned and not available yet."
+msgstr ""

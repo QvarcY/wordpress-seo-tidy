@@ -1,61 +1,69 @@
 # SEO-TidY
 
-**Bezmaksas atvērtā koda WordPress SEO un MI meklēšanas
-gatavības spraudnis, ko izstrādā QvarcY.**
+**Bezmaksas atvērtā koda WordPress SEO un MI meklēšanas gatavības spraudnis, ko izstrādā QvarcY.**
 
 Sakārtots SEO. Labāka atrodamība. Pilnīgi bez maksas.
 
-> Izstrādes statuss: pamatu izveides posms.
-> Tālāk aprakstītās SEO funkcijas ir plānotas,
-> bet vēl nav ieviestas.
+## Versijas statuss
 
-## Mērķis
+Versija: **0.1.0-beta.1**
 
-SEO-TidY mērķis ir padarīt tehnisko SEO un satura
-atrodamības uzlabošanu pieejamu bez abonementiem,
-maksas versijām vai mākslīgiem ierobežojumiem.
+Šī ir testēšanai paredzēta beta versija. Pirms izmantošanas
+publiskā vietnē nepieciešamas rezerves kopijas un saderības pārbaudes.
 
-Spraudnis paredzēts tradicionālām WordPress vietnēm.
-Nākotnē iespējamas arī izvēles headless integrācijas.
+## Funkcijas
 
-## Plānotās funkcijas
+- SEO virsraksti un meta apraksti rakstiem un lapām
+- Metadatu ievade bloku un klasiskajā redaktorā
+- SEO metadatu ātrā rediģēšana administrācijā
+- Automātiskie BlogPosting un WebPage JSON-LD strukturētie dati
+- SEO metadatu un satura audits
+- Satura struktūras ieteikumi gatavībai MI atbildēm
+- Metadatu imports no Yoast SEO un Rank Math
+- Centralizēti izvades un audita iestatījumi
+- Administrācijas saskarne latviešu un angļu valodā
 
-- SEO metadatu dzinējs
-- Smart Schema ar JSON-LD
-- Tehniskā SEO audits
-- MI un atbilžu gatavības analīze
-- Angļu un latviešu valodas atbalsts
-- Droša migrācija no Yoast SEO un Rank Math
-
-## Pamatprincipi
-
-- Bezmaksas un atvērtais kods
-- Nav Premium funkciju vai abonementu
-- Nav obligātu ārējo MI API
-- Nav telemetrijas bez skaidras piekrišanas
-- WordPress videi pielāgota arhitektūra
-- Veiktspēja un pieejamība
-- Saprotami SEO ieteikumi
-- Droša sadarbība ar esošajiem spraudņiem
-
-## Valodas
-
-Angļu un latviešu valoda ir līdzvērtīgas
-projekta atbalstītās valodas.
-
-English documentation: [README.md](README.md)
+Satura ieteikumi ir orientējoši. Spraudnis negarantē
+pozīcijas meklētājos, indeksēšanu vai iekļūšanu MI atbildēs.
 
 ## Prasības
 
-Minimālās WordPress un PHP versijas noteiksim
-pēc sākotnējiem saderības testiem.
+- WordPress 6.8 vai jaunāks
+- PHP 8.1 vai jaunāks
+
+## Instalēšana
+
+1. Lejupielādē ZIP failu no GitHub Releases.
+2. WordPress atver Spraudņi > Pievienot jaunu > Augšupielādēt spraudni.
+3. Izvēlies ZIP failu un instalē to.
+4. Aktivizē SEO-TidY.
+5. WordPress administrācijas izvēlnē atver SEO-TidY.
+
+ZIP jau satur nepieciešamos JavaScript failus.
+Parastai instalēšanai Node.js un npm nav vajadzīgs.
+
+## Darba sākšana
+
+1. Informācijas panelī apskati publicētā satura statistiku.
+2. Sadaļā Metadati pārskati un rediģē SEO laukus.
+3. Smart Schema vai Iestatījumos pārvaldi strukturētos datus.
+4. SEO auditā un MI atbilžu gatavībā pārskati ieteikumus.
+5. Pirms migrācijas izveido datubāzes rezerves kopiju.
+
+Migrācija pārņem metadatus tikai tukšajos SEO-TidY laukos.
+Avota spraudņa metadati netiek apzināti dzēsti.
+Pirms importa pārskati priekšskatījumu un apstiprini darbību.
+
+Vairāku SEO spraudņu vienlaicīga lietošana var radīt
+dublētus metadatus vai strukturētos datus.
+Pirms publicēšanas pārbaudi lapas HTML izvadi.
 
 ## Izstrāde
 
-Projekts atrodas pamatu izveides posmā.
+Atkarību instalēšana: `npm ci`
+Būvēšana: `npm run build`
 
-Instalēšanas un izstrādes instrukcijas pievienosim,
-kad būs pieejama pirmā funkcionējošā spraudņa būve.
+Pirmkods: https://github.com/QvarcY/wordpress-seo-tidy
 
 ## Licence
 
@@ -63,14 +71,8 @@ GPL-2.0-or-later. Skatīt [LICENSE](LICENSE).
 
 ## Atbalsts
 
-SEO-TidY izstrādā QvarcY.
+- GitHub: https://github.com/QvarcY
+- Ziņot par problēmu: https://github.com/QvarcY/wordpress-seo-tidy/issues
+- Buy Me a Coffee: https://buymeacoffee.com/craftin
 
-GitHub: https://github.com/QvarcY
-
-Nākotnē iespējamas brīvprātīgas atbalsta saites.
-Ziedojumi neatslēgs nekādu papildu funkcionalitāti.
-
-## Atruna
-
-SEO-TidY negarantēs meklēšanas pozīcijas,
-indeksēšanu, MI citātus vai iekļūšanu MI atbildēs.
+Atbalsts ir brīvprātīgs. Visas SEO-TidY funkcijas paliek bezmaksas.

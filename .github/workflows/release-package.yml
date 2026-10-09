@@ -1,0 +1,49 @@
+name: SEO-TidY Release Package
+
+on:
+  push:
+    branches:
+      - main
+      - feature/m0-wordpress-bootstrap
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: Build and verify WordPress ZIP
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate Latvian translations
+        run: npm run check:i18n
+
+      - name: Build plugin assets
+        run: npm run build
+
+      - name: Create portable ZIP
+        shell: pwsh
+        run: ./scripts/build-release.ps1
+
+      - name: Upload verified ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: seo-tidy-wordpress-zip
+          path: dist/seo-tidy-*.zip
+          if-no-files-found: error
+          retention-days: 30

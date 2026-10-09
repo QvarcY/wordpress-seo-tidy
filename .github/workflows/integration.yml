@@ -1,0 +1,78 @@
+name: SEO-TidY Integration
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: seo-tidy-integration-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integration:
+    name: WordPress integration / Node 24
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: none
+          coverage: none
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit production dependencies
+        continue-on-error: true
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Audit all dependencies
+        continue-on-error: true
+        run: npm audit --audit-level=high
+
+      - name: Validate PHP syntax
+        run: |
+          php -l seo-tidy.php
+          find includes tests/integration -name '*.php' -print0 |
+            xargs -0 -n1 php -l
+
+      - name: Check Latvian translations
+        run: npm run check:i18n
+
+      - name: Build WordPress interfaces
+        run: npm run build
+
+      - name: Validate integration runner
+        run: node --check tests/integration/run.cjs
+
+      - name: Start WordPress
+        run: npm exec --no -- wp-env start
+
+      - name: Report WordPress PHP version
+        run: npm exec --no -- wp-env run cli php -v
+
+      - name: Run integration tests
+        env:
+          SEO_TIDY_DNS_BOOTSTRAP: ''
+          SEO_TIDY_BASE_URL: http://localhost:8898
+        run: npm run test:integration
+
+      - name: Stop WordPress
+        if: always()
+        run: npm exec --no -- wp-env stop

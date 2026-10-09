@@ -1,0 +1,606 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: SEO-TidY 0.0.1-dev
+"
+"Report-Msgid-Bugs-To: https://github.com/QvarcY/wordpress-seo-tidy/issues
+"
+"Language: lv
+"
+"Language-Team: Latvian
+"
+"Content-Type: text/plain; charset=UTF-8
+"
+"Content-Transfer-Encoding: 8bit
+"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n!=0 ? 1 : 2);
+"
+"X-Domain: seo-tidy
+"
+
+#: src/index.js
+msgid "Dashboard"
+msgstr "Pārskats"
+
+#: src/index.js
+msgid "Metadata"
+msgstr "Metadati"
+
+#: src/index.js
+msgid "Smart Schema"
+msgstr "Viedie strukturētie dati"
+
+#: src/index.js
+msgid "SEO Audit"
+msgstr "SEO audits"
+
+#: src/index.js
+msgid "Answer Readiness"
+msgstr "Gatavība MI atbildēm"
+
+#: src/index.js
+msgid "Migration"
+msgstr "Migrācija"
+
+#: src/index.js
+msgid "Settings"
+msgstr "Iestatījumi"
+
+#: src/index.js
+msgid "SEO and AI search readiness for WordPress."
+msgstr "SEO un gatavība MI meklēšanai WordPress vidē."
+
+#: src/index.js
+msgid "SEO-TidY navigation"
+msgstr "SEO-TidY navigācija"
+
+#: src/index.js
+msgid "SEO-TidY is under development. SEO analysis is not available yet."
+msgstr "SEO-TidY tiek izstrādāts. SEO analīze vēl nav pieejama."
+
+#: src/index.js
+msgid "This feature is planned and not available yet."
+msgstr "Šī funkcija ir plānota un vēl nav pieejama."
+
+#: includes/Bootstrap.php
+msgid "Access denied."
+msgstr "Piekļuve liegta."
+
+#: includes/Bootstrap.php
+msgid "Loading SEO-TidY administration..."
+msgstr "Ielādē SEO-TidY administrācijas paneli..."
+
+#: seo-tidy.php
+msgid "SEO-TidY requires WordPress 6.8 or newer and PHP 8.1 or newer."
+msgstr "SEO-TidY nepieciešama WordPress 6.8 vai jaunāka versija un PHP 8.1 vai jaunāka versija."
+
+#: includes/Bootstrap.php
+msgid "SEO-TidY"
+msgstr "SEO-TidY"
+
+#: includes/Metadata.php
+msgid "SEO-TidY Metadata"
+msgstr "SEO-TidY metadati"
+
+#: includes/Metadata.php
+msgid "SEO Title"
+msgstr "SEO virsraksts"
+
+#: includes/Metadata.php
+msgid "Meta Description"
+msgstr "Meta apraksts"
+
+#: src/editor.js
+msgid "Search preview"
+msgstr "Meklēšanas priekšskatījums"
+
+#: src/editor.js
+msgid "characters"
+msgstr "rakstzīmes"
+
+#: src/editor.js
+msgid "Illustrative preview. Search engines may change the result."
+msgstr "Ilustratīvs priekšskatījums. Meklētājprogrammas var mainīt rezultāta attēlojumu."
+
+#: src/editor.js
+msgid "Untitled post"
+msgstr "Ieraksts bez virsraksta"
+
+#: src/editor.js
+msgid "Reference scale only, not an SEO score."
+msgstr "Tikai orientējoša skala, nevis SEO vērtējums."
+
+#: src/editor.js
+msgid "The post title is used when the SEO title is empty."
+msgstr "Ja SEO virsraksts nav norādīts, tiek izmantots ieraksta virsraksts."
+
+#: src/editor.js
+msgid "No custom description. Search engines may select text from the page."
+msgstr "Nav pielāgota apraksta. Meklētājprogrammas var izvēlēties tekstu no lapas."
+
+#: src/index.js
+msgid "Could not load Schema settings."
+msgstr "neizdevās ielādēt strukturēto datu iestatījumus."
+
+#: src/index.js
+msgid "Schema settings saved."
+msgstr "Strukturēto datu iestatījumi saglabāti."
+
+#: src/index.js
+msgid "Could not save Schema settings."
+msgstr "Neizdevās saglabāt strukturēto datu iestatījumus."
+
+#: src/index.js
+msgid "Automatically add structured data to published posts and pages."
+msgstr "Automātiski pievienot strukturētos datus publicētiem rakstiem un lapām."
+
+#: src/index.js
+msgid "Enable automatic Schema"
+msgstr "Ieslēgt automātiskos strukturētos datus"
+
+#: src/index.js
+msgid "Posts use BlogPosting; pages use WebPage."
+msgstr "Rakstiem izmanto BlogPosting, lapām — WebPage."
+
+#: src/index.js
+msgid "Could not load dashboard statistics."
+msgstr "Neizdevās ielādēt pārskata statistiku."
+
+#: src/index.js
+msgid "Published posts"
+msgstr "Publicētie raksti"
+
+#: src/index.js
+msgid "Published pages"
+msgstr "Publicētās lapas"
+
+#: src/index.js
+msgid "SEO titles completed"
+msgstr "Aizpildītie SEO virsraksti"
+
+#: src/index.js
+msgid "Meta descriptions completed"
+msgstr "Aizpildītie meta apraksti"
+
+#: src/index.js
+msgid "Missing SEO titles"
+msgstr "Trūkst SEO virsrakstu"
+
+#: src/index.js
+msgid "Missing meta descriptions"
+msgstr "Trūkst meta aprakstu"
+
+#: src/index.js
+msgid "Published posts and pages:"
+msgstr "Publicētie raksti un lapas:"
+
+#: src/index.js
+msgid "Smart Schema:"
+msgstr "Viedie strukturētie dati:"
+
+#: src/index.js
+msgid "Enabled"
+msgstr "Ieslēgts"
+
+#: src/index.js
+msgid "Disabled"
+msgstr "Izslēgts"
+
+#: src/index.js
+msgid "Manage Schema"
+msgstr "Pārvaldīt strukturētos datus"
+
+#: src/index.js
+msgid "Edit posts"
+msgstr "Rediģēt rakstus"
+
+#: src/index.js
+msgid "Edit pages"
+msgstr "Rediģēt lapas"
+
+#: src/index.js
+msgid "Counts include published posts and pages only."
+msgstr "Statistikā iekļauti tikai publicētie raksti un lapas."
+
+#: src/index.js
+msgid "All published content"
+msgstr "Viss publicētais saturs"
+
+#: src/index.js
+msgid "Posts and pages"
+msgstr "Raksti un lapas"
+
+#: src/index.js
+msgid "Posts"
+msgstr "Raksti"
+
+#: src/index.js
+msgid "Pages"
+msgstr "Lapas"
+
+#: src/index.js
+msgid "Show"
+msgstr "Rādīt"
+
+#: src/index.js
+msgid "Content type"
+msgstr "Satura veids"
+
+#: src/index.js
+msgid "Could not load content."
+msgstr "Neizdevās ielādēt saturu."
+
+#: src/index.js
+msgid "Matching items:"
+msgstr "Atrasti ieraksti:"
+
+#: src/index.js
+msgid "Title"
+msgstr "Virsraksts"
+
+#: src/index.js
+msgid "Type"
+msgstr "Veids"
+
+#: src/index.js
+msgid "SEO title"
+msgstr "SEO virsraksts"
+
+#: src/index.js
+msgid "Meta description"
+msgstr "Meta apraksts"
+
+#: src/index.js
+msgid "Action"
+msgstr "Darbība"
+
+#: src/index.js
+msgid "Untitled"
+msgstr "Bez virsraksta"
+
+#: src/index.js
+msgid "Post"
+msgstr "Raksts"
+
+#: src/index.js
+msgid "Page"
+msgstr "Lapa"
+
+#: src/index.js
+msgid "Added"
+msgstr "Pievienots"
+
+#: src/index.js
+msgid "Missing"
+msgstr "Trūkst"
+
+#: src/index.js
+msgid "Edit"
+msgstr "Rediģēt"
+
+#: src/index.js
+msgid "No matching content found."
+msgstr "Atbilstoši ieraksti nav atrasti."
+
+#: src/index.js
+msgid "Previous"
+msgstr "Iepriekšējā"
+
+#: src/index.js
+msgid "Next"
+msgstr "Nākamā"
+
+#: src/index.js
+msgid "Quick edit"
+msgstr "Ātri rediģēt"
+
+#: src/index.js
+msgid "Save changes"
+msgstr "Saglabāt izmaiņas"
+
+#: src/index.js
+msgid "Cancel"
+msgstr "Atcelt"
+
+#: src/index.js
+msgid "Could not save metadata."
+msgstr "Neizdevās saglabāt metadatus."
+
+#: src/index.js
+msgid "Missing SEO title"
+msgstr "Trūkst SEO virsraksta"
+
+#: src/index.js
+msgid "SEO title may be too short"
+msgstr "SEO virsraksts var būt pārāk īss"
+
+#: src/index.js
+msgid "SEO title may be too long"
+msgstr "SEO virsraksts var būt pārāk garš"
+
+#: src/index.js
+msgid "Missing meta description"
+msgstr "Trūkst meta apraksta"
+
+#: src/index.js
+msgid "Meta description may be too short"
+msgstr "Meta apraksts var būt pārāk īss"
+
+#: src/index.js
+msgid "Meta description may be too long"
+msgstr "Meta apraksts var būt pārāk garš"
+
+#: src/index.js
+msgid "Review H1 heading (theme may provide it)"
+msgstr "Pārskatīt H1 virsrakstu (to var nodrošināt tēma)"
+
+#: src/index.js
+msgid "Review image alternative text"
+msgstr "Pārskatīt attēlu alternatīvo tekstu"
+
+#: src/index.js
+msgid "Checks published posts and pages in batches of 20. Lengths are guidance, not SEO scores."
+msgstr "Publicētos rakstus un lapas pārbauda pa 20. Garuma norādes nav SEO vērtējums."
+
+#: src/index.js
+msgid "H1 and image checks inspect stored content, not the final theme output."
+msgstr "H1 un attēlu pārbaudes izmanto saglabāto saturu, nevis tēmas gala HTML."
+
+#: src/index.js
+msgid "Show only items with findings"
+msgstr "Rādīt tikai ierakstus ar atradumiem"
+
+#: src/index.js
+msgid "Could not load SEO audit."
+msgstr "Neizdevās ielādēt SEO auditu."
+
+#: src/index.js
+msgid "Published content:"
+msgstr "Publicētais saturs:"
+
+#: src/index.js
+msgid "Findings"
+msgstr "Atradumi"
+
+#: src/index.js
+msgid "No findings"
+msgstr "Nav atradumu"
+
+#: src/index.js
+msgid "No findings on this page."
+msgstr "Šajā lapā nav atradumu."
+
+#: src/index.js
+msgid "Needs attention"
+msgstr "Jānovērš"
+
+#: src/index.js
+msgid "Recommendations"
+msgstr "Ieteikumi"
+
+#: src/index.js
+msgid "The content is empty."
+msgstr "Saturs ir tukšs."
+
+#: src/index.js
+msgid "Review the introduction: explain the subject clearly near the beginning."
+msgstr "Pārskati ievadu un skaidri izskaidro tēmu jau sākumā."
+
+#: src/index.js
+msgid "Consider dividing longer content into descriptive sections."
+msgstr "Apsver garāka satura sadalīšanu skaidrās sadaļās."
+
+#: src/index.js
+msgid "Consider adding a question-and-answer section if relevant."
+msgstr "Ja tas ir noderīgi, apsver jautājumu un atbilžu sadaļu."
+
+#: src/index.js
+msgid "Content structure review for humans and answer systems. This does not predict AI citations or search rankings."
+msgstr "Satura struktūras pārskats lasītājiem un atbilžu sistēmām. Tas neprognozē MI atsauces vai meklēšanas pozīcijas."
+
+#: src/index.js
+msgid "Checks saved WordPress content; dynamic blocks and themes may produce different final HTML."
+msgstr "Pārbauda saglabāto WordPress saturu. Dinamiskie bloki un tēmas var veidot atšķirīgu gala HTML."
+
+#: src/index.js
+msgid "Show only content with suggestions"
+msgstr "Rādīt tikai saturu ar ieteikumiem"
+
+#: src/index.js
+msgid "Could not load content review."
+msgstr "Neizdevās ielādēt satura pārskatu."
+
+#: src/index.js
+msgid "Content structure"
+msgstr "Satura struktūra"
+
+#: src/index.js
+msgid "Suggestions"
+msgstr "Ieteikumi"
+
+#: src/index.js
+msgid "Characters:"
+msgstr "Rakstzīmes:"
+
+#: src/index.js
+msgid "Section headings:"
+msgstr "Sadaļu virsraksti:"
+
+#: src/index.js
+msgid "Question headings:"
+msgstr "Jautājumu virsraksti:"
+
+#: src/index.js
+msgid "No suggestions"
+msgstr "Nav ieteikumu"
+
+#: src/index.js
+msgid "No matching content on this page."
+msgstr "Šajā lapā nav atbilstoša satura."
+
+#: src/index.js
+msgid "Import SEO metadata from another plugin without deleting its data or replacing populated SEO-TidY fields."
+msgstr "Importē SEO metadatus no cita spraudņa, nedzēšot avota datus un nepārrakstot aizpildītos SEO-TidY laukus."
+
+#: src/index.js
+msgid "Only published posts and pages are included. Unresolved template variables are skipped."
+msgstr "Iekļauti tikai publicētie raksti un lapas. Neatrisināti veidņu mainīgie tiek izlaisti."
+
+#: src/index.js
+msgid "Source plugin"
+msgstr "Avota spraudnis"
+
+#: src/index.js
+msgid "Potential SEO titles:"
+msgstr "Potenciālie SEO virsraksti:"
+
+#: src/index.js
+msgid "Potential meta descriptions:"
+msgstr "Potenciālie meta apraksti:"
+
+#: src/index.js
+msgid "Preview counts may include values that are skipped during import."
+msgstr "Priekšskatījuma skaits var ietvert vērtības, kuras imports izlaidīs."
+
+#: src/index.js
+msgid "I confirm that I want to import the available metadata."
+msgstr "Apstiprinu, ka vēlos importēt pieejamos metadatus."
+
+#: src/index.js
+msgid "Import next 20 posts or pages"
+msgstr "Importēt nākamos 20 rakstus vai lapas"
+
+#: src/index.js
+msgid "Processed:"
+msgstr "Apstrādāti:"
+
+#: src/index.js
+msgid "Titles imported:"
+msgstr "Importēti virsraksti:"
+
+#: src/index.js
+msgid "Descriptions imported:"
+msgstr "Importēti apraksti:"
+
+#: src/index.js
+msgid "Migration finished."
+msgstr "Migrācija pabeigta."
+
+#: src/index.js
+msgid "Migration request failed. You can retry safely."
+msgstr "Migrācijas pieprasījums neizdevās. Vari droši mēģināt vēlreiz."
+
+#: src/index.js
+msgid "Report an issue"
+msgstr "Ziņot par problēmu"
+
+#: src/index.js
+msgid "Enable SEO title output"
+msgstr "Ieslēgt SEO virsraksta izvadi"
+
+#: src/index.js
+msgid "Use custom SEO titles on published posts and pages."
+msgstr "Izmantot pielāgotos SEO virsrakstus publicētajos rakstos un lapās."
+
+#: src/index.js
+msgid "Enable meta description output"
+msgstr "Ieslēgt meta apraksta izvadi"
+
+#: src/index.js
+msgid "Output saved meta descriptions in the HTML head."
+msgstr "Izvadīt saglabātos meta aprakstus HTML galvenē."
+
+#: src/index.js
+msgid "Enable H1 review suggestions"
+msgstr "Ieslēgt H1 pārbaudes ieteikumus"
+
+#: src/index.js
+msgid "Show optional H1 findings in the SEO audit."
+msgstr "Rādīt neobligātos H1 ieteikumus SEO auditā."
+
+#: src/index.js
+msgid "Manage SEO-TidY output and audit preferences."
+msgstr "Pārvaldi SEO-TidY izvades un audita iestatījumus."
+
+#: src/index.js
+msgid "Disabling output keeps your saved SEO metadata."
+msgstr "Izvades izslēgšana saglabā esošos SEO metadatus."
+
+#: src/index.js
+msgid "Could not load or save settings."
+msgstr "Neizdevās ielādēt vai saglabāt iestatījumus."
+
+#: src/index.js
+msgid "Not customized"
+msgstr "Nav pielāgots"
+
+#: src/index.js
+msgid "Consider adding more detail"
+msgstr "Ieteicams papildināt tekstu"
+
+#: src/index.js
+msgid "Consider shortening the text"
+msgstr "Ieteicams saīsināt tekstu"
+
+#: src/index.js
+msgid "Within the suggested range"
+msgstr "Ieteicamajā garuma intervālā"
+
+#: src/index.js
+msgid "Using the WordPress title"
+msgstr "Tiek izmantots WordPress virsraksts"
+
+#: src/index.js
+msgid "Search result preview"
+msgstr "Meklēšanas rezultāta priekšskatījums"
+
+#: src/index.js
+msgid "No custom meta description."
+msgstr "Nav pielāgota meta apraksta."
+
+#: src/index.js
+msgid "Illustrative only. Search engines may show different text."
+msgstr "Tikai ilustratīvs priekšskatījums. Meklētājprogrammas var rādīt citu tekstu."
+
+#: src/index.js
+msgid "Using the WordPress title. A custom SEO title is optional."
+msgstr "Tiek izmantots WordPress virsraksts. Pielāgots SEO virsraksts nav obligāts."
+
+#: src/index.js
+msgid "Duplicate SEO title"
+msgstr "Dublēts SEO virsraksts"
+
+#: src/index.js
+msgid "Duplicate meta description"
+msgstr "Dublēts meta apraksts"
+
+#: src/index.js
+msgid "Search engine indexing is discouraged site-wide"
+msgstr "Vietnes iestatījumos nav ieteikta indeksēšana meklētājprogrammās"
+
+#: src/index.js
+msgid "Review this page noindex setting"
+msgstr "Pārskatīt šīs lapas noindex iestatījumu"
+
+#: src/index.js
+msgid "Consider adding internal links to other pages"
+msgstr "Apsver iespēju pievienot iekšējās saites uz citām lapām"
+
+#: src/index.js
+msgid "No incoming links found from other published content"
+msgstr "Nav atrastas ienākošas saites no cita publicēta satura"
+
+#: src/index.js
+msgid "Incoming link checks cover up to 200 published posts and pages. Links added by themes or dynamic blocks are not included."
+msgstr "Ienākošās saites pārbauda vietnēs ar līdz 200 publicētiem rakstiem un lapām. Tēmas un dinamisko bloku saites netiek ieskaitītas."
+
+#: src/index.js
+msgid "Incoming link check skipped for this site."
+msgstr "Ienākošo saišu pārbaude šai vietnei ir izlaista."
+
+#: src/index.js
+msgid "Review links to missing or unpublished WordPress content"
+msgstr "Pārskatīt saites uz neesošiem vai nepublicētiem WordPress ierakstiem"
+
+#: src/index.js
+msgid "Affected links:"
+msgstr "Saites, kurām jāpievērš uzmanība:"
