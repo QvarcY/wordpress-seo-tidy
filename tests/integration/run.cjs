@@ -141,6 +141,7 @@ async function main() {
         'metadata-smoke.php',
         'metadata-output-smoke.php',
         'audit-smoke.php',
+        'audit-full-scan.php',
     ]) {
         console.log(`\n=== ${file} ===`);
 
