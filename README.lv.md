@@ -74,3 +74,11 @@ Ziedojumi neatslēgs nekādu papildu funkcionalitāti.
 
 SEO-TidY negarantēs meklēšanas pozīcijas,
 indeksēšanu, MI citātus vai iekļūšanu MI atbildēs.
+
+### Atbalsti SEO-TidY
+
+- GitHub: https://github.com/QvarcY
+- Kļūdu pieteikumi: https://github.com/QvarcY/wordpress-seo-tidy/issues
+- Buy Me a Coffee: https://buymeacoffee.com/craftin
+
+Ziedojumi ir brīvprātīgi. Visas funkcijas paliek bezmaksas.

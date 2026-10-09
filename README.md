@@ -70,3 +70,11 @@ No functionality will be locked behind donations.
 
 SEO-TidY will not guarantee search rankings, indexing,
 AI citations or inclusion in AI-generated answers.
+
+### Support SEO-TidY
+
+- GitHub: https://github.com/QvarcY
+- Issues: https://github.com/QvarcY/wordpress-seo-tidy/issues
+- Buy Me a Coffee: https://buymeacoffee.com/craftin
+
+Donations are voluntary. All features remain free.

@@ -936,6 +936,173 @@ function AnswerReadinessOverview() {
     );
 }
 
+
+function MigrationOverview() {
+    const [source, setSource] = useState('yoast');
+    const [preview, setPreview] = useState(null);
+    const [cursor, setCursor] = useState(0);
+    const [confirmed, setConfirmed] = useState(false);
+    const [busy, setBusy] = useState(false);
+    const [finished, setFinished] = useState(false);
+    const [error, setError] = useState(false);
+    const [titles, setTitles] = useState(0);
+    const [descriptions, setDescriptions] = useState(0);
+    const [processed, setProcessed] = useState(0);
+
+    useEffect(() => {
+        let active = true;
+        setPreview(null);
+        setCursor(0);
+        setConfirmed(false);
+        setFinished(false);
+        setError(false);
+        setTitles(0);
+        setDescriptions(0);
+        setProcessed(0);
+
+        apiFetch({ path: '/seo-tidy/v1/migration?source=' + source })
+            .then((result) => {
+                if (active) setPreview(result);
+            })
+            .catch(() => {
+                if (active) setError(true);
+            });
+
+        return () => { active = false; };
+    }, [source]);
+
+    const importNext = async () => {
+        setBusy(true);
+        setError(false);
+
+        try {
+            const result = await apiFetch({
+                path: '/seo-tidy/v1/migration',
+                method: 'POST',
+                data: { source, cursor },
+            });
+
+            setCursor(result.cursor);
+            setProcessed((value) => value + result.processed);
+            setTitles((value) => value + result.importedTitles);
+            setDescriptions((value) => value + result.importedDescriptions);
+            setFinished(result.done);
+        } catch {
+            setError(true);
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    return (
+        <div>
+            <p>
+                {__('Import SEO metadata from another plugin without deleting its data or replacing populated SEO-TidY fields.', 'seo-tidy')}
+            </p>
+            <p>
+                {__('Only published posts and pages are included. Unresolved template variables are skipped.', 'seo-tidy')}
+            </p>
+
+            <label>
+                {__('Source plugin', 'seo-tidy')}{' '}
+                <select
+                    value={source}
+                    disabled={busy || processed > 0}
+                    onChange={(event) => setSource(event.target.value)}
+                >
+                    <option value="yoast">Yoast SEO</option>
+                    <option value="rank_math">Rank Math</option>
+                </select>
+            </label>
+
+            {preview && (
+                <div style={{ marginTop: '16px' }}>
+                    <p>
+                        {__('Potential SEO titles:', 'seo-tidy')}
+                        {' '}<strong>{preview.titles}</strong>
+                    </p>
+                    <p>
+                        {__('Potential meta descriptions:', 'seo-tidy')}
+                        {' '}<strong>{preview.descriptions}</strong>
+                    </p>
+                    <p>
+                        {__('Preview counts may include values that are skipped during import.', 'seo-tidy')}
+                    </p>
+
+                    {!finished && (
+                        <>
+                            <ToggleControl
+                                label={__('I confirm that I want to import the available metadata.', 'seo-tidy')}
+                                checked={confirmed}
+                                disabled={busy || processed > 0}
+                                onChange={setConfirmed}
+                            />
+                            <Button
+                                variant="primary"
+                                disabled={!confirmed || busy}
+                                isBusy={busy}
+                                onClick={importNext}
+                            >
+                                {__('Import next 20 posts or pages', 'seo-tidy')}
+                            </Button>
+                        </>
+                    )}
+
+                    {processed > 0 && (
+                        <p>
+                            {__('Processed:', 'seo-tidy')} {processed}
+                            {' | '}
+                            {__('Titles imported:', 'seo-tidy')} {titles}
+                            {' | '}
+                            {__('Descriptions imported:', 'seo-tidy')} {descriptions}
+                        </p>
+                    )}
+
+                    {finished && (
+                        <Notice status="success" isDismissible={false}>
+                            {__('Migration finished.', 'seo-tidy')}
+                        </Notice>
+                    )}
+                </div>
+            )}
+
+            {!preview && !error && <Spinner />}
+
+            {error && (
+                <Notice status="error" isDismissible={false}>
+                    {__('Migration request failed. You can retry safely.', 'seo-tidy')}
+                </Notice>
+            )}
+        </div>
+    );
+}
+
+function SupportLinks() {
+    return (
+        <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '16px',
+            marginTop: '24px',
+            paddingTop: '12px',
+            borderTop: '1px solid #ddd',
+        }}>
+            <a href="https://github.com/QvarcY"
+                target="_blank" rel="noopener noreferrer">
+                GitHub ? QvarcY
+            </a>
+            <a href="https://github.com/QvarcY/wordpress-seo-tidy/issues"
+                target="_blank" rel="noopener noreferrer">
+                {__('Report an issue', 'seo-tidy')}
+            </a>
+            <a href="https://buymeacoffee.com/craftin"
+                target="_blank" rel="noopener noreferrer">
+                Buy Me a Coffee
+            </a>
+        </div>
+    );
+}
+
 function App() {
     const [active, setActive] = useState('dashboard');
     const [metadataFilter, setMetadataFilter] = useState('all');
@@ -971,7 +1138,9 @@ function App() {
                 <CardBody>
                     <h2>{current.label}</h2>
 
-                    {active === 'answers' ? (
+                    {active === 'migration' ? (
+                        <MigrationOverview />
+                    ) : active === 'answers' ? (
                         <AnswerReadinessOverview />
                     ) : active === 'audit' ? (
                         <SEOAuditOverview />
@@ -994,6 +1163,7 @@ function App() {
                     )}
                 </CardBody>
             </Card>
+            <SupportLinks />
         </div>
     );
 }

@@ -436,3 +436,59 @@ msgstr "Nav ieteikumu"
 #: src/index.js
 msgid "No matching content on this page."
 msgstr "Šajā lapā nav atbilstoša satura."
+
+#: src/index.js
+msgid "Import SEO metadata from another plugin without deleting its data or replacing populated SEO-TidY fields."
+msgstr "Importē SEO metadatus no cita spraudņa, nedzēšot avota datus un nepārrakstot aizpildītos SEO-TidY laukus."
+
+#: src/index.js
+msgid "Only published posts and pages are included. Unresolved template variables are skipped."
+msgstr "Iekļauti tikai publicētie raksti un lapas. Neatrisināti veidņu mainīgie tiek izlaisti."
+
+#: src/index.js
+msgid "Source plugin"
+msgstr "Avota spraudnis"
+
+#: src/index.js
+msgid "Potential SEO titles:"
+msgstr "Potenciālie SEO virsraksti:"
+
+#: src/index.js
+msgid "Potential meta descriptions:"
+msgstr "Potenciālie meta apraksti:"
+
+#: src/index.js
+msgid "Preview counts may include values that are skipped during import."
+msgstr "Priekšskatījuma skaits var ietvert vērtības, kuras imports izlaidīs."
+
+#: src/index.js
+msgid "I confirm that I want to import the available metadata."
+msgstr "Apstiprinu, ka vēlos importēt pieejamos metadatus."
+
+#: src/index.js
+msgid "Import next 20 posts or pages"
+msgstr "Importēt nākamos 20 rakstus vai lapas"
+
+#: src/index.js
+msgid "Processed:"
+msgstr "Apstrādāti:"
+
+#: src/index.js
+msgid "Titles imported:"
+msgstr "Importēti virsraksti:"
+
+#: src/index.js
+msgid "Descriptions imported:"
+msgstr "Importēti apraksti:"
+
+#: src/index.js
+msgid "Migration finished."
+msgstr "Migrācija pabeigta."
+
+#: src/index.js
+msgid "Migration request failed. You can retry safely."
+msgstr "Migrācijas pieprasījums neizdevās. Vari droši mēģināt vēlreiz."
+
+#: src/index.js
+msgid "Report an issue"
+msgstr "Ziņot par problēmu"
