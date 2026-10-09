@@ -102,6 +102,101 @@ final class SEOAudit
         return '';
     }
 
+
+    private static function hasInternalLink(string $content, int $postId): bool
+    {
+        $site = wp_parse_url(home_url('/'));
+        $siteHost = strtolower((string) ($site['host'] ?? ''));
+
+        if ($siteHost === '') {
+            return false;
+        }
+
+        $current = wp_parse_url(get_permalink($postId));
+        $currentPath = rtrim(
+            (string) ($current['path'] ?? '/'),
+            '/'
+        ) . '/';
+
+        $processor = new \WP_HTML_Tag_Processor($content);
+
+        while ($processor->next_tag('A')) {
+            $href = $processor->get_attribute('href');
+
+            if (!is_string($href)) {
+                continue;
+            }
+
+            $href = trim($href);
+
+            if (
+                $href === '' ||
+                str_starts_with($href, '#') ||
+                str_starts_with($href, '?')
+            ) {
+                continue;
+            }
+
+            $parts = wp_parse_url($href);
+
+            if (!is_array($parts)) {
+                continue;
+            }
+
+            $scheme = strtolower((string) ($parts['scheme'] ?? ''));
+
+            if (
+                $scheme !== '' &&
+                !in_array($scheme, ['http', 'https'], true)
+            ) {
+                continue;
+            }
+
+            $host = strtolower((string) ($parts['host'] ?? ''));
+
+            if ($host !== '' && $host !== $siteHost) {
+                continue;
+            }
+
+            if (
+                $host !== '' &&
+                isset($parts['port']) &&
+                (int) $parts['port'] !== (int) (
+                    $site['port'] ?? (
+                        ($site['scheme'] ?? 'http') === 'https' ? 443 : 80
+                    )
+                )
+            ) {
+                continue;
+            }
+
+            $path = (string) ($parts['path'] ?? '');
+
+            if ($host !== '' && $path === '') {
+                $path = '/';
+            }
+
+            if ($path === '') {
+                continue;
+            }
+
+            if (
+                $host !== '' ||
+                str_starts_with($href, '/')
+            ) {
+                $linkPath = rtrim($path, '/') . '/';
+
+                if ($linkPath === $currentPath) {
+                    continue;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     private static function needsAltReview(string $content): bool
     {
         $processor = new \WP_HTML_Tag_Processor($content);
@@ -217,6 +312,15 @@ final class SEOAudit
             }
 
             $content = (string) $post->post_content;
+
+            if (
+                trim(wp_strip_all_tags($content)) !== '' &&
+                !self::hasInternalLink($content, (int) $id)
+            ) {
+                $issues[] = 'review_internal_links';
+            }
+
+
 
             // Tēma var pievienot H1 atsevišķi
             if (

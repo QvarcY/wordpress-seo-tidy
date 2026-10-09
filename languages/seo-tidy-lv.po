@@ -580,3 +580,7 @@ msgstr "Vietnes iestatījumos nav ieteikta indeksēšana meklētājprogrammās"
 #: src/index.js
 msgid "Review this page noindex setting"
 msgstr "Pārskatīt šīs lapas noindex iestatījumu"
+
+#: src/index.js
+msgid "Consider adding internal links to other pages"
+msgstr "Apsver iespēju pievienot iekšējās saites uz citām lapām"

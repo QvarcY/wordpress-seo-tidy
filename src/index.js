@@ -624,6 +624,7 @@ const auditLabels = {
     duplicate_description: __('Duplicate meta description', 'seo-tidy'),
     site_noindex: __('Search engine indexing is discouraged site-wide', 'seo-tidy'),
     review_noindex: __('Review this page noindex setting', 'seo-tidy'),
+    review_internal_links: __('Consider adding internal links to other pages', 'seo-tidy'),
     review_image_alt: __('Review image alternative text', 'seo-tidy'),
 };
 
