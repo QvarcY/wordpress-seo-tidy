@@ -1,1 +1,384 @@
-{"translation-revision-date":"2026-10-08T22:42:31+00:00","generator":"WP-CLI/2.12.0","source":"build/index.js","domain":"messages","locale_data":{"messages":{"":{"domain":"messages","lang":"lv","plural-forms":"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n!=0 ? 1 : 2);"},"Dashboard":["Pārskats"],"Metadata":["Metadati"],"Smart Schema":["Viedie strukturētie dati"],"SEO Audit":["SEO audits"],"Answer Readiness":["Gatavība MI atbildēm"],"Migration":["Migrācija"],"Settings":["Iestatījumi"],"SEO and AI search readiness for WordPress.":["SEO un gatavība MI meklēšanai WordPress vidē."],"SEO-TidY navigation":["SEO-TidY navigācija"],"SEO-TidY is under development. SEO analysis is not available yet.":["SEO-TidY tiek izstrādāts. SEO analīze vēl nav pieejama."],"This feature is planned and not available yet.":["Šī funkcija ir plānota un vēl nav pieejama."],"Could not load Schema settings.":["neizdevās ielādēt strukturēto datu iestatījumus."],"Schema settings saved.":["Strukturēto datu iestatījumi saglabāti."],"Could not save Schema settings.":["Neizdevās saglabāt strukturēto datu iestatījumus."],"Automatically add structured data to published posts and pages.":["Automātiski pievienot strukturētos datus publicētiem rakstiem un lapām."],"Enable automatic Schema":["Ieslēgt automātiskos strukturētos datus"],"Posts use BlogPosting; pages use WebPage.":["Rakstiem izmanto BlogPosting, lapām — WebPage."],"Could not load dashboard statistics.":["Neizdevās ielādēt pārskata statistiku."],"Published posts":["Publicētie raksti"],"Published pages":["Publicētās lapas"],"SEO titles completed":["Aizpildītie SEO virsraksti"],"Meta descriptions completed":["Aizpildītie meta apraksti"],"Missing SEO titles":["Trūkst SEO virsrakstu"],"Missing meta descriptions":["Trūkst meta aprakstu"],"Published posts and pages:":["Publicētie raksti un lapas:"],"Smart Schema:":["Viedie strukturētie dati:"],"Enabled":["Ieslēgts"],"Disabled":["Izslēgts"],"Manage Schema":["Pārvaldīt strukturētos datus"],"Edit posts":["Rediģēt rakstus"],"Edit pages":["Rediģēt lapas"],"Counts include published posts and pages only.":["Statistikā iekļauti tikai publicētie raksti un lapas."],"All published content":["Viss publicētais saturs"],"Posts and pages":["Raksti un lapas"],"Posts":["Raksti"],"Pages":["Lapas"],"Show":["Rādīt"],"Content type":["Satura veids"],"Could not load content.":["Neizdevās ielādēt saturu."],"Matching items:":["Atrasti ieraksti:"],"Title":["Virsraksts"],"Type":["Veids"],"SEO title":["SEO virsraksts"],"Meta description":["Meta apraksts"],"Action":["Darbība"],"Untitled":["Bez virsraksta"],"Post":["Raksts"],"Page":["Lapa"],"Added":["Pievienots"],"Missing":["Trūkst"],"Edit":["Rediģēt"],"No matching content found.":["Atbilstoši ieraksti nav atrasti."],"Previous":["Iepriekšējā"],"Next":["Nākamā"],"Quick edit":["Ātri rediģēt"],"Save changes":["Saglabāt izmaiņas"],"Cancel":["Atcelt"],"Could not save metadata.":["Neizdevās saglabāt metadatus."],"Missing SEO title":["Trūkst SEO virsraksta"],"SEO title may be too short":["SEO virsraksts var būt pārāk īss"],"SEO title may be too long":["SEO virsraksts var būt pārāk garš"],"Missing meta description":["Trūkst meta apraksta"],"Meta description may be too short":["Meta apraksts var būt pārāk īss"],"Meta description may be too long":["Meta apraksts var būt pārāk garš"],"Review H1 heading (theme may provide it)":["Pārskatīt H1 virsrakstu (to var nodrošināt tēma)"],"Review image alternative text":["Pārskatīt attēlu alternatīvo tekstu"],"Checks published posts and pages in batches of 20. Lengths are guidance, not SEO scores.":["Publicētos rakstus un lapas pārbauda pa 20. Garuma norādes nav SEO vērtējums."],"H1 and image checks inspect stored content, not the final theme output.":["H1 un attēlu pārbaudes izmanto saglabāto saturu, nevis tēmas gala HTML."],"Show only items with findings":["Rādīt tikai ierakstus ar atradumiem"],"Could not load SEO audit.":["Neizdevās ielādēt SEO auditu."],"Published content:":["Publicētais saturs:"],"Findings":["Atradumi"],"No findings":["Nav atradumu"],"No findings on this page.":["Šajā lapā nav atradumu."],"Needs attention":["Jānovērš"],"Recommendations":["Ieteikumi"],"The content is empty.":["Saturs ir tukšs."],"Review the introduction: explain the subject clearly near the beginning.":["Pārskati ievadu un skaidri izskaidro tēmu jau sākumā."],"Consider dividing longer content into descriptive sections.":["Apsver garāka satura sadalīšanu skaidrās sadaļās."],"Consider adding a question-and-answer section if relevant.":["Ja tas ir noderīgi, apsver jautājumu un atbilžu sadaļu."],"Content structure review for humans and answer systems. This does not predict AI citations or search rankings.":["Satura struktūras pārskats lasītājiem un atbilžu sistēmām. Tas neprognozē MI atsauces vai meklēšanas pozīcijas."],"Checks saved WordPress content; dynamic blocks and themes may produce different final HTML.":["Pārbauda saglabāto WordPress saturu. Dinamiskie bloki un tēmas var veidot atšķirīgu gala HTML."],"Show only content with suggestions":["Rādīt tikai saturu ar ieteikumiem"],"Could not load content review.":["Neizdevās ielādēt satura pārskatu."],"Content structure":["Satura struktūra"],"Suggestions":["Ieteikumi"],"Characters:":["Rakstzīmes:"],"Section headings:":["Sadaļu virsraksti:"],"Question headings:":["Jautājumu virsraksti:"],"No suggestions":["Nav ieteikumu"],"No matching content on this page.":["Šajā lapā nav atbilstoša satura."],"Import SEO metadata from another plugin without deleting its data or replacing populated SEO-TidY fields.":["Importē SEO metadatus no cita spraudņa, nedzēšot avota datus un nepārrakstot aizpildītos SEO-TidY laukus."],"Only published posts and pages are included. Unresolved template variables are skipped.":["Iekļauti tikai publicētie raksti un lapas. Neatrisināti veidņu mainīgie tiek izlaisti."],"Source plugin":["Avota spraudnis"],"Potential SEO titles:":["Potenciālie SEO virsraksti:"],"Potential meta descriptions:":["Potenciālie meta apraksti:"],"Preview counts may include values that are skipped during import.":["Priekšskatījuma skaits var ietvert vērtības, kuras imports izlaidīs."],"I confirm that I want to import the available metadata.":["Apstiprinu, ka vēlos importēt pieejamos metadatus."],"Import next 20 posts or pages":["Importēt nākamos 20 rakstus vai lapas"],"Processed:":["Apstrādāti:"],"Titles imported:":["Importēti virsraksti:"],"Descriptions imported:":["Importēti apraksti:"],"Migration finished.":["Migrācija pabeigta."],"Migration request failed. You can retry safely.":["Migrācijas pieprasījums neizdevās. Vari droši mēģināt vēlreiz."],"Report an issue":["Ziņot par problēmu"],"Enable SEO title output":["Ieslēgt SEO virsraksta izvadi"],"Use custom SEO titles on published posts and pages.":["Izmantot pielāgotos SEO virsrakstus publicētajos rakstos un lapās."],"Enable meta description output":["Ieslēgt meta apraksta izvadi"],"Output saved meta descriptions in the HTML head.":["Izvadīt saglabātos meta aprakstus HTML galvenē."],"Enable H1 review suggestions":["Ieslēgt H1 pārbaudes ieteikumus"],"Show optional H1 findings in the SEO audit.":["Rādīt neobligātos H1 ieteikumus SEO auditā."],"Manage SEO-TidY output and audit preferences.":["Pārvaldi SEO-TidY izvades un audita iestatījumus."],"Disabling output keeps your saved SEO metadata.":["Izvades izslēgšana saglabā esošos SEO metadatus."],"Could not load or save settings.":["Neizdevās ielādēt vai saglabāt iestatījumus."]}}}
+{
+  "translation-revision-date": "2026-10-08T22:42:31+00:00",
+  "generator": "WP-CLI/2.12.0",
+  "source": "build/index.js",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "lang": "lv",
+        "plural-forms": "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n!=0 ? 1 : 2);"
+      },
+      "Dashboard": [
+        "Pārskats"
+      ],
+      "Metadata": [
+        "Metadati"
+      ],
+      "Smart Schema": [
+        "Viedie strukturētie dati"
+      ],
+      "SEO Audit": [
+        "SEO audits"
+      ],
+      "Answer Readiness": [
+        "Gatavība MI atbildēm"
+      ],
+      "Migration": [
+        "Migrācija"
+      ],
+      "Settings": [
+        "Iestatījumi"
+      ],
+      "SEO and AI search readiness for WordPress.": [
+        "SEO un gatavība MI meklēšanai WordPress vidē."
+      ],
+      "SEO-TidY navigation": [
+        "SEO-TidY navigācija"
+      ],
+      "SEO-TidY is under development. SEO analysis is not available yet.": [
+        "SEO-TidY tiek izstrādāts. SEO analīze vēl nav pieejama."
+      ],
+      "This feature is planned and not available yet.": [
+        "Šī funkcija ir plānota un vēl nav pieejama."
+      ],
+      "Could not load Schema settings.": [
+        "neizdevās ielādēt strukturēto datu iestatījumus."
+      ],
+      "Schema settings saved.": [
+        "Strukturēto datu iestatījumi saglabāti."
+      ],
+      "Could not save Schema settings.": [
+        "Neizdevās saglabāt strukturēto datu iestatījumus."
+      ],
+      "Automatically add structured data to published posts and pages.": [
+        "Automātiski pievienot strukturētos datus publicētiem rakstiem un lapām."
+      ],
+      "Enable automatic Schema": [
+        "Ieslēgt automātiskos strukturētos datus"
+      ],
+      "Posts use BlogPosting; pages use WebPage.": [
+        "Rakstiem izmanto BlogPosting, lapām — WebPage."
+      ],
+      "Could not load dashboard statistics.": [
+        "Neizdevās ielādēt pārskata statistiku."
+      ],
+      "Published posts": [
+        "Publicētie raksti"
+      ],
+      "Published pages": [
+        "Publicētās lapas"
+      ],
+      "SEO titles completed": [
+        "Aizpildītie SEO virsraksti"
+      ],
+      "Meta descriptions completed": [
+        "Aizpildītie meta apraksti"
+      ],
+      "Missing SEO titles": [
+        "Trūkst SEO virsrakstu"
+      ],
+      "Missing meta descriptions": [
+        "Trūkst meta aprakstu"
+      ],
+      "Published posts and pages:": [
+        "Publicētie raksti un lapas:"
+      ],
+      "Smart Schema:": [
+        "Viedie strukturētie dati:"
+      ],
+      "Enabled": [
+        "Ieslēgts"
+      ],
+      "Disabled": [
+        "Izslēgts"
+      ],
+      "Manage Schema": [
+        "Pārvaldīt strukturētos datus"
+      ],
+      "Edit posts": [
+        "Rediģēt rakstus"
+      ],
+      "Edit pages": [
+        "Rediģēt lapas"
+      ],
+      "Counts include published posts and pages only.": [
+        "Statistikā iekļauti tikai publicētie raksti un lapas."
+      ],
+      "All published content": [
+        "Viss publicētais saturs"
+      ],
+      "Posts and pages": [
+        "Raksti un lapas"
+      ],
+      "Posts": [
+        "Raksti"
+      ],
+      "Pages": [
+        "Lapas"
+      ],
+      "Show": [
+        "Rādīt"
+      ],
+      "Content type": [
+        "Satura veids"
+      ],
+      "Could not load content.": [
+        "Neizdevās ielādēt saturu."
+      ],
+      "Matching items:": [
+        "Atrasti ieraksti:"
+      ],
+      "Title": [
+        "Virsraksts"
+      ],
+      "Type": [
+        "Veids"
+      ],
+      "SEO title": [
+        "SEO virsraksts"
+      ],
+      "Meta description": [
+        "Meta apraksts"
+      ],
+      "Action": [
+        "Darbība"
+      ],
+      "Untitled": [
+        "Bez virsraksta"
+      ],
+      "Post": [
+        "Raksts"
+      ],
+      "Page": [
+        "Lapa"
+      ],
+      "Added": [
+        "Pievienots"
+      ],
+      "Missing": [
+        "Trūkst"
+      ],
+      "Edit": [
+        "Rediģēt"
+      ],
+      "No matching content found.": [
+        "Atbilstoši ieraksti nav atrasti."
+      ],
+      "Previous": [
+        "Iepriekšējā"
+      ],
+      "Next": [
+        "Nākamā"
+      ],
+      "Quick edit": [
+        "Ātri rediģēt"
+      ],
+      "Save changes": [
+        "Saglabāt izmaiņas"
+      ],
+      "Cancel": [
+        "Atcelt"
+      ],
+      "Could not save metadata.": [
+        "Neizdevās saglabāt metadatus."
+      ],
+      "Missing SEO title": [
+        "Trūkst SEO virsraksta"
+      ],
+      "SEO title may be too short": [
+        "SEO virsraksts var būt pārāk īss"
+      ],
+      "SEO title may be too long": [
+        "SEO virsraksts var būt pārāk garš"
+      ],
+      "Missing meta description": [
+        "Trūkst meta apraksta"
+      ],
+      "Meta description may be too short": [
+        "Meta apraksts var būt pārāk īss"
+      ],
+      "Meta description may be too long": [
+        "Meta apraksts var būt pārāk garš"
+      ],
+      "Review H1 heading (theme may provide it)": [
+        "Pārskatīt H1 virsrakstu (to var nodrošināt tēma)"
+      ],
+      "Review image alternative text": [
+        "Pārskatīt attēlu alternatīvo tekstu"
+      ],
+      "Checks published posts and pages in batches of 20. Lengths are guidance, not SEO scores.": [
+        "Publicētos rakstus un lapas pārbauda pa 20. Garuma norādes nav SEO vērtējums."
+      ],
+      "H1 and image checks inspect stored content, not the final theme output.": [
+        "H1 un attēlu pārbaudes izmanto saglabāto saturu, nevis tēmas gala HTML."
+      ],
+      "Show only items with findings": [
+        "Rādīt tikai ierakstus ar atradumiem"
+      ],
+      "Could not load SEO audit.": [
+        "Neizdevās ielādēt SEO auditu."
+      ],
+      "Published content:": [
+        "Publicētais saturs:"
+      ],
+      "Findings": [
+        "Atradumi"
+      ],
+      "No findings": [
+        "Nav atradumu"
+      ],
+      "No findings on this page.": [
+        "Šajā lapā nav atradumu."
+      ],
+      "Needs attention": [
+        "Jānovērš"
+      ],
+      "Recommendations": [
+        "Ieteikumi"
+      ],
+      "The content is empty.": [
+        "Saturs ir tukšs."
+      ],
+      "Review the introduction: explain the subject clearly near the beginning.": [
+        "Pārskati ievadu un skaidri izskaidro tēmu jau sākumā."
+      ],
+      "Consider dividing longer content into descriptive sections.": [
+        "Apsver garāka satura sadalīšanu skaidrās sadaļās."
+      ],
+      "Consider adding a question-and-answer section if relevant.": [
+        "Ja tas ir noderīgi, apsver jautājumu un atbilžu sadaļu."
+      ],
+      "Content structure review for humans and answer systems. This does not predict AI citations or search rankings.": [
+        "Satura struktūras pārskats lasītājiem un atbilžu sistēmām. Tas neprognozē MI atsauces vai meklēšanas pozīcijas."
+      ],
+      "Checks saved WordPress content; dynamic blocks and themes may produce different final HTML.": [
+        "Pārbauda saglabāto WordPress saturu. Dinamiskie bloki un tēmas var veidot atšķirīgu gala HTML."
+      ],
+      "Show only content with suggestions": [
+        "Rādīt tikai saturu ar ieteikumiem"
+      ],
+      "Could not load content review.": [
+        "Neizdevās ielādēt satura pārskatu."
+      ],
+      "Content structure": [
+        "Satura struktūra"
+      ],
+      "Suggestions": [
+        "Ieteikumi"
+      ],
+      "Characters:": [
+        "Rakstzīmes:"
+      ],
+      "Section headings:": [
+        "Sadaļu virsraksti:"
+      ],
+      "Question headings:": [
+        "Jautājumu virsraksti:"
+      ],
+      "No suggestions": [
+        "Nav ieteikumu"
+      ],
+      "No matching content on this page.": [
+        "Šajā lapā nav atbilstoša satura."
+      ],
+      "Import SEO metadata from another plugin without deleting its data or replacing populated SEO-TidY fields.": [
+        "Importē SEO metadatus no cita spraudņa, nedzēšot avota datus un nepārrakstot aizpildītos SEO-TidY laukus."
+      ],
+      "Only published posts and pages are included. Unresolved template variables are skipped.": [
+        "Iekļauti tikai publicētie raksti un lapas. Neatrisināti veidņu mainīgie tiek izlaisti."
+      ],
+      "Source plugin": [
+        "Avota spraudnis"
+      ],
+      "Potential SEO titles:": [
+        "Potenciālie SEO virsraksti:"
+      ],
+      "Potential meta descriptions:": [
+        "Potenciālie meta apraksti:"
+      ],
+      "Preview counts may include values that are skipped during import.": [
+        "Priekšskatījuma skaits var ietvert vērtības, kuras imports izlaidīs."
+      ],
+      "I confirm that I want to import the available metadata.": [
+        "Apstiprinu, ka vēlos importēt pieejamos metadatus."
+      ],
+      "Import next 20 posts or pages": [
+        "Importēt nākamos 20 rakstus vai lapas"
+      ],
+      "Processed:": [
+        "Apstrādāti:"
+      ],
+      "Titles imported:": [
+        "Importēti virsraksti:"
+      ],
+      "Descriptions imported:": [
+        "Importēti apraksti:"
+      ],
+      "Migration finished.": [
+        "Migrācija pabeigta."
+      ],
+      "Migration request failed. You can retry safely.": [
+        "Migrācijas pieprasījums neizdevās. Vari droši mēģināt vēlreiz."
+      ],
+      "Report an issue": [
+        "Ziņot par problēmu"
+      ],
+      "Enable SEO title output": [
+        "Ieslēgt SEO virsraksta izvadi"
+      ],
+      "Use custom SEO titles on published posts and pages.": [
+        "Izmantot pielāgotos SEO virsrakstus publicētajos rakstos un lapās."
+      ],
+      "Enable meta description output": [
+        "Ieslēgt meta apraksta izvadi"
+      ],
+      "Output saved meta descriptions in the HTML head.": [
+        "Izvadīt saglabātos meta aprakstus HTML galvenē."
+      ],
+      "Enable H1 review suggestions": [
+        "Ieslēgt H1 pārbaudes ieteikumus"
+      ],
+      "Show optional H1 findings in the SEO audit.": [
+        "Rādīt neobligātos H1 ieteikumus SEO auditā."
+      ],
+      "Manage SEO-TidY output and audit preferences.": [
+        "Pārvaldi SEO-TidY izvades un audita iestatījumus."
+      ],
+      "Disabling output keeps your saved SEO metadata.": [
+        "Izvades izslēgšana saglabā esošos SEO metadatus."
+      ],
+      "Could not load or save settings.": [
+        "Neizdevās ielādēt vai saglabāt iestatījumus."
+      ],
+      "Not customized": [
+        "Nav pielāgots"
+      ],
+      "Consider adding more detail": [
+        "Ieteicams papildināt tekstu"
+      ],
+      "Consider shortening the text": [
+        "Ieteicams saīsināt tekstu"
+      ],
+      "Within the suggested range": [
+        "Ieteicamajā garuma intervālā"
+      ],
+      "Using the WordPress title": [
+        "Tiek izmantots WordPress virsraksts"
+      ],
+      "Search result preview": [
+        "Meklēšanas rezultāta priekšskatījums"
+      ],
+      "No custom meta description.": [
+        "Nav pielāgota meta apraksta."
+      ],
+      "Illustrative only. Search engines may show different text.": [
+        "Tikai ilustratīvs priekšskatījums. Meklētājprogrammas var rādīt citu tekstu."
+      ],
+      "Using the WordPress title. A custom SEO title is optional.": [
+        "Tiek izmantots WordPress virsraksts. Pielāgots SEO virsraksts nav obligāts."
+      ]
+    }
+  }
+}

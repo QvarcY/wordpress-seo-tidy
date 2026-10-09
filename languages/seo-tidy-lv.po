@@ -528,3 +528,39 @@ msgstr "Izvades izslēgšana saglabā esošos SEO metadatus."
 #: src/index.js
 msgid "Could not load or save settings."
 msgstr "Neizdevās ielādēt vai saglabāt iestatījumus."
+
+#: src/index.js
+msgid "Not customized"
+msgstr "Nav pielāgots"
+
+#: src/index.js
+msgid "Consider adding more detail"
+msgstr "Ieteicams papildināt tekstu"
+
+#: src/index.js
+msgid "Consider shortening the text"
+msgstr "Ieteicams saīsināt tekstu"
+
+#: src/index.js
+msgid "Within the suggested range"
+msgstr "Ieteicamajā garuma intervālā"
+
+#: src/index.js
+msgid "Using the WordPress title"
+msgstr "Tiek izmantots WordPress virsraksts"
+
+#: src/index.js
+msgid "Search result preview"
+msgstr "Meklēšanas rezultāta priekšskatījums"
+
+#: src/index.js
+msgid "No custom meta description."
+msgstr "Nav pielāgota meta apraksta."
+
+#: src/index.js
+msgid "Illustrative only. Search engines may show different text."
+msgstr "Tikai ilustratīvs priekšskatījums. Meklētājprogrammas var rādīt citu tekstu."
+
+#: src/index.js
+msgid "Using the WordPress title. A custom SEO title is optional."
+msgstr "Tiek izmantots WordPress virsraksts. Pielāgots SEO virsraksts nav obligāts."

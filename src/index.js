@@ -1213,7 +1213,7 @@ function SupportLinks() {
         }}>
             <a href="https://github.com/QvarcY"
                 target="_blank" rel="noopener noreferrer">
-                GitHub ? QvarcY
+                GitHub - QvarcY
             </a>
             <a href="https://github.com/QvarcY/wordpress-seo-tidy/issues"
                 target="_blank" rel="noopener noreferrer">
