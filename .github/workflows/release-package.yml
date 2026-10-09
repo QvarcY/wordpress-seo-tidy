@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - feature/m0-wordpress-bootstrap
+      - 'feature/**'
   pull_request:
   workflow_dispatch:
 
