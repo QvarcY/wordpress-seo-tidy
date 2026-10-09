@@ -95,12 +95,12 @@ final class Bootstrap
 
         wp_enqueue_style('wp-components');
 
-        $adminCss = SEO_TIDY_PATH . 'src/admin.css';
+        $adminCss = SEO_TIDY_PATH . 'assets/admin.css';
 
         if (is_readable($adminCss)) {
             wp_enqueue_style(
                 'seo-tidy-admin-style',
-                plugins_url('src/admin.css', SEO_TIDY_PATH . 'seo-tidy.php'),
+                plugins_url('assets/admin.css', SEO_TIDY_PATH . 'seo-tidy.php'),
                 ['wp-components'],
                 (string) filemtime($adminCss)
             );
