@@ -6,7 +6,7 @@ Clean SEO. Smarter discovery. Completely free.
 
 ## Release status
 
-Version: **0.1.0-beta.1**
+Version: **0.1.0-beta.2**
 
 This is a beta release for testing. It is not yet recommended
 for production websites without backups and compatibility testing.
@@ -17,6 +17,12 @@ for production websites without backups and compatibility testing.
 - WordPress block editor and classic editor metadata support
 - Quick metadata editing in the SEO-TidY administration panel
 - Automatic BlogPosting and WebPage JSON-LD structured data
+- Search result previews with title and description guidance
+- SEO audit for duplicate metadata, noindex settings, headings and image ALT
+- Outgoing and incoming internal content link recommendations
+- Review of missing or unpublished WordPress post-ID link targets
+- Affected URL details for supported link checks
+- Cached incoming link and duplicate metadata analysis
 - SEO metadata and content audit
 - Answer readiness content-structure suggestions
 - Yoast SEO and Rank Math metadata import
