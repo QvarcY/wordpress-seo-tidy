@@ -52,6 +52,9 @@ jobs:
           find includes tests/integration -name '*.php' -print0 |
             xargs -0 -n1 php -l
 
+      - name: Run GitHub updater tests
+        run: npm run test:updater
+
       - name: Check Latvian translations
         run: npm run check:i18n
 

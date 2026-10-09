@@ -1517,6 +1517,11 @@ function GeneralSettings() {
             label: __('Enable H1 review suggestions', 'seo-tidy'),
             help: __('Show optional H1 findings in the SEO audit.', 'seo-tidy'),
         },
+        {
+            key: 'seo_tidy_beta_updates',
+            label: __('Enable beta updates', 'seo-tidy'),
+            help: __('Receive experimental SEO-TidY releases from GitHub. Stable updates remain available when disabled.', 'seo-tidy'),
+        },
     ];
 
     const [values, setValues] = useState(null);
@@ -1532,7 +1537,9 @@ function GeneralSettings() {
 
                 const options = {};
                 for (const item of keys) {
-                    options[item.key] = ![false, 0, '0', null].includes(data[item.key]);
+                    options[item.key] = item.key === 'seo_tidy_beta_updates'
+                        ? [true, 1, '1'].includes(data[item.key])
+                        : ![false, 0, '0', null].includes(data[item.key]);
                 }
 
                 setValues(options);

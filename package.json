@@ -9,6 +9,7 @@
         "start": "wp-scripts start",
         "lint:js": "wp-scripts lint-js",
         "test:integration": "node tests/integration/run.cjs",
+        "test:updater": "php tests/unit/github-updater.php && php tests/unit/github-updater-wordpress.php",
         "check:i18n": "node scripts/check-i18n.cjs"
     },
     "repository": {

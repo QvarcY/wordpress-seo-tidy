@@ -2,6 +2,7 @@
 /**
  * Plugin Name: SEO-TidY
  * Plugin URI: https://github.com/QvarcY/wordpress-seo-tidy
+ * Update URI: https://github.com/QvarcY/wordpress-seo-tidy
  * Description: Free SEO and AI search readiness tools for WordPress.
  * Version: 0.1.0-beta.3
  * Requires at least: 6.8

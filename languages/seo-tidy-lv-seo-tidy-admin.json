@@ -432,6 +432,12 @@
       ],
       "No items in the selected category.": [
         "Izvēlētajā kategorijā nav ierakstu."
+      ],
+      "Enable beta updates": [
+        "Ieslēgt beta atjauninājumus"
+      ],
+      "Receive experimental SEO-TidY releases from GitHub. Stable updates remain available when disabled.": [
+        "Saņemt eksperimentālos SEO-TidY laidienus no GitHub. Ja iespēja ir izslēgta, stabilie atjauninājumi joprojām ir pieejami."
       ]
     }
   }

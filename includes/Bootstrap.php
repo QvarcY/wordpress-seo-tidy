@@ -16,12 +16,14 @@ final class Bootstrap
         require_once __DIR__ . '/SEOAudit.php';
         require_once __DIR__ . '/AnswerReadiness.php';
         require_once __DIR__ . '/Migration.php';
+        require_once __DIR__ . '/GitHubUpdater.php';
         Metadata::init();
         Schema::init();
         Dashboard::init();
         SEOAudit::init();
         AnswerReadiness::init();
         Migration::init();
+        GitHubUpdater::init();
         add_action('init', [self::class, 'loadTranslations']);
         add_action('init', [self::class, 'registerSettings']);
         if (is_admin()) {
@@ -55,6 +57,13 @@ final class Bootstrap
                 'show_in_rest' => true,
             ]);
         }
+
+        register_setting('seo_tidy', 'seo_tidy_beta_updates', [
+            'type' => 'boolean',
+            'default' => false,
+            'sanitize_callback' => 'rest_sanitize_boolean',
+            'show_in_rest' => true,
+        ]);
     }
 
     public static function registerMenu(): void
