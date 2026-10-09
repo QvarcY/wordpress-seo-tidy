@@ -24,6 +24,33 @@ $admins = get_users([
 ]);
 
 seo_tidy_audit_check(!empty($admins), 'Administrator exists');
+seo_tidy_audit_check(
+    SEOAudit::classifyIssues(['duplicate_title']) === 'attention',
+    'Audit classification: attention'
+);
+
+seo_tidy_audit_check(
+    SEOAudit::classifyIssues(['missing_description']) === 'recommendations',
+    'Audit classification: recommendations'
+);
+
+seo_tidy_audit_check(
+    SEOAudit::classifyIssues(['default_title']) === 'recommendations',
+    'WordPress title fallback is optional'
+);
+
+seo_tidy_audit_check(
+    SEOAudit::classifyIssues([]) === 'clear',
+    'Audit classification: clear'
+);
+
+seo_tidy_audit_check(
+    SEOAudit::classifyIssues([
+        'review_h1',
+        'site_noindex',
+    ]) === 'attention',
+    'Important findings take priority'
+);
 
 $previousUser = get_current_user_id();
 $created = 0;
