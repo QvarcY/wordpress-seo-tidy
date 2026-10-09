@@ -87,6 +87,7 @@ final class SEOAudit
 
             // Tēma var pievienot H1 atsevišķi
             if (
+                get_option('seo_tidy_audit_h1_enabled', true) &&
                 stripos($content, '<h1') === false &&
                 stripos($content, '<!-- wp:heading {"level":1') === false
             ) {

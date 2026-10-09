@@ -167,7 +167,10 @@ final class Metadata
 
     public static function documentTitle(string $title): string
     {
-        if (!is_singular(['post', 'page'])) {
+        if (
+            !get_option('seo_tidy_title_enabled', true) ||
+            !is_singular(['post', 'page'])
+        ) {
             return $title;
         }
 
@@ -178,7 +181,10 @@ final class Metadata
 
     public static function description(): void
     {
-        if (!is_singular(['post', 'page'])) {
+        if (
+            !get_option('seo_tidy_description_enabled', true) ||
+            !is_singular(['post', 'page'])
+        ) {
             return;
         }
 

@@ -1131,6 +1131,133 @@ function SupportLinks() {
     );
 }
 
+
+function GeneralSettings() {
+    const keys = [
+        {
+            key: 'seo_tidy_title_enabled',
+            label: __('Enable SEO title output', 'seo-tidy'),
+            help: __('Use custom SEO titles on published posts and pages.', 'seo-tidy'),
+        },
+        {
+            key: 'seo_tidy_description_enabled',
+            label: __('Enable meta description output', 'seo-tidy'),
+            help: __('Output saved meta descriptions in the HTML head.', 'seo-tidy'),
+        },
+        {
+            key: 'seo_tidy_schema_enabled',
+            label: __('Enable automatic Schema', 'seo-tidy'),
+            help: __('Posts use BlogPosting; pages use WebPage.', 'seo-tidy'),
+        },
+        {
+            key: 'seo_tidy_audit_h1_enabled',
+            label: __('Enable H1 review suggestions', 'seo-tidy'),
+            help: __('Show optional H1 findings in the SEO audit.', 'seo-tidy'),
+        },
+    ];
+
+    const [values, setValues] = useState(null);
+    const [saved, setSaved] = useState(null);
+    const [busy, setBusy] = useState(false);
+    const [error, setError] = useState(false);
+
+    useEffect(() => {
+        let active = true;
+        apiFetch({ path: '/wp/v2/settings' })
+            .then((data) => {
+                if (!active) return;
+
+                const options = {};
+                for (const item of keys) {
+                    options[item.key] = data[item.key] !== false;
+                }
+
+                setValues(options);
+                setSaved(options);
+            })
+            .catch(() => {
+                if (active) setError(true);
+            });
+        return () => { active = false; };
+    }, []);
+
+    const save = async () => {
+        setBusy(true);
+        setError(false);
+
+        try {
+            const result = await apiFetch({
+                path: '/wp/v2/settings',
+                method: 'POST',
+                data: values,
+            });
+
+            const updated = {};
+            for (const item of keys) {
+                updated[item.key] = result[item.key] === true;
+            }
+
+            setValues(updated);
+            setSaved(updated);
+        } catch {
+            setError(true);
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    const changed = values && saved &&
+        keys.some((item) => values[item.key] !== saved[item.key]);
+
+    return (
+        <div>
+            <p>
+                {__('Manage SEO-TidY output and audit preferences.', 'seo-tidy')}
+            </p>
+            <p>
+                {__('Disabling output keeps your saved SEO metadata.', 'seo-tidy')}
+            </p>
+
+            {!values && !error && <Spinner />}
+
+            {error && (
+                <Notice status="error" isDismissible={false}>
+                    {__('Could not load or save settings.', 'seo-tidy')}
+                </Notice>
+            )}
+
+            {values && (
+                <>
+                    {keys.map((item) => (
+                        <ToggleControl
+                            key={item.key}
+                            label={item.label}
+                            help={item.help}
+                            checked={values[item.key]}
+                            disabled={busy}
+                            onChange={(next) => {
+                                setValues((current) => ({
+                                    ...current,
+                                    [item.key]: next,
+                                }));
+                            }}
+                        />
+                    ))}
+
+                    <Button
+                        variant="primary"
+                        disabled={!changed || busy}
+                        isBusy={busy}
+                        onClick={save}
+                    >
+                        {__('Save changes', 'seo-tidy')}
+                    </Button>
+                </>
+            )}
+        </div>
+    );
+}
+
 function App() {
     const [active, setActive] = useState('dashboard');
     const [metadataFilter, setMetadataFilter] = useState('all');
@@ -1166,7 +1293,9 @@ function App() {
                 <CardBody>
                     <h2>{current.label}</h2>
 
-                    {active === 'migration' ? (
+                    {active === 'settings' ? (
+                        <GeneralSettings />
+                    ) : active === 'migration' ? (
                         <MigrationOverview />
                     ) : active === 'answers' ? (
                         <AnswerReadinessOverview />

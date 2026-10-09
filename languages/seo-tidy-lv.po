@@ -492,3 +492,39 @@ msgstr "Migrācijas pieprasījums neizdevās. Vari droši mēģināt vēlreiz."
 #: src/index.js
 msgid "Report an issue"
 msgstr "Ziņot par problēmu"
+
+#: src/index.js
+msgid "Enable SEO title output"
+msgstr "Ieslēgt SEO virsraksta izvadi"
+
+#: src/index.js
+msgid "Use custom SEO titles on published posts and pages."
+msgstr "Izmantot pielāgotos SEO virsrakstus publicētajos rakstos un lapās."
+
+#: src/index.js
+msgid "Enable meta description output"
+msgstr "Ieslēgt meta apraksta izvadi"
+
+#: src/index.js
+msgid "Output saved meta descriptions in the HTML head."
+msgstr "Izvadīt saglabātos meta aprakstus HTML galvenē."
+
+#: src/index.js
+msgid "Enable H1 review suggestions"
+msgstr "Ieslēgt H1 pārbaudes ieteikumus"
+
+#: src/index.js
+msgid "Show optional H1 findings in the SEO audit."
+msgstr "Rādīt neobligātos H1 ieteikumus SEO auditā."
+
+#: src/index.js
+msgid "Manage SEO-TidY output and audit preferences."
+msgstr "Pārvaldi SEO-TidY izvades un audita iestatījumus."
+
+#: src/index.js
+msgid "Disabling output keeps your saved SEO metadata."
+msgstr "Izvades izslēgšana saglabā esošos SEO metadatus."
+
+#: src/index.js
+msgid "Could not load or save settings."
+msgstr "Neizdevās ielādēt vai saglabāt iestatījumus."

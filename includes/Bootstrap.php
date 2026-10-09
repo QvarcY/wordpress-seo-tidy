@@ -31,16 +31,19 @@ final class Bootstrap
 
     public static function registerSettings(): void
     {
-        register_setting(
-            'seo_tidy',
+        foreach ([
             'seo_tidy_schema_enabled',
-            [
+            'seo_tidy_title_enabled',
+            'seo_tidy_description_enabled',
+            'seo_tidy_audit_h1_enabled',
+        ] as $name) {
+            register_setting('seo_tidy', $name, [
                 'type' => 'boolean',
                 'default' => true,
                 'sanitize_callback' => 'rest_sanitize_boolean',
                 'show_in_rest' => true,
-            ]
-        );
+            ]);
+        }
     }
 
     public static function registerMenu(): void
