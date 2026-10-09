@@ -243,9 +243,30 @@ function DashboardOverview({ onOpenSchema, onOpenMetadata }) {
 
 
 
+
 function SearchPreview({ title, description, fallbackTitle }) {
     const shownTitle = title.trim() || fallbackTitle || '';
     const shownDescription = description.trim();
+
+    const guidance = (value, min, max) => {
+        if (!value.trim()) {
+            return __('Not customized', 'seo-tidy');
+        }
+
+        const length = [...value].length;
+
+        if (length < min) {
+            return __('Consider adding more detail', 'seo-tidy');
+        }
+        if (length > max) {
+            return __('Consider shortening the text', 'seo-tidy');
+        }
+        return __('Within the suggested range', 'seo-tidy');
+    };
+
+    const titleGuidance = title.trim()
+        ? guidance(title, 30, 65)
+        : __('Using the WordPress title', 'seo-tidy');
 
     return (
         <div style={{
@@ -263,17 +284,19 @@ function SearchPreview({ title, description, fallbackTitle }) {
             }}>
                 {__('Search result preview', 'seo-tidy')}
             </strong>
+
             <div style={{
                 color: '#1a0dab',
                 fontSize: '20px',
                 lineHeight: '1.35',
                 overflow: 'hidden',
-                whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
                 marginBottom: '6px',
             }}>
                 {shownTitle || __('Untitled', 'seo-tidy')}
             </div>
+
             <div style={{
                 color: '#4d5156',
                 fontSize: '14px',
@@ -283,6 +306,35 @@ function SearchPreview({ title, description, fallbackTitle }) {
                 {shownDescription ||
                     __('No custom meta description.', 'seo-tidy')}
             </div>
+
+            <div style={{
+                borderTop: '1px solid #eee',
+                paddingTop: '12px',
+                marginTop: '14px',
+                display: 'grid',
+                gap: '8px',
+                fontSize: '13px',
+            }}>
+                <div style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-between',
+                    gap: '8px',
+                }}>
+                    <span>{__('SEO title', 'seo-tidy')}</span>
+                    <span>{titleGuidance}</span>
+                </div>
+                <div style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-between',
+                    gap: '8px',
+                }}>
+                    <span>{__('Meta description', 'seo-tidy')}</span>
+                    <span>{guidance(description, 70, 160)}</span>
+                </div>
+            </div>
+
             <p style={{
                 fontSize: '12px',
                 color: '#646970',
