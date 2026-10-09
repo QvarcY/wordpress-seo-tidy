@@ -47,6 +47,7 @@ $Required = @(
     "build/index.asset.php",
     "build/editor/editor.js",
     "build/editor/editor.asset.php",
+    "assets/admin.css",
     "assets/seo-tidy-hero.webp",
     "assets/seo-tidy-social-preview.png"
 )
