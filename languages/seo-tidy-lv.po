@@ -1,13 +1,21 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: SEO-TidY 0.0.1-dev\n"
-"Report-Msgid-Bugs-To: https://github.com/QvarcY/wordpress-seo-tidy/issues\n"
-"Language: lv\n"
-"Language-Team: Latvian\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n!=0 ? 1 : 2);\n"
-"X-Domain: seo-tidy\n"
+"Project-Id-Version: SEO-TidY 0.0.1-dev
+"
+"Report-Msgid-Bugs-To: https://github.com/QvarcY/wordpress-seo-tidy/issues
+"
+"Language: lv
+"
+"Language-Team: Latvian
+"
+"Content-Type: text/plain; charset=UTF-8
+"
+"Content-Transfer-Encoding: 8bit
+"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n!=0 ? 1 : 2);
+"
+"X-Domain: seo-tidy
+"
 
 #: src/index.js
 msgid "Dashboard"
@@ -108,3 +116,27 @@ msgstr "Ja SEO virsraksts nav norādīts, tiek izmantots ieraksta virsraksts."
 #: src/editor.js
 msgid "No custom description. Search engines may select text from the page."
 msgstr "Nav pielāgota apraksta. Meklētājprogrammas var izvēlēties tekstu no lapas."
+
+#: src/index.js
+msgid "Could not load Schema settings."
+msgstr "neizdevās ielādēt strukturēto datu iestatījumus."
+
+#: src/index.js
+msgid "Schema settings saved."
+msgstr "Strukturēto datu iestatījumi saglabāti."
+
+#: src/index.js
+msgid "Could not save Schema settings."
+msgstr "Neizdevās saglabāt strukturēto datu iestatījumus."
+
+#: src/index.js
+msgid "Automatically add structured data to published posts and pages."
+msgstr "Automātiski pievienot strukturētos datus publicētiem rakstiem un lapām."
+
+#: src/index.js
+msgid "Enable automatic Schema"
+msgstr "Ieslēgt automātiskos strukturētos datus"
+
+#: src/index.js
+msgid "Posts use BlogPosting; pages use WebPage."
+msgstr "Rakstiem izmanto BlogPosting, lapām — WebPage."

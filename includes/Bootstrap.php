@@ -11,11 +11,28 @@ final class Bootstrap
     public static function init(): void
     {
         require_once __DIR__ . '/Metadata.php';
+        require_once __DIR__ . '/Schema.php';
         Metadata::init();
+        Schema::init();
+        add_action('init', [self::class, 'registerSettings']);
         if (is_admin()) {
             add_action('admin_menu', [self::class, 'registerMenu']);
             add_action('admin_enqueue_scripts', [self::class, 'enqueueAssets']);
         }
+    }
+
+    public static function registerSettings(): void
+    {
+        register_setting(
+            'seo_tidy',
+            'seo_tidy_schema_enabled',
+            [
+                'type' => 'boolean',
+                'default' => true,
+                'sanitize_callback' => 'rest_sanitize_boolean',
+                'show_in_rest' => true,
+            ]
+        );
     }
 
     public static function registerMenu(): void
