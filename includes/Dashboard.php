@@ -115,9 +115,15 @@ final class Dashboard
                 'id' => $id,
                 'title' => get_the_title($id),
                 'type' => $row['post_type'],
+                'seoTitle' => (string) get_post_meta(
+                    $id, '_seo_tidy_title', true
+                ),
                 'hasTitle' => trim((string) get_post_meta(
                     $id, '_seo_tidy_title', true
                 )) !== '',
+                'seoDescription' => (string) get_post_meta(
+                    $id, '_seo_tidy_description', true
+                ),
                 'hasDescription' => trim((string) get_post_meta(
                     $id, '_seo_tidy_description', true
                 )) !== '',

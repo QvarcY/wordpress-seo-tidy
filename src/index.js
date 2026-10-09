@@ -1,5 +1,5 @@
 import { createElement, createRoot, useState, useEffect } from '@wordpress/element';
-import { Button, Card, CardBody, Notice, ToggleControl, Spinner } from '@wordpress/components';
+import { Button, Card, CardBody, Notice, ToggleControl, Spinner, TextControl, TextareaControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
 
@@ -247,6 +247,12 @@ function MetadataList({ filter, setFilter }) {
     const [page, setPage] = useState(1);
     const [result, setResult] = useState(null);
     const [error, setError] = useState(false);
+    const [editing, setEditing] = useState(null);
+    const [draftTitle, setDraftTitle] = useState('');
+    const [draftDescription, setDraftDescription] = useState('');
+    const [saving, setSaving] = useState(false);
+    const [saveError, setSaveError] = useState(false);
+    const [refresh, setRefresh] = useState(0);
 
     useEffect(() => {
         let active = true;
@@ -268,7 +274,45 @@ function MetadataList({ filter, setFilter }) {
             });
 
         return () => { active = false; };
-    }, [filter, type, page]);
+    }, [filter, type, page, refresh]);
+
+    const startEditing = (item) => {
+        setEditing(item.id);
+        setDraftTitle(item.seoTitle || '');
+        setDraftDescription(item.seoDescription || '');
+        setSaveError(false);
+    };
+
+    const cancelEditing = () => {
+        setEditing(null);
+        setSaveError(false);
+    };
+
+    const saveMetadata = async (item) => {
+        setSaving(true);
+        setSaveError(false);
+
+        try {
+            await apiFetch({
+                path: '/wp/v2/' + (item.type === 'page' ? 'pages' : 'posts') +
+                    '/' + item.id,
+                method: 'POST',
+                data: {
+                    meta: {
+                        _seo_tidy_title: draftTitle,
+                        _seo_tidy_description: draftDescription,
+                    },
+                },
+            });
+
+            setEditing(null);
+            setRefresh((value) => value + 1);
+        } catch {
+            setSaveError(true);
+        } finally {
+            setSaving(false);
+        }
+    };
 
     const filters = [
         ['all', __('All published content', 'seo-tidy')],
@@ -347,6 +391,13 @@ function MetadataList({ filter, setFilter }) {
                                         ? __('Added', 'seo-tidy')
                                         : __('Missing', 'seo-tidy')}</td>
                                     <td>
+                                        <Button
+                                            variant="link"
+                                            disabled={saving}
+                                            onClick={() => startEditing(item)}
+                                        >
+                                            {__('Quick edit', 'seo-tidy')}
+                                        </Button>
                                         {item.editUrl && (
                                             <a href={item.editUrl}>
                                                 {__('Edit', 'seo-tidy')}
@@ -357,6 +408,65 @@ function MetadataList({ filter, setFilter }) {
                             ))}
                         </tbody>
                     </table>
+
+                    {editing !== null && (() => {
+                        const item = result.items.find((row) => row.id === editing);
+
+                        if (!item) return null;
+
+                        return (
+                            <div style={{
+                                border: '1px solid #ddd',
+                                padding: '16px',
+                                marginTop: '16px',
+                                borderRadius: '6px',
+                            }}>
+                                <h3>
+                                    {__('Quick edit', 'seo-tidy')}: {item.title}
+                                </h3>
+                                <TextControl
+                                    label={__('SEO title', 'seo-tidy')}
+                                    value={draftTitle}
+                                    disabled={saving}
+                                    onChange={setDraftTitle}
+                                />
+                                <TextareaControl
+                                    label={__('Meta description', 'seo-tidy')}
+                                    value={draftDescription}
+                                    disabled={saving}
+                                    onChange={setDraftDescription}
+                                />
+
+                                {saveError && (
+                                    <Notice status="error" isDismissible={false}>
+                                        {__('Could not save metadata.', 'seo-tidy')}
+                                    </Notice>
+                                )}
+
+                                <div style={{
+                                    display: 'flex',
+                                    gap: '8px',
+                                    marginTop: '12px',
+                                }}>
+                                    <Button
+                                        variant="primary"
+                                        isBusy={saving}
+                                        disabled={saving}
+                                        onClick={() => saveMetadata(item)}
+                                    >
+                                        {__('Save changes', 'seo-tidy')}
+                                    </Button>
+                                    <Button
+                                        variant="secondary"
+                                        disabled={saving}
+                                        onClick={cancelEditing}
+                                    >
+                                        {__('Cancel', 'seo-tidy')}
+                                    </Button>
+                                </div>
+                            </div>
+                        );
+                    })()}
 
                     {result.total === 0 && (
                         <p>{__('No matching content found.', 'seo-tidy')}</p>

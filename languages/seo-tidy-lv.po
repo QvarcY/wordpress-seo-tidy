@@ -288,3 +288,19 @@ msgstr "Iepriekšējā"
 #: src/index.js
 msgid "Next"
 msgstr "Nākamā"
+
+#: src/index.js
+msgid "Quick edit"
+msgstr "Ātri rediģēt"
+
+#: src/index.js
+msgid "Save changes"
+msgstr "Saglabāt izmaiņas"
+
+#: src/index.js
+msgid "Cancel"
+msgstr "Atcelt"
+
+#: src/index.js
+msgid "Could not save metadata."
+msgstr "Neizdevās saglabāt metadatus."
