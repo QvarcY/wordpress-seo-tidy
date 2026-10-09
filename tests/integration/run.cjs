@@ -140,6 +140,7 @@ async function main() {
     for (const file of [
         'metadata-smoke.php',
         'metadata-output-smoke.php',
+        'audit-smoke.php',
     ]) {
         console.log(`\n=== ${file} ===`);
 
