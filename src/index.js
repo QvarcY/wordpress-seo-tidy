@@ -791,6 +791,25 @@ function SEOAuditOverview() {
                                                                 {advice.map((issue) => (
                                                                     <li key={issue}>
                                                                         {auditLabels[issue]}
+                                                                        {issue === 'review_unavailable_post_link' &&
+                                                                            Array.isArray(item.unavailableLinks) &&
+                                                                            item.unavailableLinks.length > 0 && (
+                                                                                <div style={{ marginTop: '6px' }}>
+                                                                                    <strong>
+                                                                                        {__('Affected links:', 'seo-tidy')}
+                                                                                    </strong>
+                                                                                    <ul style={{
+                                                                                        paddingLeft: '18px',
+                                                                                        overflowWrap: 'anywhere',
+                                                                                    }}>
+                                                                                        {item.unavailableLinks.map((href) => (
+                                                                                            <li key={href}>
+                                                                                                <code>{href}</code>
+                                                                                            </li>
+                                                                                        ))}
+                                                                                    </ul>
+                                                                                </div>
+                                                                            )}
                                                                     </li>
                                                                 ))}
                                                             </ul>

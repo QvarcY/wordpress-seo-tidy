@@ -600,3 +600,7 @@ msgstr "Ienākošo saišu pārbaude šai vietnei ir izlaista."
 #: src/index.js
 msgid "Review links to missing or unpublished WordPress content"
 msgstr "Pārskatīt saites uz neesošiem vai nepublicētiem WordPress ierakstiem"
+
+#: src/index.js
+msgid "Affected links:"
+msgstr "Saites, kurām jāpievērš uzmanība:"

@@ -291,13 +291,13 @@ final class SEOAudit
     }
 
 
-    private static function hasUnavailablePostLink(string $content): bool
+    private static function unavailablePostLinks(string $content): array
     {
         $home = wp_parse_url(home_url('/'));
         $homeHost = strtolower((string) ($home['host'] ?? ''));
 
         if ($homeHost === '') {
-            return false;
+            return [];
         }
 
         $homeScheme = strtolower(
@@ -307,6 +307,7 @@ final class SEOAudit
             $homeScheme === 'https' ? 443 : 80
         ));
 
+        $links = [];
         $processor = new \WP_HTML_Tag_Processor($content);
 
         while ($processor->next_tag('A')) {
@@ -382,12 +383,21 @@ final class SEOAudit
                     !in_array($target->post_type, ['post', 'page'], true) ||
                     $target->post_status !== 'publish'
                 ) {
-                    return true;
+                    $links[$href] = true;
+
+                    if (count($links) >= 10) {
+                        return array_keys($links);
+                    }
                 }
             }
         }
 
-        return false;
+        return array_keys($links);
+    }
+
+    private static function hasUnavailablePostLink(string $content): bool
+    {
+        return self::unavailablePostLinks($content) !== [];
     }
 
     private static function needsAltReview(string $content): bool
@@ -534,7 +544,9 @@ final class SEOAudit
             }
 
             // Pārbaudām tikai saturā esošos HTML attēlus
-            if (self::hasUnavailablePostLink($content)) {
+            $unavailableLinks = self::unavailablePostLinks($content);
+
+            if ($unavailableLinks !== []) {
                 $issues[] = 'review_unavailable_post_link';
             }
 
@@ -549,6 +561,7 @@ final class SEOAudit
                 'issues' => $issues,
                 'seoTitle' => $title,
                 'seoDescription' => $description,
+                'unavailableLinks' => $unavailableLinks,
                 'editUrl' => get_edit_post_link($id, 'raw'),
             ];
         }

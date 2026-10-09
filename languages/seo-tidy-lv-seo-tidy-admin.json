@@ -405,6 +405,9 @@
       ],
       "Review links to missing or unpublished WordPress content": [
         "Pārskatīt saites uz neesošiem vai nepublicētiem WordPress ierakstiem"
+      ],
+      "Affected links:": [
+        "Saites, kurām jāpievērš uzmanība:"
       ]
     }
   }
