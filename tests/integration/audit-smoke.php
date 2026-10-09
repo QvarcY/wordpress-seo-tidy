@@ -106,6 +106,16 @@ try {
             is_array($item['issues']),
             'Audit item structure valid'
         );
+        seo_tidy_audit_check(
+            isset($item['category']) &&
+            in_array(
+                $item['category'],
+                ['attention', 'recommendations', 'clear'],
+                true
+            ) &&
+            $item['category'] === SEOAudit::classifyIssues($item['issues']),
+            'Audit API category matches issues'
+        );
     }
 
     wp_set_current_user(0);

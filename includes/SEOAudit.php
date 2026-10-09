@@ -655,6 +655,7 @@ final class SEOAudit
                 'title' => get_the_title($id),
                 'type' => $post->post_type,
                 'issues' => $issues,
+                'category' => self::classifyIssues($issues),
                 'seoTitle' => $title,
                 'seoDescription' => $description,
                 'unavailableLinks' => $unavailableLinks,
