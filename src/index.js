@@ -72,7 +72,7 @@ function SchemaSettings() {
     };
 
     return (
-        <div>
+        <div className="tidy-settings-panel">
             <p>
                 {__('Automatically add structured data to published posts and pages.', 'seo-tidy')}
             </p>
@@ -80,6 +80,7 @@ function SchemaSettings() {
             {loading ? (
                 <Spinner />
             ) : (
+                <div className="tidy-setting-row">
                 <ToggleControl
                     label={__('Enable automatic Schema', 'seo-tidy')}
                     help={__('Posts use BlogPosting; pages use WebPage.', 'seo-tidy')}
@@ -87,6 +88,7 @@ function SchemaSettings() {
                     disabled={saving || message?.text === __('Could not load Schema settings.', 'seo-tidy')}
                     onChange={save}
                 />
+                </div>
             )}
 
             {saving && <Spinner />}
@@ -170,42 +172,39 @@ function DashboardOverview({ onOpenSchema, onOpenMetadata }) {
     ];
 
     return (
-        <div>
-            <p>
-                {__('Published posts and pages:', 'seo-tidy')}
-                {' '}
-                <strong>{data.total}</strong>
-            </p>
+        <div className="tidy-dashboard">
+            <div className="tidy-dashboard-summary">
+                <span className="tidy-dashboard-summary-label">
+                    {__('Published posts and pages:', 'seo-tidy')}
+                </span>
+                <strong className="tidy-dashboard-total">
+                    {data.total}
+                </strong>
+            </div>
 
-            <div
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(185px, 1fr))',
-                    gap: '12px',
-                    marginBottom: '20px',
-                }}
-            >
+            <div className="tidy-metrics-grid">
                 {metrics.map((metric) => (
                     <div
                         key={metric.label}
-                        style={{
-                            border: '1px solid #ddd',
-                            borderRadius: '6px',
-                            padding: '14px',
-                        }}
+                        className={
+                            'tidy-metric-card' +
+                            (metric.filter ? ' tidy-metric-card-action' : '')
+                        }
                     >
-                        <div style={{ fontSize: '13px', marginBottom: '8px' }}>
+                        <span className="tidy-metric-label">
                             {metric.label}
-                        </div>
+                        </span>
+
                         {metric.filter ? (
-                            <Button variant="link"
-                                onClick={() => onOpenMetadata(metric.filter)}>
-                                <strong style={{ fontSize: '25px' }}>
-                                    {metric.value}
-                                </strong>
+                            <Button
+                                variant="link"
+                                className="tidy-metric-link"
+                                onClick={() => onOpenMetadata(metric.filter)}
+                            >
+                                {metric.value}
                             </Button>
                         ) : (
-                            <strong style={{ fontSize: '25px' }}>
+                            <strong className="tidy-metric-value">
                                 {metric.value}
                             </strong>
                         )}
@@ -213,35 +212,48 @@ function DashboardOverview({ onOpenSchema, onOpenMetadata }) {
                 ))}
             </div>
 
-            <p>
-                <strong>{__('Smart Schema:', 'seo-tidy')}</strong>
-                {' '}
-                {data.schemaEnabled
-                    ? __('Enabled', 'seo-tidy')
-                    : __('Disabled', 'seo-tidy')}
-                {' '}
-                <Button variant="link" onClick={onOpenSchema}>
-                    {__('Manage Schema', 'seo-tidy')}
-                </Button>
-            </p>
+            <div className="tidy-dashboard-bottom">
+                <div className="tidy-schema-panel">
+                    <div>
+                        <strong className="tidy-panel-heading">
+                            {__('Smart Schema:', 'seo-tidy')}
+                        </strong>
+                        <span className={
+                            'tidy-schema-status' +
+                            (data.schemaEnabled
+                                ? ' tidy-schema-status-enabled'
+                                : ' tidy-schema-status-disabled')
+                        }>
+                            {data.schemaEnabled
+                                ? __('Enabled', 'seo-tidy')
+                                : __('Disabled', 'seo-tidy')}
+                        </span>
+                    </div>
 
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <Button variant="secondary" href={data.links.posts}>
-                    {__('Edit posts', 'seo-tidy')}
-                </Button>
-                <Button variant="secondary" href={data.links.pages}>
-                    {__('Edit pages', 'seo-tidy')}
-                </Button>
+                    <Button
+                        variant="secondary"
+                        onClick={onOpenSchema}
+                    >
+                        {__('Manage Schema', 'seo-tidy')}
+                    </Button>
+                </div>
+
+                <div className="tidy-dashboard-actions">
+                    <Button variant="secondary" href={data.links.posts}>
+                        {__('Edit posts', 'seo-tidy')}
+                    </Button>
+                    <Button variant="secondary" href={data.links.pages}>
+                        {__('Edit pages', 'seo-tidy')}
+                    </Button>
+                </div>
             </div>
 
-            <p style={{ marginTop: '18px', color: '#666' }}>
+            <p className="tidy-dashboard-footnote">
                 {__('Counts include published posts and pages only.', 'seo-tidy')}
             </p>
         </div>
     );
 }
-
-
 
 
 function SearchPreview({ title, description, fallbackTitle }) {
@@ -431,12 +443,9 @@ function MetadataList({ filter, setFilter }) {
     ];
 
     return (
-        <div>
-            <div style={{
-                display: 'flex', flexWrap: 'wrap',
-                gap: '12px', marginBottom: '16px',
-            }}>
-                <label>
+        <div className="tidy-metadata">
+            <div className="tidy-metadata-filters">
+                <label className="tidy-metadata-filter">
                     {__('Show', 'seo-tidy')}{' '}
                     <select value={filter} onChange={(event) => {
                         setFilter(event.target.value);
@@ -447,7 +456,7 @@ function MetadataList({ filter, setFilter }) {
                         ))}
                     </select>
                 </label>
-                <label>
+                <label className="tidy-metadata-filter">
                     {__('Content type', 'seo-tidy')}{' '}
                     <select value={type} onChange={(event) => {
                         setType(event.target.value);
@@ -470,8 +479,9 @@ function MetadataList({ filter, setFilter }) {
 
             {result && (
                 <>
-                    <p>{__('Matching items:', 'seo-tidy')} <strong>{result.total}</strong></p>
-                    <table className="widefat striped">
+                    <p className="tidy-metadata-count">{__('Matching items:', 'seo-tidy')} <strong>{result.total}</strong></p>
+                    <div className="tidy-metadata-table-wrap">
+                    <table className="widefat striped tidy-metadata-table">
                         <thead>
                             <tr>
                                 <th>{__('Title', 'seo-tidy')}</th>
@@ -484,17 +494,21 @@ function MetadataList({ filter, setFilter }) {
                         <tbody>
                             {result.items.map((item) => (
                                 <tr key={item.id}>
-                                    <td>{item.title || __('Untitled', 'seo-tidy')}</td>
-                                    <td>{item.type === 'post'
+                                    <td className="tidy-metadata-title">{item.title || __('Untitled', 'seo-tidy')}</td>
+                                    <td className="tidy-metadata-type">{item.type === 'post'
                                         ? __('Post', 'seo-tidy')
                                         : __('Page', 'seo-tidy')}</td>
-                                    <td>{item.hasTitle
-                                        ? __('Added', 'seo-tidy')
-                                        : __('Missing', 'seo-tidy')}</td>
-                                    <td>{item.hasDescription
-                                        ? __('Added', 'seo-tidy')
-                                        : __('Missing', 'seo-tidy')}</td>
-                                    <td>
+                                    <td><span className={'tidy-metadata-status ' + (item.hasTitle ? 'tidy-metadata-status-added' : 'tidy-metadata-status-missing')}>
+                                        {item.hasTitle
+                                            ? __('Added', 'seo-tidy')
+                                            : __('Missing', 'seo-tidy')}
+                                    </span></td>
+                                    <td><span className={'tidy-metadata-status ' + (item.hasDescription ? 'tidy-metadata-status-added' : 'tidy-metadata-status-missing')}>
+                                        {item.hasDescription
+                                            ? __('Added', 'seo-tidy')
+                                            : __('Missing', 'seo-tidy')}
+                                    </span></td>
+                                    <td className="tidy-metadata-actions">
                                         <Button
                                             variant="link"
                                             disabled={saving}
@@ -505,7 +519,7 @@ function MetadataList({ filter, setFilter }) {
                                         {item.editUrl && (
                                             <a
                                                 href={item.editUrl}
-                                                style={{ marginLeft: '12px' }}
+                                                className="tidy-metadata-edit-link"
                                             >
                                                 {__('Edit', 'seo-tidy')}
                                             </a>
@@ -515,6 +529,7 @@ function MetadataList({ filter, setFilter }) {
                             ))}
                         </tbody>
                     </table>
+                    </div>
 
                     {editing !== null && (() => {
                         const item = result.items.find((row) => row.id === editing);
@@ -522,12 +537,7 @@ function MetadataList({ filter, setFilter }) {
                         if (!item) return null;
 
                         return (
-                            <div style={{
-                                border: '1px solid #ddd',
-                                padding: '16px',
-                                marginTop: '16px',
-                                borderRadius: '6px',
-                            }}>
+                            <div className="tidy-metadata-quick-edit">
                                 <h3>
                                     {__('Quick edit', 'seo-tidy')}: {item.title}
                                 </h3>
@@ -557,11 +567,7 @@ function MetadataList({ filter, setFilter }) {
                                     </Notice>
                                 )}
 
-                                <div style={{
-                                    display: 'flex',
-                                    gap: '8px',
-                                    marginTop: '12px',
-                                }}>
+                                <div className="tidy-metadata-edit-buttons">
                                     <Button
                                         variant="primary"
                                         isBusy={saving}
@@ -587,10 +593,7 @@ function MetadataList({ filter, setFilter }) {
                     )}
 
                     {result.pages > 1 && (
-                        <div style={{
-                            display: 'flex', gap: '12px',
-                            alignItems: 'center', marginTop: '16px',
-                        }}>
+                        <div className="tidy-metadata-pagination">
                             <Button variant="secondary"
                                 disabled={page <= 1}
                                 onClick={() => setPage(page - 1)}>
@@ -697,7 +700,7 @@ function SEOAuditOverview() {
         : [];
 
     return (
-        <div>
+        <div className="tidy-audit">
             <p>
                 {__('Checks published posts and pages in batches of 20. Lengths are guidance, not SEO scores.', 'seo-tidy')}
             </p>
@@ -714,7 +717,7 @@ function SEOAuditOverview() {
                 </Notice>
             )}
 
-            <label style={{ display: 'block', marginBottom: '14px' }}>
+            <label className="tidy-audit-filter">
                 <input
                     type="checkbox"
                     checked={issuesOnly}
@@ -740,7 +743,8 @@ function SEOAuditOverview() {
                         <strong>{data.total}</strong>
                     </p>
 
-                    <table className="widefat striped">
+                    <div className="tidy-audit-table-wrap">
+                    <table className="widefat striped tidy-audit-table">
                         <thead>
                             <tr>
                                 <th>{__('Title', 'seo-tidy')}</th>
@@ -750,9 +754,9 @@ function SEOAuditOverview() {
                         </thead>
                         <tbody>
                             {items.map((item) => (
-                                <tr key={item.id}>
-                                    <td>{item.title || __('Untitled', 'seo-tidy')}</td>
-                                    <td>
+                                <tr key={item.id} className={item.issues.length ? "tidy-audit-row-issues" : "tidy-audit-row-clear"}>
+                                    <td className="tidy-audit-title">{item.title || __('Untitled', 'seo-tidy')}</td>
+                                    <td className="tidy-audit-findings">
                                         {(() => {
                                             const missing = item.issues.filter(
                                                 (issue) => issue.startsWith('missing_')
@@ -762,17 +766,17 @@ function SEOAuditOverview() {
                                             );
 
                                             if (!item.issues.length) {
-                                                return __('No findings', 'seo-tidy');
+                                                return <span className="tidy-audit-clear">{__('No findings', 'seo-tidy')}</span>;
                                             }
 
                                             return (
                                                 <>
                                                     {missing.length > 0 && (
-                                                        <div>
+                                                        <div className="tidy-audit-attention">
                                                             <strong>
                                                                 {__('Needs attention', 'seo-tidy')}
                                                             </strong>
-                                                            <ul style={{ paddingLeft: '18px' }}>
+                                                            <ul className="tidy-audit-issue-list">
                                                                 {missing.map((issue) => (
                                                                     <li key={issue}>
                                                                         {auditLabels[issue]}
@@ -782,26 +786,23 @@ function SEOAuditOverview() {
                                                         </div>
                                                     )}
                                                     {advice.length > 0 && (
-                                                        <details>
+                                                        <details className="tidy-audit-recommendations">
                                                             <summary>
                                                                 {__('Recommendations', 'seo-tidy')}
                                                                 {' (' + advice.length + ')'}
                                                             </summary>
-                                                            <ul style={{ paddingLeft: '18px' }}>
+                                                            <ul className="tidy-audit-issue-list">
                                                                 {advice.map((issue) => (
                                                                     <li key={issue}>
                                                                         {auditLabels[issue]}
                                                                         {issue === 'review_unavailable_post_link' &&
                                                                             Array.isArray(item.unavailableLinks) &&
                                                                             item.unavailableLinks.length > 0 && (
-                                                                                <div style={{ marginTop: '6px' }}>
+                                                                                <div className="tidy-audit-affected">
                                                                                     <strong>
                                                                                         {__('Affected links:', 'seo-tidy')}
                                                                                     </strong>
-                                                                                    <ul style={{
-                                                                                        paddingLeft: '18px',
-                                                                                        overflowWrap: 'anywhere',
-                                                                                    }}>
+                                                                                    <ul className="tidy-audit-link-list">
                                                                                         {item.unavailableLinks.map((href) => (
                                                                                             <li key={href}>
                                                                                                 <code>{href}</code>
@@ -819,7 +820,7 @@ function SEOAuditOverview() {
                                             );
                                         })()}
                                     </td>
-                                    <td>
+                                    <td className="tidy-audit-actions">
                                         <Button
                                             variant="link"
                                             disabled={saving}
@@ -829,7 +830,7 @@ function SEOAuditOverview() {
                                         </Button>
                                         {item.editUrl && (
                                             <a href={item.editUrl}
-                                                style={{ marginLeft: '12px' }}>
+                                                className="tidy-audit-edit-link">
                                                 {__('Edit', 'seo-tidy')}
                                             </a>
                                         )}
@@ -838,6 +839,7 @@ function SEOAuditOverview() {
                             ))}
                         </tbody>
                     </table>
+                    </div>
 
                     {editing !== null && (() => {
                         const item = data.items.find((entry) =>
@@ -846,12 +848,7 @@ function SEOAuditOverview() {
                         if (!item) return null;
 
                         return (
-                            <div style={{
-                                marginTop: '16px',
-                                padding: '16px',
-                                border: '1px solid #ddd',
-                                borderRadius: '6px',
-                            }}>
+                            <div className="tidy-audit-quick-edit">
                                 <h3>
                                     {__('Quick edit', 'seo-tidy')}: {item.title}
                                 </h3>
@@ -879,11 +876,7 @@ function SEOAuditOverview() {
                                         {__('Could not save metadata.', 'seo-tidy')}
                                     </Notice>
                                 )}
-                                <div style={{
-                                    display: 'flex',
-                                    gap: '8px',
-                                    marginTop: '12px',
-                                }}>
+                                <div className="tidy-audit-edit-buttons">
                                     <Button
                                         variant="primary"
                                         isBusy={saving}
@@ -909,12 +902,7 @@ function SEOAuditOverview() {
                     )}
 
                     {data.pages > 1 && (
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            marginTop: '16px',
-                        }}>
+                        <div className="tidy-audit-pagination">
                             <Button variant="secondary"
                                 disabled={page <= 1}
                                 onClick={() => setPage(page - 1)}>
@@ -971,14 +959,14 @@ function AnswerReadinessOverview() {
         : [];
 
     return (
-        <div>
+        <div className="tidy-answers">
             <p>
                 {__('Content structure review for humans and answer systems. This does not predict AI citations or search rankings.', 'seo-tidy')}
             </p>
             <p>
                 {__('Checks saved WordPress content; dynamic blocks and themes may produce different final HTML.', 'seo-tidy')}
             </p>
-            <label style={{ display: 'block', marginBottom: '14px' }}>
+            <label className="tidy-answers-filter">
                 <input
                     type="checkbox"
                     checked={suggestionsOnly}
@@ -997,12 +985,13 @@ function AnswerReadinessOverview() {
 
             {data && (
                 <>
-                    <p>
+                    <p className="tidy-answers-count">
                         {__('Published content:', 'seo-tidy')}
                         {' '}
                         <strong>{data.total}</strong>
                     </p>
-                    <table className="widefat striped">
+                    <div className="tidy-answers-table-wrap">
+                    <table className="widefat striped tidy-answers-table">
                         <thead>
                             <tr>
                                 <th>{__('Title', 'seo-tidy')}</th>
@@ -1013,11 +1002,11 @@ function AnswerReadinessOverview() {
                         </thead>
                         <tbody>
                             {items.map((item) => (
-                                <tr key={item.id}>
-                                    <td>
+                                <tr key={item.id} className={item.suggestions.length ? "tidy-answers-row-review" : "tidy-answers-row-clear"}>
+                                    <td className="tidy-answers-title">
                                         {item.title || __('Untitled', 'seo-tidy')}
                                     </td>
-                                    <td>
+                                    <td className="tidy-answers-facts">
                                         <div>
                                             {__('Characters:', 'seo-tidy')}
                                             {' '}{item.facts.characters}
@@ -1031,11 +1020,11 @@ function AnswerReadinessOverview() {
                                             {' '}{item.facts.questionHeadings}
                                         </div>
                                     </td>
-                                    <td>
+                                    <td className="tidy-answers-suggestions">
                                         {item.suggestions.length === 0
-                                            ? __('No suggestions', 'seo-tidy')
+                                            ? <span className="tidy-answers-clear">{__('No suggestions', 'seo-tidy')}</span>
                                             : (
-                                                <ul style={{ paddingLeft: '18px', margin: 0 }}>
+                                                <ul className="tidy-answers-suggestion-list">
                                                     {item.suggestions.map((code) => (
                                                         <li key={code}>
                                                             {answerSuggestions[code] || code}
@@ -1044,7 +1033,7 @@ function AnswerReadinessOverview() {
                                                 </ul>
                                             )}
                                     </td>
-                                    <td>
+                                    <td className="tidy-answers-actions">
                                         {item.editUrl && (
                                             <a href={item.editUrl}>
                                                 {__('Edit', 'seo-tidy')}
@@ -1055,18 +1044,14 @@ function AnswerReadinessOverview() {
                             ))}
                         </tbody>
                     </table>
+                    </div>
                     {items.length === 0 && (
                         <p>
                             {__('No matching content on this page.', 'seo-tidy')}
                         </p>
                     )}
                     {data.pages > 1 && (
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            marginTop: '16px',
-                        }}>
+                        <div className="tidy-answers-pagination">
                             <Button
                                 variant="secondary"
                                 disabled={page <= 1}
@@ -1154,7 +1139,7 @@ function MigrationOverview() {
     };
 
     return (
-        <div>
+        <div className="tidy-migration">
             <p>
                 {__('Import SEO metadata from another plugin without deleting its data or replacing populated SEO-TidY fields.', 'seo-tidy')}
             </p>
@@ -1162,7 +1147,7 @@ function MigrationOverview() {
                 {__('Only published posts and pages are included. Unresolved template variables are skipped.', 'seo-tidy')}
             </p>
 
-            <label>
+            <label className="tidy-migration-source">
                 {__('Source plugin', 'seo-tidy')}{' '}
                 <select
                     value={source}
@@ -1175,7 +1160,8 @@ function MigrationOverview() {
             </label>
 
             {preview && (
-                <div style={{ marginTop: '16px' }}>
+                <div className="tidy-migration-preview">
+                    <div className="tidy-migration-stats">
                     <p>
                         {__('Potential SEO titles:', 'seo-tidy')}
                         {' '}<strong>{preview.titles}</strong>
@@ -1184,12 +1170,13 @@ function MigrationOverview() {
                         {__('Potential meta descriptions:', 'seo-tidy')}
                         {' '}<strong>{preview.descriptions}</strong>
                     </p>
-                    <p>
+                    </div>
+                    <p className="tidy-migration-note">
                         {__('Preview counts may include values that are skipped during import.', 'seo-tidy')}
                     </p>
 
                     {!finished && (
-                        <>
+                        <div className="tidy-migration-confirm">
                             <ToggleControl
                                 label={__('I confirm that I want to import the available metadata.', 'seo-tidy')}
                                 checked={confirmed}
@@ -1201,14 +1188,15 @@ function MigrationOverview() {
                                 disabled={!confirmed || busy}
                                 isBusy={busy}
                                 onClick={importNext}
+                                className="tidy-migration-import-button"
                             >
                                 {__('Import next 20 posts or pages', 'seo-tidy')}
                             </Button>
-                        </>
+                        </div>
                     )}
 
                     {processed > 0 && (
-                        <p>
+                        <p className="tidy-migration-progress">
                             {__('Processed:', 'seo-tidy')} {processed}
                             {' | '}
                             {__('Titles imported:', 'seo-tidy')} {titles}
@@ -1369,7 +1357,7 @@ function GeneralSettings() {
         keys.some((item) => values[item.key] !== saved[item.key]);
 
     return (
-        <div>
+        <div className="tidy-settings-panel tidy-general-settings">
             <p>
                 {__('Manage SEO-TidY output and audit preferences.', 'seo-tidy')}
             </p>
@@ -1387,9 +1375,10 @@ function GeneralSettings() {
 
             {values && (
                 <>
+                    <div className="tidy-settings-list">
                     {keys.map((item) => (
+                        <div className="tidy-setting-row" key={item.key}>
                         <ToggleControl
-                            key={item.key}
                             label={item.label}
                             help={item.help}
                             checked={values[item.key]}
@@ -1401,10 +1390,13 @@ function GeneralSettings() {
                                 }));
                             }}
                         />
+                        </div>
                     ))}
+                    </div>
 
                     <Button
                         variant="primary"
+                        className="tidy-settings-save"
                         disabled={!changed || busy}
                         isBusy={busy}
                         onClick={save}
@@ -1429,11 +1421,14 @@ function App() {
 
     return (
         <div className="wrap seo-tidy-admin">
-            <h1>SEO-TidY</h1>
-            <p>{__('SEO and AI search readiness for WordPress.', 'seo-tidy')}</p>
+            <header className="tidy-header">
+                <h1>SEO-TidY</h1>
+                <p>{__('SEO and AI search readiness for WordPress.', 'seo-tidy')}</p>
+            </header>
             {active === 'dashboard' && window.seoTidyBranding?.heroUrl && (
                 <img
                     src={window.seoTidyBranding.heroUrl}
+                    className="tidy-hero"
                     alt="SEO-TidY by QvarcY"
                     style={{
                         display: 'block',
@@ -1448,7 +1443,7 @@ function App() {
 
             <nav
                 aria-label={__('SEO-TidY navigation', 'seo-tidy')}
-                style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '20px' }}
+                className="tidy-navigation"
             >
                 {sections.map((section) => (
                     <Button
@@ -1462,7 +1457,7 @@ function App() {
                 ))}
             </nav>
 
-            <Card>
+            <Card className="tidy-main-card">
                 <CardBody>
                     <h2>{current.label}</h2>
 
