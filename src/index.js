@@ -1169,7 +1169,7 @@ function GeneralSettings() {
 
                 const options = {};
                 for (const item of keys) {
-                    options[item.key] = data[item.key] !== false;
+                    options[item.key] = ![false, 0, '0', null].includes(data[item.key]);
                 }
 
                 setValues(options);
@@ -1194,7 +1194,7 @@ function GeneralSettings() {
 
             const updated = {};
             for (const item of keys) {
-                updated[item.key] = result[item.key] === true;
+                updated[item.key] = [true, 1, '1'].includes(result[item.key]);
             }
 
             setValues(updated);
