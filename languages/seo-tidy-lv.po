@@ -92,3 +92,19 @@ msgstr "rakstzīmes"
 #: src/editor.js
 msgid "Illustrative preview. Search engines may change the result."
 msgstr "Ilustratīvs priekšskatījums. Meklētājprogrammas var mainīt rezultāta attēlojumu."
+
+#: src/editor.js
+msgid "Untitled post"
+msgstr "Ieraksts bez virsraksta"
+
+#: src/editor.js
+msgid "Reference scale only, not an SEO score."
+msgstr "Tikai orientējoša skala, nevis SEO vērtējums."
+
+#: src/editor.js
+msgid "The post title is used when the SEO title is empty."
+msgstr "Ja SEO virsraksts nav norādīts, tiek izmantots ieraksta virsraksts."
+
+#: src/editor.js
+msgid "No custom description. Search engines may select text from the page."
+msgstr "Nav pielāgota apraksta. Meklētājprogrammas var izvēlēties tekstu no lapas."

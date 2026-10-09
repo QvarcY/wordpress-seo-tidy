@@ -14,6 +14,35 @@ import { useSelect, useDispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { createElement } from '@wordpress/element';
 
+
+function LengthIndicator({ label, value, reference }) {
+    const percentage = Math.min(100, (value / reference) * 100);
+
+    return (
+        <div style={{ marginBottom: '12px' }}>
+            <div style={{ fontSize: '12px', marginBottom: '5px' }}>
+                {label}: {value} {__('characters', 'seo-tidy')}
+            </div>
+            <div
+                style={{
+                    height: '6px',
+                    backgroundColor: '#ddd',
+                    borderRadius: '4px',
+                    overflow: 'hidden',
+                }}
+            >
+                <div
+                    style={{
+                        width: percentage + '%',
+                        height: '100%',
+                        backgroundColor: '#666',
+                    }}
+                />
+            </div>
+        </div>
+    );
+}
+
 function SeoTidySidebar() {
     const meta = useSelect(
         (select) => select('core/editor').getEditedPostAttribute('meta'),
@@ -32,7 +61,8 @@ function SeoTidySidebar() {
 
     const seoTitle = meta?._seo_tidy_title || '';
     const seoDescription = meta?._seo_tidy_description || '';
-    const previewTitle = seoTitle || postTitle || '';
+    const previewTitle = seoTitle || postTitle ||
+        __('Untitled post', 'seo-tidy');
     const { editPost } = useDispatch('core/editor');
     const { openGeneralSidebar } = useDispatch('core/edit-post');
 
@@ -93,18 +123,24 @@ function SeoTidySidebar() {
                             {__('Search preview', 'seo-tidy')}
                         </h3>
 
-                        <p style={{ marginBottom: '6px' }}>
-                            {__('SEO Title', 'seo-tidy')}: {seoTitle.length}
-                            {' '}
-                            {__('characters', 'seo-tidy')}
+                        <LengthIndicator
+                            label={__('SEO Title', 'seo-tidy')}
+                            value={seoTitle.length}
+                            reference={65}
+                        />
+                        <LengthIndicator
+                            label={__('Meta Description', 'seo-tidy')}
+                            value={seoDescription.length}
+                            reference={160}
+                        />
+                        <p style={{ fontSize: '12px', color: '#666' }}>
+                            {__('Reference scale only, not an SEO score.', 'seo-tidy')}
                         </p>
-
-                        <p style={{ marginTop: 0 }}>
-                            {__('Meta Description', 'seo-tidy')}:
-                            {' '}{seoDescription.length}
-                            {' '}
-                            {__('characters', 'seo-tidy')}
-                        </p>
+                        {!seoTitle && (
+                            <p style={{ fontSize: '12px' }}>
+                                {__('The post title is used when the SEO title is empty.', 'seo-tidy')}
+                            </p>
+                        )}
 
                         <div
                             style={{
@@ -144,7 +180,10 @@ function SeoTidySidebar() {
                                     lineHeight: '1.5',
                                 }}
                             >
-                                {seoDescription}
+                                {seoDescription || __(
+                                    'No custom description. Search engines may select text from the page.',
+                                    'seo-tidy'
+                                )}
                             </div>
                         </div>
 

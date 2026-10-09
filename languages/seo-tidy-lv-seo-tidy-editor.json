@@ -25,6 +25,18 @@
       ],
       "Illustrative preview. Search engines may change the result.": [
         "Ilustratīvs priekšskatījums. Meklētājprogrammas var mainīt rezultāta attēlojumu."
+      ],
+      "Untitled post": [
+        "Ieraksts bez virsraksta"
+      ],
+      "Reference scale only, not an SEO score.": [
+        "Tikai orientējoša skala, nevis SEO vērtējums."
+      ],
+      "The post title is used when the SEO title is empty.": [
+        "Ja SEO virsraksts nav norādīts, tiek izmantots ieraksta virsraksts."
+      ],
+      "No custom description. Search engines may select text from the page.": [
+        "Nav pielāgota apraksta. Meklētājprogrammas var izvēlēties tekstu no lapas."
       ]
     }
   }
