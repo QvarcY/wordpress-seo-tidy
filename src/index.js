@@ -979,7 +979,12 @@ function MigrationOverview() {
             const result = await apiFetch({
                 path: '/seo-tidy/v1/migration',
                 method: 'POST',
-                data: { source, cursor },
+                data: {
+                    source,
+                    cursor,
+                    token: preview.token,
+                    confirmed,
+                },
             });
 
             setCursor(result.cursor);

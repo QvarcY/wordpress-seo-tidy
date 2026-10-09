@@ -50,6 +50,12 @@ final class Migration
         }
     }
 
+    private static function permissionKey(string $source): string
+    {
+        return 'seo_tidy_migration_' .
+            get_current_user_id() . '_' . $source;
+    }
+
     private static function keys(\WP_REST_Request $request): array
     {
         return self::SOURCES[$request->get_param('source')];
@@ -83,7 +89,16 @@ final class Migration
     {
         [$titleKey, $descriptionKey] = self::keys($request);
 
+        $token = wp_generate_password(48, false, false);
+
+        set_transient(
+            self::permissionKey((string) $request->get_param('source')),
+            $token,
+            15 * MINUTE_IN_SECONDS
+        );
+
         return new \WP_REST_Response([
+            'token' => $token,
             'titles' => self::candidates($titleKey, '_seo_tidy_title'),
             'descriptions' => self::candidates(
                 $descriptionKey,
@@ -113,8 +128,26 @@ final class Migration
 
     public static function importBatch(
         \WP_REST_Request $request
-    ): \WP_REST_Response {
+    ): \WP_REST_Response|\WP_Error {
         global $wpdb;
+
+        $source = (string) $request->get_param('source');
+        $token = $request->get_param('token');
+        $stored = get_transient(self::permissionKey($source));
+
+        if (
+            $request->get_param('confirmed') !== true ||
+            !is_string($token) ||
+            !is_string($stored) ||
+            $stored === '' ||
+            !hash_equals($stored, $token)
+        ) {
+            return new \WP_Error(
+                'seo_tidy_migration_not_confirmed',
+                'Migration requires a valid preview and explicit confirmation.',
+                ['status' => 403]
+            );
+        }
 
         [$titleKey, $descriptionKey] = self::keys($request);
         $cursor = (int) $request->get_param('cursor');
@@ -160,6 +193,10 @@ final class Migration
                     }
                 }
             }
+        }
+
+        if (count($ids) < 20) {
+            delete_transient(self::permissionKey($source));
         }
 
         return new \WP_REST_Response([
