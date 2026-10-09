@@ -147,3 +147,173 @@
         animation-duration: 0s !important;
     }
 }
+
+/* Dashboard */
+
+.seo-tidy-admin .tidy-dashboard-summary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+    border: 1px solid #d5e7df;
+    border-radius: 13px;
+    background: #eaf4f1;
+}
+
+.seo-tidy-admin .tidy-dashboard-summary-label {
+    color: #25483e;
+    font-weight: 600;
+}
+
+.seo-tidy-admin .tidy-dashboard-total {
+    margin-left: auto;
+    color: var(--tidy-navy);
+    font-size: 30px;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.seo-tidy-admin .tidy-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.seo-tidy-admin .tidy-metric-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    min-width: 0;
+    min-height: 126px;
+    padding: 19px;
+    border: 1px solid var(--tidy-border);
+    border-radius: 13px;
+    background: #f8fafc;
+}
+
+.seo-tidy-admin .tidy-metric-card-action {
+    border-color: #b9dcd0;
+    background: #eff8f4;
+}
+
+.seo-tidy-admin .tidy-metric-label {
+    color: #4a6074;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.45;
+}
+
+.seo-tidy-admin .tidy-metric-value,
+.seo-tidy-admin .tidy-metric-link {
+    color: var(--tidy-navy);
+    font-size: 29px;
+    font-weight: 750;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+
+.seo-tidy-admin .tidy-metric-link.components-button {
+    padding: 0;
+    min-height: 32px;
+    height: auto;
+    color: #126d5b;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.seo-tidy-admin .tidy-metric-link.components-button:hover {
+    color: #0b4d40;
+}
+
+.seo-tidy-admin .tidy-metric-link.components-button:focus-visible {
+    outline: 3px solid var(--tidy-green);
+    outline-offset: 3px;
+}
+
+.seo-tidy-admin .tidy-dashboard-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 14px;
+}
+
+.seo-tidy-admin .tidy-schema-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    flex: 2 1 320px;
+    gap: 14px;
+    padding: 18px;
+    border: 1px solid var(--tidy-border);
+    border-radius: 13px;
+}
+
+.seo-tidy-admin .tidy-panel-heading {
+    display: block;
+    margin-bottom: 9px;
+    color: var(--tidy-navy);
+}
+
+.seo-tidy-admin .tidy-schema-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 11px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.seo-tidy-admin .tidy-schema-status-enabled {
+    color: #176249;
+    background: #dbf4e7;
+}
+
+.seo-tidy-admin .tidy-schema-status-disabled {
+    color: #74521d;
+    background: #fff0cb;
+}
+
+.seo-tidy-admin .tidy-dashboard-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    flex: 1 1 200px;
+    gap: 10px;
+    padding: 18px;
+    border: 1px solid var(--tidy-border);
+    border-radius: 13px;
+}
+
+.seo-tidy-admin .tidy-dashboard-footnote {
+    margin: 18px 0 0;
+    color: #607286;
+    font-size: 12px;
+}
+
+@media (max-width: 600px) {
+    .seo-tidy-admin .tidy-metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+    }
+
+    .seo-tidy-admin .tidy-metric-card {
+        min-height: 115px;
+        padding: 13px;
+    }
+
+    .seo-tidy-admin .tidy-metric-value,
+    .seo-tidy-admin .tidy-metric-link {
+        font-size: 25px;
+    }
+}
+
+@media (max-width: 380px) {
+    .seo-tidy-admin .tidy-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+}

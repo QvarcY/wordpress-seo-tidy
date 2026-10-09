@@ -170,42 +170,39 @@ function DashboardOverview({ onOpenSchema, onOpenMetadata }) {
     ];
 
     return (
-        <div>
-            <p>
-                {__('Published posts and pages:', 'seo-tidy')}
-                {' '}
-                <strong>{data.total}</strong>
-            </p>
+        <div className="tidy-dashboard">
+            <div className="tidy-dashboard-summary">
+                <span className="tidy-dashboard-summary-label">
+                    {__('Published posts and pages:', 'seo-tidy')}
+                </span>
+                <strong className="tidy-dashboard-total">
+                    {data.total}
+                </strong>
+            </div>
 
-            <div
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(185px, 1fr))',
-                    gap: '12px',
-                    marginBottom: '20px',
-                }}
-            >
+            <div className="tidy-metrics-grid">
                 {metrics.map((metric) => (
                     <div
                         key={metric.label}
-                        style={{
-                            border: '1px solid #ddd',
-                            borderRadius: '6px',
-                            padding: '14px',
-                        }}
+                        className={
+                            'tidy-metric-card' +
+                            (metric.filter ? ' tidy-metric-card-action' : '')
+                        }
                     >
-                        <div style={{ fontSize: '13px', marginBottom: '8px' }}>
+                        <span className="tidy-metric-label">
                             {metric.label}
-                        </div>
+                        </span>
+
                         {metric.filter ? (
-                            <Button variant="link"
-                                onClick={() => onOpenMetadata(metric.filter)}>
-                                <strong style={{ fontSize: '25px' }}>
-                                    {metric.value}
-                                </strong>
+                            <Button
+                                variant="link"
+                                className="tidy-metric-link"
+                                onClick={() => onOpenMetadata(metric.filter)}
+                            >
+                                {metric.value}
                             </Button>
                         ) : (
-                            <strong style={{ fontSize: '25px' }}>
+                            <strong className="tidy-metric-value">
                                 {metric.value}
                             </strong>
                         )}
@@ -213,35 +210,48 @@ function DashboardOverview({ onOpenSchema, onOpenMetadata }) {
                 ))}
             </div>
 
-            <p>
-                <strong>{__('Smart Schema:', 'seo-tidy')}</strong>
-                {' '}
-                {data.schemaEnabled
-                    ? __('Enabled', 'seo-tidy')
-                    : __('Disabled', 'seo-tidy')}
-                {' '}
-                <Button variant="link" onClick={onOpenSchema}>
-                    {__('Manage Schema', 'seo-tidy')}
-                </Button>
-            </p>
+            <div className="tidy-dashboard-bottom">
+                <div className="tidy-schema-panel">
+                    <div>
+                        <strong className="tidy-panel-heading">
+                            {__('Smart Schema:', 'seo-tidy')}
+                        </strong>
+                        <span className={
+                            'tidy-schema-status' +
+                            (data.schemaEnabled
+                                ? ' tidy-schema-status-enabled'
+                                : ' tidy-schema-status-disabled')
+                        }>
+                            {data.schemaEnabled
+                                ? __('Enabled', 'seo-tidy')
+                                : __('Disabled', 'seo-tidy')}
+                        </span>
+                    </div>
 
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <Button variant="secondary" href={data.links.posts}>
-                    {__('Edit posts', 'seo-tidy')}
-                </Button>
-                <Button variant="secondary" href={data.links.pages}>
-                    {__('Edit pages', 'seo-tidy')}
-                </Button>
+                    <Button
+                        variant="secondary"
+                        onClick={onOpenSchema}
+                    >
+                        {__('Manage Schema', 'seo-tidy')}
+                    </Button>
+                </div>
+
+                <div className="tidy-dashboard-actions">
+                    <Button variant="secondary" href={data.links.posts}>
+                        {__('Edit posts', 'seo-tidy')}
+                    </Button>
+                    <Button variant="secondary" href={data.links.pages}>
+                        {__('Edit pages', 'seo-tidy')}
+                    </Button>
+                </div>
             </div>
 
-            <p style={{ marginTop: '18px', color: '#666' }}>
+            <p className="tidy-dashboard-footnote">
                 {__('Counts include published posts and pages only.', 'seo-tidy')}
             </p>
         </div>
     );
 }
-
-
 
 
 function SearchPreview({ title, description, fallbackTitle }) {
