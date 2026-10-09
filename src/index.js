@@ -441,12 +441,9 @@ function MetadataList({ filter, setFilter }) {
     ];
 
     return (
-        <div>
-            <div style={{
-                display: 'flex', flexWrap: 'wrap',
-                gap: '12px', marginBottom: '16px',
-            }}>
-                <label>
+        <div className="tidy-metadata">
+            <div className="tidy-metadata-filters">
+                <label className="tidy-metadata-filter">
                     {__('Show', 'seo-tidy')}{' '}
                     <select value={filter} onChange={(event) => {
                         setFilter(event.target.value);
@@ -457,7 +454,7 @@ function MetadataList({ filter, setFilter }) {
                         ))}
                     </select>
                 </label>
-                <label>
+                <label className="tidy-metadata-filter">
                     {__('Content type', 'seo-tidy')}{' '}
                     <select value={type} onChange={(event) => {
                         setType(event.target.value);
@@ -480,8 +477,9 @@ function MetadataList({ filter, setFilter }) {
 
             {result && (
                 <>
-                    <p>{__('Matching items:', 'seo-tidy')} <strong>{result.total}</strong></p>
-                    <table className="widefat striped">
+                    <p className="tidy-metadata-count">{__('Matching items:', 'seo-tidy')} <strong>{result.total}</strong></p>
+                    <div className="tidy-metadata-table-wrap">
+                    <table className="widefat striped tidy-metadata-table">
                         <thead>
                             <tr>
                                 <th>{__('Title', 'seo-tidy')}</th>
@@ -494,17 +492,21 @@ function MetadataList({ filter, setFilter }) {
                         <tbody>
                             {result.items.map((item) => (
                                 <tr key={item.id}>
-                                    <td>{item.title || __('Untitled', 'seo-tidy')}</td>
-                                    <td>{item.type === 'post'
+                                    <td className="tidy-metadata-title">{item.title || __('Untitled', 'seo-tidy')}</td>
+                                    <td className="tidy-metadata-type">{item.type === 'post'
                                         ? __('Post', 'seo-tidy')
                                         : __('Page', 'seo-tidy')}</td>
-                                    <td>{item.hasTitle
-                                        ? __('Added', 'seo-tidy')
-                                        : __('Missing', 'seo-tidy')}</td>
-                                    <td>{item.hasDescription
-                                        ? __('Added', 'seo-tidy')
-                                        : __('Missing', 'seo-tidy')}</td>
-                                    <td>
+                                    <td><span className={'tidy-metadata-status ' + (item.hasTitle ? 'tidy-metadata-status-added' : 'tidy-metadata-status-missing')}>
+                                        {item.hasTitle
+                                            ? __('Added', 'seo-tidy')
+                                            : __('Missing', 'seo-tidy')}
+                                    </span></td>
+                                    <td><span className={'tidy-metadata-status ' + (item.hasDescription ? 'tidy-metadata-status-added' : 'tidy-metadata-status-missing')}>
+                                        {item.hasDescription
+                                            ? __('Added', 'seo-tidy')
+                                            : __('Missing', 'seo-tidy')}
+                                    </span></td>
+                                    <td className="tidy-metadata-actions">
                                         <Button
                                             variant="link"
                                             disabled={saving}
@@ -515,7 +517,7 @@ function MetadataList({ filter, setFilter }) {
                                         {item.editUrl && (
                                             <a
                                                 href={item.editUrl}
-                                                style={{ marginLeft: '12px' }}
+                                                className="tidy-metadata-edit-link"
                                             >
                                                 {__('Edit', 'seo-tidy')}
                                             </a>
@@ -525,6 +527,7 @@ function MetadataList({ filter, setFilter }) {
                             ))}
                         </tbody>
                     </table>
+                    </div>
 
                     {editing !== null && (() => {
                         const item = result.items.find((row) => row.id === editing);
@@ -532,12 +535,7 @@ function MetadataList({ filter, setFilter }) {
                         if (!item) return null;
 
                         return (
-                            <div style={{
-                                border: '1px solid #ddd',
-                                padding: '16px',
-                                marginTop: '16px',
-                                borderRadius: '6px',
-                            }}>
+                            <div className="tidy-metadata-quick-edit">
                                 <h3>
                                     {__('Quick edit', 'seo-tidy')}: {item.title}
                                 </h3>
@@ -567,11 +565,7 @@ function MetadataList({ filter, setFilter }) {
                                     </Notice>
                                 )}
 
-                                <div style={{
-                                    display: 'flex',
-                                    gap: '8px',
-                                    marginTop: '12px',
-                                }}>
+                                <div className="tidy-metadata-edit-buttons">
                                     <Button
                                         variant="primary"
                                         isBusy={saving}
@@ -597,10 +591,7 @@ function MetadataList({ filter, setFilter }) {
                     )}
 
                     {result.pages > 1 && (
-                        <div style={{
-                            display: 'flex', gap: '12px',
-                            alignItems: 'center', marginTop: '16px',
-                        }}>
+                        <div className="tidy-metadata-pagination">
                             <Button variant="secondary"
                                 disabled={page <= 1}
                                 onClick={() => setPage(page - 1)}>
