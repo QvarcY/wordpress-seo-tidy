@@ -9,6 +9,11 @@ final class SEOAudit
     public static function init(): void
     {
         add_action('rest_api_init', [self::class, 'registerRoutes']);
+        add_action('save_post', [self::class, 'clearIncomingLinksCache']);
+        add_action('deleted_post', [self::class, 'clearIncomingLinksCache']);
+        add_action('transition_post_status', [self::class, 'clearIncomingLinksCache']);
+        add_action('update_option_home', [self::class, 'clearIncomingLinksCache']);
+        add_action('update_option_permalink_structure', [self::class, 'clearIncomingLinksCache']);
     }
 
     public static function registerRoutes(): void
@@ -198,7 +203,35 @@ final class SEOAudit
     }
 
 
+
+    public static function clearIncomingLinksCache(): void
+    {
+        delete_transient('seo_tidy_incoming_links_v1');
+    }
+
     private static function incomingContentLinks(): ?array
+    {
+        $cached = get_transient('seo_tidy_incoming_links_v1');
+
+        if (
+            is_array($cached) &&
+            array_key_exists('result', $cached)
+        ) {
+            return $cached['result'];
+        }
+
+        $result = self::buildIncomingContentLinks();
+
+        set_transient(
+            'seo_tidy_incoming_links_v1',
+            ['result' => $result],
+            5 * MINUTE_IN_SECONDS
+        );
+
+        return $result;
+    }
+
+    private static function buildIncomingContentLinks(): ?array
     {
         $ids = get_posts([
             'post_type' => ['post', 'page'],
