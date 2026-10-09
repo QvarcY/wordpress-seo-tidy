@@ -780,6 +780,162 @@ function SEOAuditOverview() {
     );
 }
 
+
+const answerSuggestions = {
+    empty_content: __('The content is empty.', 'seo-tidy'),
+    review_introduction: __('Review the introduction: explain the subject clearly near the beginning.', 'seo-tidy'),
+    review_sections: __('Consider dividing longer content into descriptive sections.', 'seo-tidy'),
+    consider_questions: __('Consider adding a question-and-answer section if relevant.', 'seo-tidy'),
+};
+
+function AnswerReadinessOverview() {
+    const [page, setPage] = useState(1);
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(false);
+    const [suggestionsOnly, setSuggestionsOnly] = useState(false);
+
+    useEffect(() => {
+        let active = true;
+        setData(null);
+        setError(false);
+
+        apiFetch({ path: '/seo-tidy/v1/answers?page=' + page })
+            .then((result) => {
+                if (active) setData(result);
+            })
+            .catch(() => {
+                if (active) setError(true);
+            });
+
+        return () => { active = false; };
+    }, [page]);
+
+    const items = data
+        ? data.items.filter((item) =>
+            !suggestionsOnly || item.suggestions.length > 0
+        )
+        : [];
+
+    return (
+        <div>
+            <p>
+                {__('Content structure review for humans and answer systems. This does not predict AI citations or search rankings.', 'seo-tidy')}
+            </p>
+            <p>
+                {__('Checks saved WordPress content; dynamic blocks and themes may produce different final HTML.', 'seo-tidy')}
+            </p>
+            <label style={{ display: 'block', marginBottom: '14px' }}>
+                <input
+                    type="checkbox"
+                    checked={suggestionsOnly}
+                    onChange={(event) => setSuggestionsOnly(event.target.checked)}
+                />
+                {' '}
+                {__('Show only content with suggestions', 'seo-tidy')}
+            </label>
+
+            {error && (
+                <Notice status="error" isDismissible={false}>
+                    {__('Could not load content review.', 'seo-tidy')}
+                </Notice>
+            )}
+            {!error && !data && <Spinner />}
+
+            {data && (
+                <>
+                    <p>
+                        {__('Published content:', 'seo-tidy')}
+                        {' '}
+                        <strong>{data.total}</strong>
+                    </p>
+                    <table className="widefat striped">
+                        <thead>
+                            <tr>
+                                <th>{__('Title', 'seo-tidy')}</th>
+                                <th>{__('Content structure', 'seo-tidy')}</th>
+                                <th>{__('Suggestions', 'seo-tidy')}</th>
+                                <th>{__('Action', 'seo-tidy')}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {items.map((item) => (
+                                <tr key={item.id}>
+                                    <td>
+                                        {item.title || __('Untitled', 'seo-tidy')}
+                                    </td>
+                                    <td>
+                                        <div>
+                                            {__('Characters:', 'seo-tidy')}
+                                            {' '}{item.facts.characters}
+                                        </div>
+                                        <div>
+                                            {__('Section headings:', 'seo-tidy')}
+                                            {' '}{item.facts.headings}
+                                        </div>
+                                        <div>
+                                            {__('Question headings:', 'seo-tidy')}
+                                            {' '}{item.facts.questionHeadings}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {item.suggestions.length === 0
+                                            ? __('No suggestions', 'seo-tidy')
+                                            : (
+                                                <ul style={{ paddingLeft: '18px', margin: 0 }}>
+                                                    {item.suggestions.map((code) => (
+                                                        <li key={code}>
+                                                            {answerSuggestions[code] || code}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                    </td>
+                                    <td>
+                                        {item.editUrl && (
+                                            <a href={item.editUrl}>
+                                                {__('Edit', 'seo-tidy')}
+                                            </a>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    {items.length === 0 && (
+                        <p>
+                            {__('No matching content on this page.', 'seo-tidy')}
+                        </p>
+                    )}
+                    {data.pages > 1 && (
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            marginTop: '16px',
+                        }}>
+                            <Button
+                                variant="secondary"
+                                disabled={page <= 1}
+                                onClick={() => setPage(page - 1)}
+                            >
+                                {__('Previous', 'seo-tidy')}
+                            </Button>
+                            <span>{page} / {data.pages}</span>
+                            <Button
+                                variant="secondary"
+                                disabled={page >= data.pages}
+                                onClick={() => setPage(page + 1)}
+                            >
+                                {__('Next', 'seo-tidy')}
+                            </Button>
+                        </div>
+                    )}
+                </>
+            )}
+        </div>
+    );
+}
+
 function App() {
     const [active, setActive] = useState('dashboard');
     const [metadataFilter, setMetadataFilter] = useState('all');
@@ -815,7 +971,9 @@ function App() {
                 <CardBody>
                     <h2>{current.label}</h2>
 
-                    {active === 'audit' ? (
+                    {active === 'answers' ? (
+                        <AnswerReadinessOverview />
+                    ) : active === 'audit' ? (
                         <SEOAuditOverview />
                     ) : active === 'schema' ? (
                         <SchemaSettings />

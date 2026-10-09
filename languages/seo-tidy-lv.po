@@ -376,3 +376,63 @@ msgstr "Jānovērš"
 #: src/index.js
 msgid "Recommendations"
 msgstr "Ieteikumi"
+
+#: src/index.js
+msgid "The content is empty."
+msgstr "Saturs ir tukšs."
+
+#: src/index.js
+msgid "Review the introduction: explain the subject clearly near the beginning."
+msgstr "Pārskati ievadu un skaidri izskaidro tēmu jau sākumā."
+
+#: src/index.js
+msgid "Consider dividing longer content into descriptive sections."
+msgstr "Apsver garāka satura sadalīšanu skaidrās sadaļās."
+
+#: src/index.js
+msgid "Consider adding a question-and-answer section if relevant."
+msgstr "Ja tas ir noderīgi, apsver jautājumu un atbilžu sadaļu."
+
+#: src/index.js
+msgid "Content structure review for humans and answer systems. This does not predict AI citations or search rankings."
+msgstr "Satura struktūras pārskats lasītājiem un atbilžu sistēmām. Tas neprognozē MI atsauces vai meklēšanas pozīcijas."
+
+#: src/index.js
+msgid "Checks saved WordPress content; dynamic blocks and themes may produce different final HTML."
+msgstr "Pārbauda saglabāto WordPress saturu. Dinamiskie bloki un tēmas var veidot atšķirīgu gala HTML."
+
+#: src/index.js
+msgid "Show only content with suggestions"
+msgstr "Rādīt tikai saturu ar ieteikumiem"
+
+#: src/index.js
+msgid "Could not load content review."
+msgstr "Neizdevās ielādēt satura pārskatu."
+
+#: src/index.js
+msgid "Content structure"
+msgstr "Satura struktūra"
+
+#: src/index.js
+msgid "Suggestions"
+msgstr "Ieteikumi"
+
+#: src/index.js
+msgid "Characters:"
+msgstr "Rakstzīmes:"
+
+#: src/index.js
+msgid "Section headings:"
+msgstr "Sadaļu virsraksti:"
+
+#: src/index.js
+msgid "Question headings:"
+msgstr "Jautājumu virsraksti:"
+
+#: src/index.js
+msgid "No suggestions"
+msgstr "Nav ieteikumu"
+
+#: src/index.js
+msgid "No matching content on this page."
+msgstr "Šajā lapā nav atbilstoša satura."
