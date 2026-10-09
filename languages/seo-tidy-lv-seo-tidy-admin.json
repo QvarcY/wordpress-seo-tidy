@@ -384,6 +384,12 @@
       ],
       "Duplicate meta description": [
         "Dublēts meta apraksts"
+      ],
+      "Search engine indexing is discouraged site-wide": [
+        "Vietnes iestatījumos nav ieteikta indeksēšana meklētājprogrammās"
+      ],
+      "Review this page noindex setting": [
+        "Pārskatīt šīs lapas noindex iestatījumu"
       ]
     }
   }

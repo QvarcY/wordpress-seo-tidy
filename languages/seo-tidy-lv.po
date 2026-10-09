@@ -572,3 +572,11 @@ msgstr "Dublēts SEO virsraksts"
 #: src/index.js
 msgid "Duplicate meta description"
 msgstr "Dublēts meta apraksts"
+
+#: src/index.js
+msgid "Search engine indexing is discouraged site-wide"
+msgstr "Vietnes iestatījumos nav ieteikta indeksēšana meklētājprogrammās"
+
+#: src/index.js
+msgid "Review this page noindex setting"
+msgstr "Pārskatīt šīs lapas noindex iestatījumu"

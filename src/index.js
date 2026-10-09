@@ -622,6 +622,8 @@ const auditLabels = {
     review_h1: __('Review H1 heading (theme may provide it)', 'seo-tidy'),
     duplicate_title: __('Duplicate SEO title', 'seo-tidy'),
     duplicate_description: __('Duplicate meta description', 'seo-tidy'),
+    site_noindex: __('Search engine indexing is discouraged site-wide', 'seo-tidy'),
+    review_noindex: __('Review this page noindex setting', 'seo-tidy'),
     review_image_alt: __('Review image alternative text', 'seo-tidy'),
 };
 

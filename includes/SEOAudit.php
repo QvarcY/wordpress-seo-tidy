@@ -69,6 +69,39 @@ final class SEOAudit
         return $duplicates;
     }
 
+
+    private static function noindexSource(int $postId): string
+    {
+        if (get_option('blog_public', '1') === '0') {
+            return 'site';
+        }
+
+        $yoast = get_post_meta(
+            $postId,
+            '_yoast_wpseo_meta-robots-noindex',
+            true
+        );
+
+        if ((string) $yoast === '1') {
+            return 'yoast';
+        }
+
+        $rankMath = get_post_meta(
+            $postId,
+            'rank_math_robots',
+            true
+        );
+
+        if (
+            is_array($rankMath) &&
+            in_array('noindex', $rankMath, true)
+        ) {
+            return 'rank_math';
+        }
+
+        return '';
+    }
+
     private static function needsAltReview(string $content): bool
     {
         $processor = new \WP_HTML_Tag_Processor($content);
@@ -172,6 +205,15 @@ final class SEOAudit
                 $duplicates['_seo_tidy_description'][$description]
             )) {
                 $issues[] = 'duplicate_description';
+            }
+
+
+            $noindex = self::noindexSource((int) $id);
+
+            if ($noindex !== '') {
+                $issues[] = $noindex === 'site'
+                    ? 'site_noindex'
+                    : 'review_noindex';
             }
 
             $content = (string) $post->post_content;
