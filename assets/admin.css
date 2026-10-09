@@ -317,3 +317,171 @@
         grid-template-columns: 1fr;
     }
 }
+
+
+/* SEO Audit */
+
+.seo-tidy-admin .tidy-audit > p {
+    line-height: 1.65;
+}
+
+.seo-tidy-admin .tidy-audit-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 15px;
+    margin: 10px 0 18px;
+    border: 1px solid var(--tidy-border);
+    border-radius: 10px;
+    background: #f8fafc;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.seo-tidy-admin .tidy-audit-filter input {
+    margin: 0;
+}
+
+.seo-tidy-admin .tidy-audit-table-wrap {
+    max-width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--tidy-border);
+    border-radius: 13px;
+}
+
+.seo-tidy-admin .tidy-audit-table {
+    width: 100%;
+    min-width: 680px;
+    border: 0;
+    border-spacing: 0;
+}
+
+.seo-tidy-admin .tidy-audit-table th {
+    padding: 14px 16px;
+    color: #fff;
+    background: var(--tidy-navy);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: left;
+}
+
+.seo-tidy-admin .tidy-audit-table td {
+    padding: 16px;
+    vertical-align: top;
+    border-bottom: 1px solid var(--tidy-border);
+    line-height: 1.5;
+}
+
+.seo-tidy-admin .tidy-audit-title {
+    min-width: 160px;
+    max-width: 290px;
+    font-weight: 650;
+    overflow-wrap: anywhere;
+}
+
+.seo-tidy-admin .tidy-audit-findings {
+    min-width: 280px;
+}
+
+.seo-tidy-admin .tidy-audit-actions {
+    min-width: 145px;
+    white-space: nowrap;
+}
+
+.seo-tidy-admin .tidy-audit-row-issues td:first-child {
+    box-shadow: inset 3px 0 0 #dba33e;
+}
+
+.seo-tidy-admin .tidy-audit-clear {
+    color: #176249;
+    font-weight: 650;
+}
+
+.seo-tidy-admin .tidy-audit-attention {
+    padding: 10px 13px;
+    border: 1px solid #f0d6a8;
+    border-radius: 9px;
+    background: #fff8ea;
+}
+
+.seo-tidy-admin .tidy-audit-attention strong {
+    color: #755018;
+}
+
+.seo-tidy-admin .tidy-audit-issue-list {
+    margin: 9px 0 0;
+    padding-left: 20px;
+}
+
+.seo-tidy-admin .tidy-audit-issue-list li {
+    margin-bottom: 6px;
+}
+
+.seo-tidy-admin .tidy-audit-recommendations {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--tidy-border);
+    border-radius: 9px;
+    background: #f8fafc;
+}
+
+.seo-tidy-admin .tidy-audit-recommendations summary {
+    color: #205a4d;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.seo-tidy-admin .tidy-audit-affected {
+    margin-top: 9px;
+}
+
+.seo-tidy-admin .tidy-audit-link-list {
+    padding-left: 19px;
+    overflow-wrap: anywhere;
+}
+
+.seo-tidy-admin .tidy-audit-link-list code {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.seo-tidy-admin .tidy-audit-edit-link {
+    display: inline-block;
+    margin-left: 12px;
+}
+
+.seo-tidy-admin .tidy-audit-quick-edit {
+    margin-top: 20px;
+    padding: 22px;
+    border: 1px solid #b9dcd0;
+    border-radius: 13px;
+    background: #f4faf7;
+}
+
+.seo-tidy-admin .tidy-audit-quick-edit h3 {
+    margin-top: 0;
+    color: var(--tidy-navy);
+}
+
+.seo-tidy-admin .tidy-audit-edit-buttons,
+.seo-tidy-admin .tidy-audit-pagination {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.seo-tidy-admin .tidy-audit-pagination {
+    justify-content: flex-end;
+}
+
+@media (max-width: 782px) {
+    .seo-tidy-admin .tidy-audit-table {
+        min-width: 620px;
+    }
+
+    .seo-tidy-admin .tidy-audit-quick-edit {
+        padding: 15px;
+    }
+}

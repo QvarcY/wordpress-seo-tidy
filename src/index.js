@@ -707,7 +707,7 @@ function SEOAuditOverview() {
         : [];
 
     return (
-        <div>
+        <div className="tidy-audit">
             <p>
                 {__('Checks published posts and pages in batches of 20. Lengths are guidance, not SEO scores.', 'seo-tidy')}
             </p>
@@ -724,7 +724,7 @@ function SEOAuditOverview() {
                 </Notice>
             )}
 
-            <label style={{ display: 'block', marginBottom: '14px' }}>
+            <label className="tidy-audit-filter">
                 <input
                     type="checkbox"
                     checked={issuesOnly}
@@ -750,7 +750,8 @@ function SEOAuditOverview() {
                         <strong>{data.total}</strong>
                     </p>
 
-                    <table className="widefat striped">
+                    <div className="tidy-audit-table-wrap">
+                    <table className="widefat striped tidy-audit-table">
                         <thead>
                             <tr>
                                 <th>{__('Title', 'seo-tidy')}</th>
@@ -760,9 +761,9 @@ function SEOAuditOverview() {
                         </thead>
                         <tbody>
                             {items.map((item) => (
-                                <tr key={item.id}>
-                                    <td>{item.title || __('Untitled', 'seo-tidy')}</td>
-                                    <td>
+                                <tr key={item.id} className={item.issues.length ? "tidy-audit-row-issues" : "tidy-audit-row-clear"}>
+                                    <td className="tidy-audit-title">{item.title || __('Untitled', 'seo-tidy')}</td>
+                                    <td className="tidy-audit-findings">
                                         {(() => {
                                             const missing = item.issues.filter(
                                                 (issue) => issue.startsWith('missing_')
@@ -772,17 +773,17 @@ function SEOAuditOverview() {
                                             );
 
                                             if (!item.issues.length) {
-                                                return __('No findings', 'seo-tidy');
+                                                return <span className="tidy-audit-clear">{__('No findings', 'seo-tidy')}</span>;
                                             }
 
                                             return (
                                                 <>
                                                     {missing.length > 0 && (
-                                                        <div>
+                                                        <div className="tidy-audit-attention">
                                                             <strong>
                                                                 {__('Needs attention', 'seo-tidy')}
                                                             </strong>
-                                                            <ul style={{ paddingLeft: '18px' }}>
+                                                            <ul className="tidy-audit-issue-list">
                                                                 {missing.map((issue) => (
                                                                     <li key={issue}>
                                                                         {auditLabels[issue]}
@@ -792,26 +793,23 @@ function SEOAuditOverview() {
                                                         </div>
                                                     )}
                                                     {advice.length > 0 && (
-                                                        <details>
+                                                        <details className="tidy-audit-recommendations">
                                                             <summary>
                                                                 {__('Recommendations', 'seo-tidy')}
                                                                 {' (' + advice.length + ')'}
                                                             </summary>
-                                                            <ul style={{ paddingLeft: '18px' }}>
+                                                            <ul className="tidy-audit-issue-list">
                                                                 {advice.map((issue) => (
                                                                     <li key={issue}>
                                                                         {auditLabels[issue]}
                                                                         {issue === 'review_unavailable_post_link' &&
                                                                             Array.isArray(item.unavailableLinks) &&
                                                                             item.unavailableLinks.length > 0 && (
-                                                                                <div style={{ marginTop: '6px' }}>
+                                                                                <div className="tidy-audit-affected">
                                                                                     <strong>
                                                                                         {__('Affected links:', 'seo-tidy')}
                                                                                     </strong>
-                                                                                    <ul style={{
-                                                                                        paddingLeft: '18px',
-                                                                                        overflowWrap: 'anywhere',
-                                                                                    }}>
+                                                                                    <ul className="tidy-audit-link-list">
                                                                                         {item.unavailableLinks.map((href) => (
                                                                                             <li key={href}>
                                                                                                 <code>{href}</code>
@@ -829,7 +827,7 @@ function SEOAuditOverview() {
                                             );
                                         })()}
                                     </td>
-                                    <td>
+                                    <td className="tidy-audit-actions">
                                         <Button
                                             variant="link"
                                             disabled={saving}
@@ -839,7 +837,7 @@ function SEOAuditOverview() {
                                         </Button>
                                         {item.editUrl && (
                                             <a href={item.editUrl}
-                                                style={{ marginLeft: '12px' }}>
+                                                className="tidy-audit-edit-link">
                                                 {__('Edit', 'seo-tidy')}
                                             </a>
                                         )}
@@ -848,6 +846,7 @@ function SEOAuditOverview() {
                             ))}
                         </tbody>
                     </table>
+                    </div>
 
                     {editing !== null && (() => {
                         const item = data.items.find((entry) =>
@@ -856,12 +855,7 @@ function SEOAuditOverview() {
                         if (!item) return null;
 
                         return (
-                            <div style={{
-                                marginTop: '16px',
-                                padding: '16px',
-                                border: '1px solid #ddd',
-                                borderRadius: '6px',
-                            }}>
+                            <div className="tidy-audit-quick-edit">
                                 <h3>
                                     {__('Quick edit', 'seo-tidy')}: {item.title}
                                 </h3>
@@ -889,11 +883,7 @@ function SEOAuditOverview() {
                                         {__('Could not save metadata.', 'seo-tidy')}
                                     </Notice>
                                 )}
-                                <div style={{
-                                    display: 'flex',
-                                    gap: '8px',
-                                    marginTop: '12px',
-                                }}>
+                                <div className="tidy-audit-edit-buttons">
                                     <Button
                                         variant="primary"
                                         isBusy={saving}
@@ -919,12 +909,7 @@ function SEOAuditOverview() {
                     )}
 
                     {data.pages > 1 && (
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            marginTop: '16px',
-                        }}>
+                        <div className="tidy-audit-pagination">
                             <Button variant="secondary"
                                 disabled={page <= 1}
                                 onClick={() => setPage(page - 1)}>
