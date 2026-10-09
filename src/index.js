@@ -399,7 +399,10 @@ function MetadataList({ filter, setFilter }) {
                                             {__('Quick edit', 'seo-tidy')}
                                         </Button>
                                         {item.editUrl && (
-                                            <a href={item.editUrl}>
+                                            <a
+                                                href={item.editUrl}
+                                                style={{ marginLeft: '12px' }}
+                                            >
                                                 {__('Edit', 'seo-tidy')}
                                             </a>
                                         )}
