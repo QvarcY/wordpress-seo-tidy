@@ -633,6 +633,17 @@ const auditLabels = {
     review_image_alt: __('Review image alternative text', 'seo-tidy'),
 };
 
+const auditAttentionCodes = new Set([
+    'missing_title',
+    'duplicate_title',
+    'duplicate_description',
+    'site_noindex',
+]);
+
+function isAuditAttention(issue) {
+    return auditAttentionCodes.has(issue);
+}
+
 function SEOAuditOverview() {
     const [page, setPage] = useState(1);
     const [data, setData] = useState(null);
@@ -758,11 +769,11 @@ function SEOAuditOverview() {
                                     <td className="tidy-audit-title">{item.title || __('Untitled', 'seo-tidy')}</td>
                                     <td className="tidy-audit-findings">
                                         {(() => {
-                                            const missing = item.issues.filter(
-                                                (issue) => issue.startsWith('missing_')
+                                            const attention = item.issues.filter(
+                                                isAuditAttention
                                             );
                                             const advice = item.issues.filter(
-                                                (issue) => !issue.startsWith('missing_')
+                                                (issue) => !isAuditAttention(issue)
                                             );
 
                                             if (!item.issues.length) {
@@ -771,13 +782,13 @@ function SEOAuditOverview() {
 
                                             return (
                                                 <>
-                                                    {missing.length > 0 && (
+                                                    {attention.length > 0 && (
                                                         <div className="tidy-audit-attention">
                                                             <strong>
                                                                 {__('Needs attention', 'seo-tidy')}
                                                             </strong>
                                                             <ul className="tidy-audit-issue-list">
-                                                                {missing.map((issue) => (
+                                                                {attention.map((issue) => (
                                                                     <li key={issue}>
                                                                         {auditLabels[issue]}
                                                                     </li>
