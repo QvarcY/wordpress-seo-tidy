@@ -1429,11 +1429,14 @@ function App() {
 
     return (
         <div className="wrap seo-tidy-admin">
-            <h1>SEO-TidY</h1>
-            <p>{__('SEO and AI search readiness for WordPress.', 'seo-tidy')}</p>
+            <header className="tidy-header">
+                <h1>SEO-TidY</h1>
+                <p>{__('SEO and AI search readiness for WordPress.', 'seo-tidy')}</p>
+            </header>
             {active === 'dashboard' && window.seoTidyBranding?.heroUrl && (
                 <img
                     src={window.seoTidyBranding.heroUrl}
+                    className="tidy-hero"
                     alt="SEO-TidY by QvarcY"
                     style={{
                         display: 'block',
@@ -1448,7 +1451,7 @@ function App() {
 
             <nav
                 aria-label={__('SEO-TidY navigation', 'seo-tidy')}
-                style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '20px' }}
+                className="tidy-navigation"
             >
                 {sections.map((section) => (
                     <Button
@@ -1462,7 +1465,7 @@ function App() {
                 ))}
             </nav>
 
-            <Card>
+            <Card className="tidy-main-card">
                 <CardBody>
                     <h2>{current.label}</h2>
 

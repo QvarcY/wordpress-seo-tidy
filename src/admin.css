@@ -1,0 +1,149 @@
+/* SEO-TidY admin design */
+
+.seo-tidy-admin {
+    --tidy-navy: #10243e;
+    --tidy-green: #178c74;
+    --tidy-surface: #ffffff;
+    --tidy-background: #f6f8fb;
+    --tidy-border: #dce5eb;
+    --tidy-text: #24364a;
+
+    max-width: 1440px;
+    color: var(--tidy-text);
+    font-size: 14px;
+}
+
+.seo-tidy-admin *,
+.seo-tidy-admin *::before,
+.seo-tidy-admin *::after {
+    box-sizing: border-box;
+}
+
+.seo-tidy-admin .tidy-header {
+    padding: 20px 24px;
+    margin: 16px 0 20px;
+    border: 1px solid var(--tidy-border);
+    border-radius: 16px;
+    background: var(--tidy-surface);
+}
+
+.seo-tidy-admin .tidy-header h1 {
+    margin: 0 0 8px;
+    color: var(--tidy-navy);
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 750;
+    line-height: 1.2;
+}
+
+.seo-tidy-admin .tidy-header p {
+    margin: 0;
+    color: #526579;
+}
+
+.seo-tidy-admin .tidy-hero {
+    display: block;
+    width: 100%;
+    max-height: 320px;
+    object-fit: cover;
+    object-position: center;
+    margin: 0 0 20px;
+    border: 1px solid var(--tidy-border);
+    border-radius: 16px;
+}
+
+.seo-tidy-admin .tidy-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 20px;
+    padding: 12px;
+    border: 1px solid var(--tidy-border);
+    border-radius: 14px;
+    background: var(--tidy-surface);
+}
+
+.seo-tidy-admin .tidy-navigation .components-button {
+    min-height: 38px;
+    border-radius: 9px;
+    font-weight: 600;
+}
+
+.seo-tidy-admin .tidy-navigation .components-button.is-primary {
+    background: var(--tidy-navy);
+    color: #ffffff;
+}
+
+.seo-tidy-admin .tidy-navigation .components-button.is-primary:hover {
+    background: #1c3b5b;
+}
+
+.seo-tidy-admin .tidy-navigation .components-button:focus-visible {
+    outline: 3px solid var(--tidy-green);
+    outline-offset: 2px;
+}
+
+.seo-tidy-admin .tidy-main-card {
+    border: 1px solid var(--tidy-border);
+    border-radius: 16px;
+    background: var(--tidy-surface);
+    box-shadow: 0 5px 22px rgb(16 36 62 / 5%);
+    overflow: hidden;
+}
+
+.seo-tidy-admin .tidy-main-card > .components-card__body {
+    padding: clamp(16px, 3vw, 28px);
+}
+
+.seo-tidy-admin .tidy-main-card h2 {
+    margin-top: 0;
+    color: var(--tidy-navy);
+    font-size: 21px;
+    line-height: 1.35;
+}
+
+.seo-tidy-admin .tidy-main-card a {
+    color: #126d5b;
+}
+
+.seo-tidy-admin .tidy-main-card :is(
+    input, textarea, select
+):focus {
+    border-color: var(--tidy-green);
+    box-shadow: 0 0 0 1px var(--tidy-green);
+}
+
+@media (max-width: 782px) {
+    .seo-tidy-admin {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .seo-tidy-admin .tidy-header {
+        padding: 18px;
+    }
+
+    .seo-tidy-admin .tidy-hero {
+        max-height: 230px;
+    }
+
+    .seo-tidy-admin .tidy-navigation {
+        gap: 6px;
+        padding: 9px;
+    }
+
+    .seo-tidy-admin .tidy-navigation .components-button {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .seo-tidy-admin *,
+    .seo-tidy-admin *::before,
+    .seo-tidy-admin *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0s !important;
+        animation-duration: 0s !important;
+    }
+}
