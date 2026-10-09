@@ -720,3 +720,142 @@
         justify-content: center;
     }
 }
+
+
+/* AI Answer Readiness */
+
+.seo-tidy-admin .tidy-answers > p {
+    color: #526579;
+    line-height: 1.65;
+}
+
+.seo-tidy-admin .tidy-answers-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 15px;
+    margin: 10px 0 18px;
+    border: 1px solid var(--tidy-border);
+    border-radius: 10px;
+    background: #f8fafc;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.seo-tidy-admin .tidy-answers-filter input {
+    margin: 0;
+}
+
+.seo-tidy-admin .tidy-answers-count {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0 0 15px;
+    font-weight: 600;
+}
+
+.seo-tidy-admin .tidy-answers-count strong {
+    color: var(--tidy-green);
+    font-size: 22px;
+    font-variant-numeric: tabular-nums;
+}
+
+.seo-tidy-admin .tidy-answers-table-wrap {
+    max-width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--tidy-border);
+    border-radius: 13px;
+}
+
+.seo-tidy-admin .tidy-answers-table {
+    width: 100%;
+    min-width: 760px;
+    border: 0;
+    border-spacing: 0;
+}
+
+.seo-tidy-admin .tidy-answers-table th {
+    padding: 14px 15px;
+    color: #fff;
+    background: var(--tidy-navy);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: left;
+}
+
+.seo-tidy-admin .tidy-answers-table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--tidy-border);
+    vertical-align: top;
+    line-height: 1.55;
+}
+
+.seo-tidy-admin .tidy-answers-title {
+    min-width: 170px;
+    max-width: 280px;
+    color: var(--tidy-navy);
+    font-weight: 650;
+    overflow-wrap: anywhere;
+}
+
+.seo-tidy-admin .tidy-answers-facts {
+    min-width: 160px;
+    color: #526579;
+    font-variant-numeric: tabular-nums;
+}
+
+.seo-tidy-admin .tidy-answers-facts > div {
+    padding: 3px 0;
+}
+
+.seo-tidy-admin .tidy-answers-suggestions {
+    min-width: 230px;
+}
+
+.seo-tidy-admin .tidy-answers-actions {
+    min-width: 85px;
+}
+
+.seo-tidy-admin .tidy-answers-row-review td:first-child {
+    box-shadow: inset 3px 0 0 #dba33e;
+}
+
+.seo-tidy-admin .tidy-answers-clear {
+    display: inline-flex;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: #dcf5e7;
+    color: #176249;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.seo-tidy-admin .tidy-answers-suggestion-list {
+    margin: 0;
+    padding-left: 20px;
+    color: #755018;
+}
+
+.seo-tidy-admin .tidy-answers-suggestion-list li {
+    margin-bottom: 8px;
+}
+
+.seo-tidy-admin .tidy-answers-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+@media (max-width: 782px) {
+    .seo-tidy-admin .tidy-answers-table {
+        min-width: 690px;
+    }
+
+    .seo-tidy-admin .tidy-answers-filter {
+        max-width: 100%;
+        line-height: 1.5;
+    }
+}

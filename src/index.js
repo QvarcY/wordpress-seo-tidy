@@ -959,14 +959,14 @@ function AnswerReadinessOverview() {
         : [];
 
     return (
-        <div>
+        <div className="tidy-answers">
             <p>
                 {__('Content structure review for humans and answer systems. This does not predict AI citations or search rankings.', 'seo-tidy')}
             </p>
             <p>
                 {__('Checks saved WordPress content; dynamic blocks and themes may produce different final HTML.', 'seo-tidy')}
             </p>
-            <label style={{ display: 'block', marginBottom: '14px' }}>
+            <label className="tidy-answers-filter">
                 <input
                     type="checkbox"
                     checked={suggestionsOnly}
@@ -985,12 +985,13 @@ function AnswerReadinessOverview() {
 
             {data && (
                 <>
-                    <p>
+                    <p className="tidy-answers-count">
                         {__('Published content:', 'seo-tidy')}
                         {' '}
                         <strong>{data.total}</strong>
                     </p>
-                    <table className="widefat striped">
+                    <div className="tidy-answers-table-wrap">
+                    <table className="widefat striped tidy-answers-table">
                         <thead>
                             <tr>
                                 <th>{__('Title', 'seo-tidy')}</th>
@@ -1001,11 +1002,11 @@ function AnswerReadinessOverview() {
                         </thead>
                         <tbody>
                             {items.map((item) => (
-                                <tr key={item.id}>
-                                    <td>
+                                <tr key={item.id} className={item.suggestions.length ? "tidy-answers-row-review" : "tidy-answers-row-clear"}>
+                                    <td className="tidy-answers-title">
                                         {item.title || __('Untitled', 'seo-tidy')}
                                     </td>
-                                    <td>
+                                    <td className="tidy-answers-facts">
                                         <div>
                                             {__('Characters:', 'seo-tidy')}
                                             {' '}{item.facts.characters}
@@ -1019,11 +1020,11 @@ function AnswerReadinessOverview() {
                                             {' '}{item.facts.questionHeadings}
                                         </div>
                                     </td>
-                                    <td>
+                                    <td className="tidy-answers-suggestions">
                                         {item.suggestions.length === 0
-                                            ? __('No suggestions', 'seo-tidy')
+                                            ? <span className="tidy-answers-clear">{__('No suggestions', 'seo-tidy')}</span>
                                             : (
-                                                <ul style={{ paddingLeft: '18px', margin: 0 }}>
+                                                <ul className="tidy-answers-suggestion-list">
                                                     {item.suggestions.map((code) => (
                                                         <li key={code}>
                                                             {answerSuggestions[code] || code}
@@ -1032,7 +1033,7 @@ function AnswerReadinessOverview() {
                                                 </ul>
                                             )}
                                     </td>
-                                    <td>
+                                    <td className="tidy-answers-actions">
                                         {item.editUrl && (
                                             <a href={item.editUrl}>
                                                 {__('Edit', 'seo-tidy')}
@@ -1043,18 +1044,14 @@ function AnswerReadinessOverview() {
                             ))}
                         </tbody>
                     </table>
+                    </div>
                     {items.length === 0 && (
                         <p>
                             {__('No matching content on this page.', 'seo-tidy')}
                         </p>
                     )}
                     {data.pages > 1 && (
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            marginTop: '16px',
-                        }}>
+                        <div className="tidy-answers-pagination">
                             <Button
                                 variant="secondary"
                                 disabled={page <= 1}
