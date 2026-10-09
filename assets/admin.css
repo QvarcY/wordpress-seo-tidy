@@ -43,8 +43,9 @@
 .seo-tidy-admin .tidy-hero {
     display: block;
     width: 100%;
-    max-height: 320px;
-    object-fit: cover;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
     object-position: center;
     margin: 0 0 20px;
     border: 1px solid var(--tidy-border);
@@ -121,10 +122,6 @@
 
     .seo-tidy-admin .tidy-header {
         padding: 18px;
-    }
-
-    .seo-tidy-admin .tidy-hero {
-        max-height: 230px;
     }
 
     .seo-tidy-admin .tidy-navigation {
