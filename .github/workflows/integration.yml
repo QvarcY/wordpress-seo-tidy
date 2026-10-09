@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   integration:
-    name: WordPress 6.8 / PHP 8.2 / Node 24
+    name: WordPress integration / Node 24
     runs-on: ubuntu-24.04
     timeout-minutes: 25
 
@@ -38,6 +38,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Audit production dependencies
+        continue-on-error: true
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Audit all dependencies
+        continue-on-error: true
+        run: npm audit --audit-level=high
+
       - name: Validate PHP syntax
         run: |
           php -l seo-tidy.php
@@ -52,6 +60,9 @@ jobs:
 
       - name: Start WordPress
         run: npm exec --no -- wp-env start
+
+      - name: Report WordPress PHP version
+        run: npm exec --no -- wp-env run cli php -v
 
       - name: Run integration tests
         env:
