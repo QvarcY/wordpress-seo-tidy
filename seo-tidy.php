@@ -3,7 +3,7 @@
  * Plugin Name: SEO-TidY
  * Plugin URI: https://github.com/QvarcY/wordpress-seo-tidy
  * Description: Free SEO and AI search readiness tools for WordPress.
- * Version: 0.0.1-dev
+ * Version: 0.1.0-beta.1
  * Requires at least: 6.8
  * Requires PHP: 8.1
  * Author: QvarcY
@@ -15,7 +15,7 @@
 
 defined('ABSPATH') || exit;
 
-define('SEO_TIDY_VERSION', '0.0.1-dev');
+define('SEO_TIDY_VERSION', '0.1.0-beta.1');
 define('SEO_TIDY_PATH', plugin_dir_path(__FILE__));
 
 require_once SEO_TIDY_PATH . 'includes/Requirements.php';
