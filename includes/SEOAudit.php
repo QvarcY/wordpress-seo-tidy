@@ -37,6 +37,50 @@ final class SEOAudit
             : strlen($value);
     }
 
+    private static function needsAltReview(string $content): bool
+    {
+        $processor = new \WP_HTML_Tag_Processor($content);
+
+        while ($processor->next_tag('IMG')) {
+            if ($processor->get_attribute('alt') === null) {
+                return true;
+            }
+        }
+
+        foreach (parse_blocks($content) as $block) {
+            if (self::blockNeedsAltReview($block)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static function blockNeedsAltReview(array $block): bool
+    {
+        if (($block['blockName'] ?? '') === 'core/image') {
+            $html = (string) ($block['innerHTML'] ?? '');
+            $attrs = $block['attrs'] ?? [];
+
+            if (
+                is_array($attrs) &&
+                stripos($html, '<img') === false &&
+                (isset($attrs['id']) || isset($attrs['url'])) &&
+                !array_key_exists('alt', $attrs)
+            ) {
+                return true;
+            }
+        }
+
+        foreach (($block['innerBlocks'] ?? []) as $inner) {
+            if (is_array($inner) && self::blockNeedsAltReview($inner)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static function getResults(\WP_REST_Request $request): \WP_REST_Response
     {
         $page = max(1, (int) $request->get_param('page'));
@@ -97,15 +141,8 @@ final class SEOAudit
             }
 
             // Pārbaudām tikai saturā esošos HTML attēlus
-            if (preg_match_all('/<img\b[^>]*>/i', $content, $images)) {
-                foreach ($images[0] as $image) {
-                    if (
-                        !preg_match('/\balt\s*=\s*(["\x27]).*?\1/is', $image)
-                    ) {
-                        $issues[] = 'review_image_alt';
-                        break;
-                    }
-                }
+            if (self::needsAltReview($content)) {
+                $issues[] = 'review_image_alt';
             }
 
             $items[] = [
