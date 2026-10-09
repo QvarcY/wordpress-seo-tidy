@@ -304,3 +304,67 @@ msgstr "Atcelt"
 #: src/index.js
 msgid "Could not save metadata."
 msgstr "Neizdevās saglabāt metadatus."
+
+#: src/index.js
+msgid "Missing SEO title"
+msgstr "Trūkst SEO virsraksta"
+
+#: src/index.js
+msgid "SEO title may be too short"
+msgstr "SEO virsraksts var būt pārāk īss"
+
+#: src/index.js
+msgid "SEO title may be too long"
+msgstr "SEO virsraksts var būt pārāk garš"
+
+#: src/index.js
+msgid "Missing meta description"
+msgstr "Trūkst meta apraksta"
+
+#: src/index.js
+msgid "Meta description may be too short"
+msgstr "Meta apraksts var būt pārāk īss"
+
+#: src/index.js
+msgid "Meta description may be too long"
+msgstr "Meta apraksts var būt pārāk garš"
+
+#: src/index.js
+msgid "Review H1 heading (theme may provide it)"
+msgstr "Pārskatīt H1 virsrakstu (to var nodrošināt tēma)"
+
+#: src/index.js
+msgid "Review image alternative text"
+msgstr "Pārskatīt attēlu alternatīvo tekstu"
+
+#: src/index.js
+msgid "Checks published posts and pages in batches of 20. Lengths are guidance, not SEO scores."
+msgstr "Publicētos rakstus un lapas pārbauda pa 20. Garuma norādes nav SEO vērtējums."
+
+#: src/index.js
+msgid "H1 and image checks inspect stored content, not the final theme output."
+msgstr "H1 un attēlu pārbaudes izmanto saglabāto saturu, nevis tēmas gala HTML."
+
+#: src/index.js
+msgid "Show only items with findings"
+msgstr "Rādīt tikai ierakstus ar atradumiem"
+
+#: src/index.js
+msgid "Could not load SEO audit."
+msgstr "Neizdevās ielādēt SEO auditu."
+
+#: src/index.js
+msgid "Published content:"
+msgstr "Publicētais saturs:"
+
+#: src/index.js
+msgid "Findings"
+msgstr "Atradumi"
+
+#: src/index.js
+msgid "No findings"
+msgstr "Nav atradumu"
+
+#: src/index.js
+msgid "No findings on this page."
+msgstr "Šajā lapā nav atradumu."

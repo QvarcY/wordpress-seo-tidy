@@ -499,6 +499,151 @@ function MetadataList({ filter, setFilter }) {
     );
 }
 
+
+const auditLabels = {
+    missing_title: __('Missing SEO title', 'seo-tidy'),
+    short_title: __('SEO title may be too short', 'seo-tidy'),
+    long_title: __('SEO title may be too long', 'seo-tidy'),
+    missing_description: __('Missing meta description', 'seo-tidy'),
+    short_description: __('Meta description may be too short', 'seo-tidy'),
+    long_description: __('Meta description may be too long', 'seo-tidy'),
+    review_h1: __('Review H1 heading (theme may provide it)', 'seo-tidy'),
+    review_image_alt: __('Review image alternative text', 'seo-tidy'),
+};
+
+function SEOAuditOverview() {
+    const [page, setPage] = useState(1);
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(false);
+    const [issuesOnly, setIssuesOnly] = useState(true);
+
+    useEffect(() => {
+        let active = true;
+        setData(null);
+        setError(false);
+
+        apiFetch({ path: '/seo-tidy/v1/audit?page=' + page })
+            .then((response) => {
+                if (active) setData(response);
+            })
+            .catch(() => {
+                if (active) setError(true);
+            });
+
+        return () => { active = false; };
+    }, [page]);
+
+    const items = data
+        ? data.items.filter((item) =>
+            !issuesOnly || item.issues.length > 0
+        )
+        : [];
+
+    return (
+        <div>
+            <p>
+                {__('Checks published posts and pages in batches of 20. Lengths are guidance, not SEO scores.', 'seo-tidy')}
+            </p>
+            <p>
+                {__('H1 and image checks inspect stored content, not the final theme output.', 'seo-tidy')}
+            </p>
+
+            <label style={{ display: 'block', marginBottom: '14px' }}>
+                <input
+                    type="checkbox"
+                    checked={issuesOnly}
+                    onChange={(event) => setIssuesOnly(event.target.checked)}
+                />
+                {' '}
+                {__('Show only items with findings', 'seo-tidy')}
+            </label>
+
+            {error && (
+                <Notice status="error" isDismissible={false}>
+                    {__('Could not load SEO audit.', 'seo-tidy')}
+                </Notice>
+            )}
+
+            {!error && !data && <Spinner />}
+
+            {data && (
+                <>
+                    <p>
+                        {__('Published content:', 'seo-tidy')}
+                        {' '}
+                        <strong>{data.total}</strong>
+                    </p>
+
+                    <table className="widefat striped">
+                        <thead>
+                            <tr>
+                                <th>{__('Title', 'seo-tidy')}</th>
+                                <th>{__('Findings', 'seo-tidy')}</th>
+                                <th>{__('Action', 'seo-tidy')}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {items.map((item) => (
+                                <tr key={item.id}>
+                                    <td>{item.title || __('Untitled', 'seo-tidy')}</td>
+                                    <td>
+                                        {item.issues.length === 0
+                                            ? __('No findings', 'seo-tidy')
+                                            : (
+                                                <ul style={{
+                                                    margin: 0,
+                                                    paddingLeft: '18px',
+                                                }}>
+                                                    {item.issues.map((issue) => (
+                                                        <li key={issue}>
+                                                            {auditLabels[issue] || issue}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                    </td>
+                                    <td>
+                                        {item.editUrl && (
+                                            <a href={item.editUrl}>
+                                                {__('Edit', 'seo-tidy')}
+                                            </a>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+
+                    {items.length === 0 && (
+                        <p>{__('No findings on this page.', 'seo-tidy')}</p>
+                    )}
+
+                    {data.pages > 1 && (
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            marginTop: '16px',
+                        }}>
+                            <Button variant="secondary"
+                                disabled={page <= 1}
+                                onClick={() => setPage(page - 1)}>
+                                {__('Previous', 'seo-tidy')}
+                            </Button>
+                            <span>{page} / {data.pages}</span>
+                            <Button variant="secondary"
+                                disabled={page >= data.pages}
+                                onClick={() => setPage(page + 1)}>
+                                {__('Next', 'seo-tidy')}
+                            </Button>
+                        </div>
+                    )}
+                </>
+            )}
+        </div>
+    );
+}
+
 function App() {
     const [active, setActive] = useState('dashboard');
     const [metadataFilter, setMetadataFilter] = useState('all');
@@ -534,7 +679,9 @@ function App() {
                 <CardBody>
                     <h2>{current.label}</h2>
 
-                    {active === 'schema' ? (
+                    {active === 'audit' ? (
+                        <SEOAuditOverview />
+                    ) : active === 'schema' ? (
                         <SchemaSettings />
                     ) : active === 'metadata' ? (
                         <MetadataList

@@ -13,9 +13,11 @@ final class Bootstrap
         require_once __DIR__ . '/Metadata.php';
         require_once __DIR__ . '/Schema.php';
         require_once __DIR__ . '/Dashboard.php';
+        require_once __DIR__ . '/SEOAudit.php';
         Metadata::init();
         Schema::init();
         Dashboard::init();
+        SEOAudit::init();
         add_action('init', [self::class, 'registerSettings']);
         if (is_admin()) {
             add_action('admin_menu', [self::class, 'registerMenu']);
