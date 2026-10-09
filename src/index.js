@@ -104,7 +104,7 @@ function SchemaSettings() {
 }
 
 
-function DashboardOverview({ onOpenSchema }) {
+function DashboardOverview({ onOpenSchema, onOpenMetadata }) {
     const [data, setData] = useState(null);
     const [error, setError] = useState(false);
 
@@ -160,10 +160,12 @@ function DashboardOverview({ onOpenSchema }) {
         {
             label: __('Missing SEO titles', 'seo-tidy'),
             value: data.missingTitles,
+            filter: 'missing_title',
         },
         {
             label: __('Missing meta descriptions', 'seo-tidy'),
             value: data.missingDescriptions,
+            filter: 'missing_description',
         },
     ];
 
@@ -195,9 +197,18 @@ function DashboardOverview({ onOpenSchema }) {
                         <div style={{ fontSize: '13px', marginBottom: '8px' }}>
                             {metric.label}
                         </div>
-                        <strong style={{ fontSize: '25px' }}>
-                            {metric.value}
-                        </strong>
+                        {metric.filter ? (
+                            <Button variant="link"
+                                onClick={() => onOpenMetadata(metric.filter)}>
+                                <strong style={{ fontSize: '25px' }}>
+                                    {metric.value}
+                                </strong>
+                            </Button>
+                        ) : (
+                            <strong style={{ fontSize: '25px' }}>
+                                {metric.value}
+                            </strong>
+                        )}
                     </div>
                 ))}
             </div>
@@ -230,8 +241,159 @@ function DashboardOverview({ onOpenSchema }) {
     );
 }
 
+
+function MetadataList({ filter, setFilter }) {
+    const [type, setType] = useState('all');
+    const [page, setPage] = useState(1);
+    const [result, setResult] = useState(null);
+    const [error, setError] = useState(false);
+
+    useEffect(() => {
+        let active = true;
+        setResult(null);
+        setError(false);
+
+        const query = new URLSearchParams({
+            filter,
+            type,
+            page: String(page),
+        });
+
+        apiFetch({ path: '/seo-tidy/v1/content?' + query.toString() })
+            .then((data) => {
+                if (active) setResult(data);
+            })
+            .catch(() => {
+                if (active) setError(true);
+            });
+
+        return () => { active = false; };
+    }, [filter, type, page]);
+
+    const filters = [
+        ['all', __('All published content', 'seo-tidy')],
+        ['missing_title', __('Missing SEO titles', 'seo-tidy')],
+        ['missing_description', __('Missing meta descriptions', 'seo-tidy')],
+    ];
+
+    const types = [
+        ['all', __('Posts and pages', 'seo-tidy')],
+        ['post', __('Posts', 'seo-tidy')],
+        ['page', __('Pages', 'seo-tidy')],
+    ];
+
+    return (
+        <div>
+            <div style={{
+                display: 'flex', flexWrap: 'wrap',
+                gap: '12px', marginBottom: '16px',
+            }}>
+                <label>
+                    {__('Show', 'seo-tidy')}{' '}
+                    <select value={filter} onChange={(event) => {
+                        setFilter(event.target.value);
+                        setPage(1);
+                    }}>
+                        {filters.map(([value, label]) => (
+                            <option key={value} value={value}>{label}</option>
+                        ))}
+                    </select>
+                </label>
+                <label>
+                    {__('Content type', 'seo-tidy')}{' '}
+                    <select value={type} onChange={(event) => {
+                        setType(event.target.value);
+                        setPage(1);
+                    }}>
+                        {types.map(([value, label]) => (
+                            <option key={value} value={value}>{label}</option>
+                        ))}
+                    </select>
+                </label>
+            </div>
+
+            {error && (
+                <Notice status="error" isDismissible={false}>
+                    {__('Could not load content.', 'seo-tidy')}
+                </Notice>
+            )}
+
+            {!error && !result && <Spinner />}
+
+            {result && (
+                <>
+                    <p>{__('Matching items:', 'seo-tidy')} <strong>{result.total}</strong></p>
+                    <table className="widefat striped">
+                        <thead>
+                            <tr>
+                                <th>{__('Title', 'seo-tidy')}</th>
+                                <th>{__('Type', 'seo-tidy')}</th>
+                                <th>{__('SEO title', 'seo-tidy')}</th>
+                                <th>{__('Meta description', 'seo-tidy')}</th>
+                                <th>{__('Action', 'seo-tidy')}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {result.items.map((item) => (
+                                <tr key={item.id}>
+                                    <td>{item.title || __('Untitled', 'seo-tidy')}</td>
+                                    <td>{item.type === 'post'
+                                        ? __('Post', 'seo-tidy')
+                                        : __('Page', 'seo-tidy')}</td>
+                                    <td>{item.hasTitle
+                                        ? __('Added', 'seo-tidy')
+                                        : __('Missing', 'seo-tidy')}</td>
+                                    <td>{item.hasDescription
+                                        ? __('Added', 'seo-tidy')
+                                        : __('Missing', 'seo-tidy')}</td>
+                                    <td>
+                                        {item.editUrl && (
+                                            <a href={item.editUrl}>
+                                                {__('Edit', 'seo-tidy')}
+                                            </a>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+
+                    {result.total === 0 && (
+                        <p>{__('No matching content found.', 'seo-tidy')}</p>
+                    )}
+
+                    {result.pages > 1 && (
+                        <div style={{
+                            display: 'flex', gap: '12px',
+                            alignItems: 'center', marginTop: '16px',
+                        }}>
+                            <Button variant="secondary"
+                                disabled={page <= 1}
+                                onClick={() => setPage(page - 1)}>
+                                {__('Previous', 'seo-tidy')}
+                            </Button>
+                            <span>{page} / {result.pages}</span>
+                            <Button variant="secondary"
+                                disabled={page >= result.pages}
+                                onClick={() => setPage(page + 1)}>
+                                {__('Next', 'seo-tidy')}
+                            </Button>
+                        </div>
+                    )}
+                </>
+            )}
+        </div>
+    );
+}
+
 function App() {
     const [active, setActive] = useState('dashboard');
+    const [metadataFilter, setMetadataFilter] = useState('all');
+
+    const openMetadata = (filter) => {
+        setMetadataFilter(filter);
+        setActive('metadata');
+    };
     const current = sections.find((item) => item.id === active);
 
     return (
@@ -261,8 +423,16 @@ function App() {
 
                     {active === 'schema' ? (
                         <SchemaSettings />
+                    ) : active === 'metadata' ? (
+                        <MetadataList
+                            filter={metadataFilter}
+                            setFilter={setMetadataFilter}
+                        />
                     ) : active === 'dashboard' ? (
-                        <DashboardOverview onOpenSchema={() => setActive('schema')} />
+                        <DashboardOverview
+                            onOpenSchema={() => setActive('schema')}
+                            onOpenMetadata={openMetadata}
+                        />
                     ) : (
                         <p>
                             {__('This feature is planned and not available yet.', 'seo-tidy')}

@@ -24,6 +24,113 @@ final class Dashboard
                 },
             ]
         );
+        register_rest_route(
+            'seo-tidy/v1',
+            '/content',
+            [
+                'methods' => 'GET',
+                'callback' => [self::class, 'getContent'],
+                'permission_callback' => static function (): bool {
+                    return current_user_can('manage_options');
+                },
+                'args' => [
+                    'filter' => [
+                        'default' => 'all',
+                        'enum' => ['all', 'missing_title', 'missing_description'],
+                    ],
+                    'type' => [
+                        'default' => 'all',
+                        'enum' => ['all', 'post', 'page'],
+                    ],
+                    'page' => [
+                        'default' => 1,
+                        'type' => 'integer',
+                        'minimum' => 1,
+                    ],
+                ],
+            ]
+        );
+    }
+
+    public static function getContent(\WP_REST_Request $request): \WP_REST_Response
+    {
+        global $wpdb;
+
+        $filter = $request->get_param('filter') ?: 'all';
+        $type = $request->get_param('type') ?: 'all';
+        $page = max(1, (int) $request->get_param('page'));
+        $perPage = 20;
+
+        $where = ["p.post_status = %s", "p.post_type IN (%s, %s)"];
+        $params = ['publish', 'post', 'page'];
+
+        if ($type !== 'all') {
+            $where[] = 'p.post_type = %s';
+            $params[] = $type;
+        }
+
+        if ($filter !== 'all') {
+            $key = $filter === 'missing_title'
+                ? '_seo_tidy_title'
+                : '_seo_tidy_description';
+
+            $where[] = "NOT EXISTS (
+                SELECT 1 FROM {$wpdb->postmeta} AS m
+                WHERE m.post_id = p.ID
+                    AND m.meta_key = %s
+                    AND TRIM(m.meta_value) <> ''
+            )";
+            $params[] = $key;
+        }
+
+        $condition = implode(' AND ', $where);
+
+        $countQuery = $wpdb->prepare(
+            "SELECT COUNT(*) FROM {$wpdb->posts} AS p WHERE " . $condition,
+            $params
+        );
+
+        $total = (int) $wpdb->get_var($countQuery);
+
+        $listParams = array_merge($params, [
+            $perPage,
+            ($page - 1) * $perPage,
+        ]);
+
+        $listQuery = $wpdb->prepare(
+            "SELECT p.ID, p.post_title, p.post_type
+            FROM {$wpdb->posts} AS p
+            WHERE " . $condition . "
+            ORDER BY p.post_date DESC, p.ID DESC
+            LIMIT %d OFFSET %d",
+            $listParams
+        );
+
+        $rows = $wpdb->get_results($listQuery, ARRAY_A);
+        $items = [];
+
+        foreach ($rows ?: [] as $row) {
+            $id = (int) $row['ID'];
+            $items[] = [
+                'id' => $id,
+                'title' => get_the_title($id),
+                'type' => $row['post_type'],
+                'hasTitle' => trim((string) get_post_meta(
+                    $id, '_seo_tidy_title', true
+                )) !== '',
+                'hasDescription' => trim((string) get_post_meta(
+                    $id, '_seo_tidy_description', true
+                )) !== '',
+                'editUrl' => get_edit_post_link($id, 'raw'),
+            ];
+        }
+
+        return new \WP_REST_Response([
+            'items' => $items,
+            'total' => $total,
+            'page' => $page,
+            'pages' => (int) ceil($total / $perPage),
+        ]);
     }
 
     public static function getData(): \WP_REST_Response

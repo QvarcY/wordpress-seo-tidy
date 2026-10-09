@@ -200,3 +200,91 @@ msgstr "Rediģēt lapas"
 #: src/index.js
 msgid "Counts include published posts and pages only."
 msgstr "Statistikā iekļauti tikai publicētie raksti un lapas."
+
+#: src/index.js
+msgid "All published content"
+msgstr "Viss public?tais saturs"
+
+#: src/index.js
+msgid "Posts and pages"
+msgstr "Raksti un lapas"
+
+#: src/index.js
+msgid "Posts"
+msgstr "Raksti"
+
+#: src/index.js
+msgid "Pages"
+msgstr "Lapas"
+
+#: src/index.js
+msgid "Show"
+msgstr "R?d?t"
+
+#: src/index.js
+msgid "Content type"
+msgstr "Satura veids"
+
+#: src/index.js
+msgid "Could not load content."
+msgstr "Neizdev?s iel?d?t saturu."
+
+#: src/index.js
+msgid "Matching items:"
+msgstr "Atrasti ieraksti:"
+
+#: src/index.js
+msgid "Title"
+msgstr "Virsraksts"
+
+#: src/index.js
+msgid "Type"
+msgstr "Veids"
+
+#: src/index.js
+msgid "SEO title"
+msgstr "SEO virsraksts"
+
+#: src/index.js
+msgid "Meta description"
+msgstr "Meta apraksts"
+
+#: src/index.js
+msgid "Action"
+msgstr "Darb?ba"
+
+#: src/index.js
+msgid "Untitled"
+msgstr "Bez virsraksta"
+
+#: src/index.js
+msgid "Post"
+msgstr "Raksts"
+
+#: src/index.js
+msgid "Page"
+msgstr "Lapa"
+
+#: src/index.js
+msgid "Added"
+msgstr "Pievienots"
+
+#: src/index.js
+msgid "Missing"
+msgstr "Tr?kst"
+
+#: src/index.js
+msgid "Edit"
+msgstr "Redi??t"
+
+#: src/index.js
+msgid "No matching content found."
+msgstr "Atbilsto?i ieraksti nav atrasti."
+
+#: src/index.js
+msgid "Previous"
+msgstr "Iepriek??j?"
+
+#: src/index.js
+msgid "Next"
+msgstr "N?kam?"
