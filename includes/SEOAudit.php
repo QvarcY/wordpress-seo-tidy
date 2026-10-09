@@ -72,7 +72,7 @@ final class SEOAudit
 
     private static function noindexSource(int $postId): string
     {
-        if (get_option('blog_public', '1') === '0') {
+        if ((string) get_option('blog_public', '1') === '0') {
             return 'site';
         }
 
