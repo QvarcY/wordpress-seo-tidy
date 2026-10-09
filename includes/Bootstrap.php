@@ -22,11 +22,22 @@ final class Bootstrap
         SEOAudit::init();
         AnswerReadiness::init();
         Migration::init();
+        add_action('init', [self::class, 'loadTranslations']);
         add_action('init', [self::class, 'registerSettings']);
         if (is_admin()) {
             add_action('admin_menu', [self::class, 'registerMenu']);
             add_action('admin_enqueue_scripts', [self::class, 'enqueueAssets']);
         }
+    }
+
+    public static function loadTranslations(): void
+    {
+        load_plugin_textdomain(
+            'seo-tidy',
+            false,
+            dirname(plugin_basename(SEO_TIDY_PATH . 'seo-tidy.php')) .
+                '/languages'
+        );
     }
 
     public static function registerSettings(): void
