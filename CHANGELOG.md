@@ -4,6 +4,8 @@ All notable changes to SEO-TidY will be documented here.
 
 ## [Unreleased]
 
+## [0.1.0-beta.7] - Pending release
+
 ### M13 ? Analytics, Stats Badge and Community
 
 - Added opt-in, disabled-by-default daily website statistics
