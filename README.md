@@ -8,7 +8,7 @@ Clean SEO. Smarter discovery. Completely free.
 
 ## Release status
 
-Version: **0.1.0-beta.2**
+Version: **0.1.0-beta.6** (current development baseline)
 
 This is a beta release for testing. It is not yet recommended
 for production websites without backups and compatibility testing.
@@ -30,6 +30,12 @@ for production websites without backups and compatibility testing.
 - Yoast SEO and Rank Math metadata import
 - Centralized output and audit settings
 - English and Latvian administration interface
+- Optional local daily pageview analytics with separate suspected-bot counts
+- Configurable statistics badge with shortcode `[seo_tidy_stats]`
+- Optional statistics badge in the website footer
+- Light, dark and transparent badge themes
+- Local-only Wall of Fame community profile settings
+- Administrator-controlled statistics deletion and daily data retention
 
 Content recommendations are heuristic and do not guarantee search
 rankings, indexing, or inclusion in AI-generated answers.
@@ -64,6 +70,41 @@ Review the preview and confirm before importing.
 
 Using multiple SEO plugins at once may create duplicate metadata
 or structured data. Check the public page output before deployment.
+
+## Analytics and privacy
+
+SEO-TidY Analytics is **disabled by default**. Enabling it records
+aggregated daily counts of eligible public page requests in the
+WordPress database. The analytics engine does not persist raw IP
+addresses or create a separate visitor event log.
+
+- Human-classified pageviews are requests, not unique visitors.
+- Suspected bots are identified heuristically from user agents.
+- The bot classification can be inaccurate or manipulated.
+- WordPress administrators and logged-in users are excluded.
+- Non-GET and several non-public requests are excluded.
+- Full-page caches, CDNs and other caching layers may bypass
+  WordPress, so totals may be lower than actual traffic.
+- The built-in engine does not calculate reliable unique visitors
+  or real-time online visitor counts.
+- Statistics are stored by calendar day for up to 365 days.
+- Old rows are removed using WordPress scheduled tasks.
+  WordPress cron depends on site activity or external cron setup.
+- Administrators can explicitly delete all recorded statistics
+  from the Analytics screen after a confirmation prompt.
+
+The statistics badge is optional. The footer badge and the
+Powered by SEO-TidY attribution are disabled by default.
+The shortcode can be used where a badge is wanted.
+
+Wall of Fame currently saves an optional site profile locally
+inside WordPress. It does not submit the profile to any central
+catalogue, verify site ownership or publish a public listing.
+A public community directory requires separate development and
+review.
+
+Site owners remain responsible for providing appropriate privacy
+information to their visitors.
 
 ## Development
 

@@ -17,6 +17,8 @@ final class Bootstrap
         require_once __DIR__ . '/AnswerReadiness.php';
         require_once __DIR__ . '/Migration.php';
         require_once __DIR__ . '/GitHubUpdater.php';
+        require_once __DIR__ . '/Analytics.php';
+        require_once __DIR__ . '/StatsBadge.php';
         Metadata::init();
         Schema::init();
         Dashboard::init();
@@ -24,6 +26,8 @@ final class Bootstrap
         AnswerReadiness::init();
         Migration::init();
         GitHubUpdater::init();
+        Analytics::init();
+        StatsBadge::init();
         add_action('init', [self::class, 'loadTranslations']);
         add_action('init', [self::class, 'registerSettings']);
         if (is_admin()) {
@@ -57,6 +61,73 @@ final class Bootstrap
                 'show_in_rest' => true,
             ]);
         }
+
+        register_setting(
+            'seo_tidy',
+            'seo_tidy_analytics_enabled',
+            [
+                'type' => 'boolean',
+                'default' => false,
+                'sanitize_callback' => 'rest_sanitize_boolean',
+                'show_in_rest' => true,
+            ]
+        );
+
+        foreach ([
+            'seo_tidy_badge_footer' => false,
+            'seo_tidy_badge_branding' => false,
+            'seo_tidy_badge_bots' => true,
+            'seo_tidy_badge_humans' => true,
+            'seo_tidy_badge_labels' => true,
+        ] as $name => $default) {
+            register_setting('seo_tidy', $name, [
+                'type' => 'boolean',
+                'default' => $default,
+                'sanitize_callback' => 'rest_sanitize_boolean',
+                'show_in_rest' => true,
+            ]);
+        }
+
+        register_setting('seo_tidy', 'seo_tidy_badge_theme', [
+            'type' => 'string',
+            'default' => 'transparent',
+            'sanitize_callback' => static function ($value): string {
+                return in_array(
+                    $value,
+                    ['light', 'dark', 'transparent'],
+                    true
+                ) ? $value : 'transparent';
+            },
+            'show_in_rest' => true,
+        ]);
+
+        register_setting('seo_tidy', 'seo_tidy_community_opt_in', [
+            'type' => 'boolean',
+            'default' => false,
+            'sanitize_callback' => 'rest_sanitize_boolean',
+            'show_in_rest' => true,
+        ]);
+
+        register_setting('seo_tidy', 'seo_tidy_community_name', [
+            'type' => 'string',
+            'default' => '',
+            'sanitize_callback' => 'sanitize_text_field',
+            'show_in_rest' => true,
+        ]);
+
+        register_setting('seo_tidy', 'seo_tidy_community_url', [
+            'type' => 'string',
+            'default' => '',
+            'sanitize_callback' => 'esc_url_raw',
+            'show_in_rest' => true,
+        ]);
+
+        register_setting('seo_tidy', 'seo_tidy_community_description', [
+            'type' => 'string',
+            'default' => '',
+            'sanitize_callback' => 'sanitize_textarea_field',
+            'show_in_rest' => true,
+        ]);
 
         register_setting('seo_tidy', 'seo_tidy_beta_updates', [
             'type' => 'boolean',

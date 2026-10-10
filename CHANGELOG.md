@@ -4,6 +4,27 @@ All notable changes to SEO-TidY will be documented here.
 
 ## [Unreleased]
 
+### M13 ? Analytics, Stats Badge and Community
+
+- Added opt-in, disabled-by-default daily website statistics
+- Separated human-classified pageviews from suspected bot requests
+- Added protected analytics REST endpoints and administration controls
+- Added configurable public statistics badge and shortcode
+- Added optional footer placement and optional project attribution
+- Added local-only Wall of Fame profile settings
+- Added 365-day data retention and confirmed statistics deletion
+- Added WordPress integration tests for analytics, access control,
+  data cleanup, badge rendering and community settings
+- Completed Latvian administration translations for M13
+
+**Limitations:** Counts are requests, not unique visitors.
+Bot detection is approximate. Full-page caching may bypass
+server-side collection. WordPress cron is traffic-dependent.
+The public community catalogue is not yet implemented.
+
+**Status:** Feature branch under review; no public M13 release yet.
+
+
 ## [0.1.0-beta.3] - 2026-10-09
 
 ### Administration

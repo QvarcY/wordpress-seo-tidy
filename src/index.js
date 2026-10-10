@@ -6,6 +6,9 @@ import { __ } from '@wordpress/i18n';
 const sections = [
     { id: 'dashboard', label: __('Dashboard', 'seo-tidy') },
     { id: 'metadata', label: __('Metadata', 'seo-tidy') },
+    { id: 'analytics', label: __('Analytics', 'seo-tidy') },
+    { id: 'badge', label: __('Stats Badge', 'seo-tidy') },
+    { id: 'community', label: __('Wall of Fame', 'seo-tidy') },
     { id: 'schema', label: __('Smart Schema', 'seo-tidy') },
     { id: 'audit', label: __('SEO Audit', 'seo-tidy') },
     { id: 'answers', label: __('Answer Readiness', 'seo-tidy') },
@@ -250,6 +253,799 @@ function DashboardOverview({ onOpenSchema, onOpenMetadata }) {
 
             <p className="tidy-dashboard-footnote">
                 {__('Counts include published posts and pages only.', 'seo-tidy')}
+            </p>
+        </div>
+    );
+}
+
+
+
+function AnalyticsOverview() {
+    const [enabled, setEnabled] = useState(null);
+    const [days, setDays] = useState(30);
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState('');
+    const [refresh, setRefresh] = useState(0);
+    const [deleting, setDeleting] = useState(false);
+
+    useEffect(() => {
+        let active = true;
+
+        setLoading(true);
+        setError('');
+
+        Promise.all([
+            apiFetch({ path: '/wp/v2/settings' }),
+            apiFetch({ path: '/seo-tidy/v1/analytics?days=' + days }),
+        ])
+            .then(([settings, summary]) => {
+                if (!active) return;
+
+                setEnabled(
+                    [true, 1, '1'].includes(
+                        settings.seo_tidy_analytics_enabled
+                    )
+                );
+                setData(summary);
+            })
+            .catch(() => {
+                if (active) {
+                    setError(
+                        __('Could not load analytics.', 'seo-tidy')
+                    );
+                }
+            })
+            .finally(() => {
+                if (active) setLoading(false);
+            });
+
+        return () => {
+            active = false;
+        };
+    }, [days, refresh]);
+
+    const toggle = async (next) => {
+        setSaving(true);
+        setError('');
+
+        try {
+            const result = await apiFetch({
+                path: '/wp/v2/settings',
+                method: 'POST',
+                data: {
+                    seo_tidy_analytics_enabled: next,
+                },
+            });
+
+            setEnabled(
+                [true, 1, '1'].includes(
+                    result.seo_tidy_analytics_enabled
+                )
+            );
+
+            setRefresh((current) => current + 1);
+        } catch {
+            setError(
+                __('Could not save analytics settings.', 'seo-tidy')
+            );
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const resetStatistics = async () => {
+        if (!window.confirm(
+            __('Delete all SEO-TidY analytics statistics? This cannot be undone.', 'seo-tidy')
+        )) {
+            return;
+        }
+
+        setDeleting(true);
+        setError('');
+
+        try {
+            await apiFetch({
+                path: '/seo-tidy/v1/analytics/reset',
+                method: 'POST',
+                data: { confirm: 'DELETE' },
+            });
+
+            setRefresh((current) => current + 1);
+        } catch {
+            setError(
+                __('Could not delete analytics statistics.', 'seo-tidy')
+            );
+        } finally {
+            setDeleting(false);
+        }
+    };
+
+    return (
+        <div className="tidy-dashboard">
+            <p>
+                {__(
+                    'Optional local pageview statistics. Collection is disabled by default.',
+                    'seo-tidy'
+                )}
+            </p>
+
+            {enabled !== null && (
+                <div className="tidy-setting-row">
+                    <ToggleControl
+                        label={__('Enable local analytics', 'seo-tidy')}
+                        help={__(
+                            'Counts eligible WordPress page requests without storing visitor IP addresses.',
+                            'seo-tidy'
+                        )}
+                        checked={enabled}
+                        disabled={saving || loading}
+                        onChange={toggle}
+                    />
+                </div>
+            )}
+
+            {(loading || saving) && <Spinner />}
+
+            {error && (
+                <Notice status="error" isDismissible={false}>
+                    {error}
+                </Notice>
+            )}
+
+            {enabled === false && !loading && (
+                <Notice status="info" isDismissible={false}>
+                    {__(
+                        'Analytics is disabled. No visits are being recorded by SEO-TidY.',
+                        'seo-tidy'
+                    )}
+                </Notice>
+            )}
+
+            {enabled === true && data && !loading && (
+                <>
+                    <p>
+                        <label>
+                            {__('Statistics period', 'seo-tidy')}{' '}
+                            <select
+                                value={days}
+                                onChange={(event) =>
+                                    setDays(Number(event.target.value))
+                                }
+                            >
+                                <option value={1}>
+                                    {__('Today', 'seo-tidy')}
+                                </option>
+                                <option value={7}>
+                                    {__('Last 7 days', 'seo-tidy')}
+                                </option>
+                                <option value={30}>
+                                    {__('Last 30 days', 'seo-tidy')}
+                                </option>
+                                <option value={90}>
+                                    {__('Last 90 days', 'seo-tidy')}
+                                </option>
+                                <option value={365}>
+                                    {__('Last 365 days', 'seo-tidy')}
+                                </option>
+                            </select>
+                        </label>
+                    </p>
+
+                    <div className="tidy-metrics-grid">
+                        <div className="tidy-metric-card">
+                            <span className="tidy-metric-label">
+                                {__('Human-classified pageviews', 'seo-tidy')}
+                            </span>
+                            <strong className="tidy-metric-value">
+                                {Number(
+                                    data.humanPageviews || 0
+                                ).toLocaleString()}
+                            </strong>
+                        </div>
+                        <div className="tidy-metric-card">
+                            <span className="tidy-metric-label">
+                                {__('Suspected bot requests', 'seo-tidy')}
+                            </span>
+                            <strong className="tidy-metric-value">
+                                {Number(
+                                    data.suspectedBotRequests || 0
+                                ).toLocaleString()}
+                            </strong>
+                        </div>
+                    </div>
+
+                    <p className="tidy-dashboard-footnote">
+                        {__(
+                            'Pageviews are not unique visitors. Bot identification is approximate. Cached pages and some requests may not be counted.',
+                            'seo-tidy'
+                        )}
+                    </p>
+
+                    <Button
+                        variant="secondary"
+                        onClick={() =>
+                            setRefresh((current) => current + 1)
+                        }
+                        disabled={loading || saving}
+                    >
+                        {__('Refresh statistics', 'seo-tidy')}
+                    </Button>
+
+                    <div style={{
+                        marginTop: 24,
+                        paddingTop: 16,
+                        borderTop: '1px solid #dcdcde',
+                    }}>
+                        <h3>{__('Data management', 'seo-tidy')}</h3>
+                        <p>
+                            {__(
+                                'Statistics older than 365 days are removed automatically. You can also delete all collected statistics now.',
+                                'seo-tidy'
+                            )}
+                        </p>
+                        <Button
+                            variant="secondary"
+                            isDestructive
+                            isBusy={deleting}
+                            disabled={deleting || loading || saving}
+                            onClick={resetStatistics}
+                        >
+                            {__('Delete all statistics', 'seo-tidy')}
+                        </Button>
+                    </div>
+                </>
+            )}
+        </div>
+    );
+}
+
+
+
+const badgeDefaults = {
+    seo_tidy_badge_footer: false,
+    seo_tidy_badge_branding: false,
+    seo_tidy_badge_bots: true,
+    seo_tidy_badge_humans: true,
+    seo_tidy_badge_labels: true,
+    seo_tidy_badge_theme: 'transparent',
+};
+
+function StatsBadgeSettings() {
+    const [values, setValues] = useState(null);
+    const [saved, setSaved] = useState(null);
+    const [analytics, setAnalytics] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState(false);
+
+    useEffect(() => {
+        let active = true;
+
+        Promise.all([
+            apiFetch({ path: '/wp/v2/settings' }),
+            apiFetch({ path: '/seo-tidy/v1/analytics?days=30' }),
+        ]).then(([settings, result]) => {
+            if (!active) return;
+
+            const initial = {};
+
+            for (const [key, fallback] of Object.entries(badgeDefaults)) {
+                if (typeof fallback === 'boolean') {
+                    initial[key] = [true, 1, '1'].includes(settings[key]);
+                } else {
+                    initial[key] = settings[key] || fallback;
+                }
+            }
+
+            setValues(initial);
+            setSaved(initial);
+            setAnalytics(result);
+        }).catch(() => {
+            if (active) {
+                setError(__('Could not load badge settings.', 'seo-tidy'));
+            }
+        }).finally(() => {
+            if (active) setLoading(false);
+        });
+
+        return () => { active = false; };
+    }, []);
+
+    const update = (key, value) => {
+        setSuccess(false);
+        setValues((current) => ({
+            ...current,
+            [key]: value,
+        }));
+    };
+
+    const save = async () => {
+        setSaving(true);
+        setError('');
+        setSuccess(false);
+
+        try {
+            const result = await apiFetch({
+                path: '/wp/v2/settings',
+                method: 'POST',
+                data: values,
+            });
+
+            const confirmed = {};
+            for (const [key, fallback] of Object.entries(badgeDefaults)) {
+                confirmed[key] = typeof fallback === 'boolean'
+                    ? [true, 1, '1'].includes(result[key])
+                    : result[key] || fallback;
+            }
+
+            setValues(confirmed);
+            setSaved(confirmed);
+            setSuccess(true);
+        } catch {
+            setError(__('Could not save badge settings.', 'seo-tidy'));
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    if (loading) return <Spinner />;
+
+    if (!values) {
+        return (
+            <Notice status="error" isDismissible={false}>
+                {error || __('Badge settings unavailable.', 'seo-tidy')}
+            </Notice>
+        );
+    }
+
+    const changed = Object.keys(badgeDefaults).some(
+        (key) => values[key] !== saved?.[key]
+    );
+
+    const theme = values.seo_tidy_badge_theme;
+
+    const palette = theme === 'dark'
+        ? {
+            background: '#152033',
+            border: '#34435b',
+            color: '#eef4fb',
+        }
+        : theme === 'light'
+            ? {
+                background: '#fff',
+                border: '#d9e0e9',
+                color: '#263449',
+            }
+            : {
+                background: 'transparent',
+                border: 'currentColor',
+                color: 'inherit',
+            };
+
+    const fields = [
+        {
+            key: 'seo_tidy_badge_footer',
+            label: __('Automatically show badge in footer', 'seo-tidy'),
+            help: __('Optional. Off by default.', 'seo-tidy'),
+        },
+        {
+            key: 'seo_tidy_badge_humans',
+            label: __('Show pageviews', 'seo-tidy'),
+            help: __('Human-classified page requests, not unique people.', 'seo-tidy'),
+        },
+        {
+            key: 'seo_tidy_badge_bots',
+            label: __('Show suspected bot requests', 'seo-tidy'),
+            help: __('Bot detection is approximate.', 'seo-tidy'),
+        },
+        {
+            key: 'seo_tidy_badge_labels',
+            label: __('Show descriptions next to icons', 'seo-tidy'),
+            help: __('When disabled, accessible descriptions remain available.', 'seo-tidy'),
+        },
+        {
+            key: 'seo_tidy_badge_branding',
+            label: __('Show Powered by SEO-TidY link', 'seo-tidy'),
+            help: __('Optional project attribution. Off by default.', 'seo-tidy'),
+        },
+    ];
+
+    const previewMetrics = [];
+
+    if (values.seo_tidy_badge_humans) {
+        previewMetrics.push({
+            id: 'human',
+            icon: '?',
+            label: __('Human-classified pageviews', 'seo-tidy'),
+            value: Number(analytics?.humanPageviews || 0),
+        });
+    }
+
+    if (values.seo_tidy_badge_bots) {
+        previewMetrics.push({
+            id: 'bot',
+            icon: '?',
+            label: __('Suspected bot requests', 'seo-tidy'),
+            value: Number(analytics?.suspectedBotRequests || 0),
+        });
+    }
+
+    return (
+        <div className="tidy-settings-panel">
+            <p>
+                {__(
+                    'Customize the optional public statistics badge.',
+                    'seo-tidy'
+                )}
+            </p>
+
+            {!analytics?.enabled && (
+                <Notice status="info" isDismissible={false}>
+                    {__(
+                        'Analytics is disabled. Enable it in the Analytics tab before publishing the badge.',
+                        'seo-tidy'
+                    )}
+                </Notice>
+            )}
+
+            <div className="tidy-setting-row">
+                <label htmlFor="tidy-badge-theme">
+                    <strong>{__('Badge appearance', 'seo-tidy')}</strong>
+                </label>
+                <p>
+                    <select
+                        id="tidy-badge-theme"
+                        value={theme}
+                        disabled={saving}
+                        onChange={(event) =>
+                            update('seo_tidy_badge_theme', event.target.value)
+                        }
+                    >
+                        <option value="transparent">
+                            {__('Transparent', 'seo-tidy')}
+                        </option>
+                        <option value="light">
+                            {__('Light', 'seo-tidy')}
+                        </option>
+                        <option value="dark">
+                            {__('Dark', 'seo-tidy')}
+                        </option>
+                    </select>
+                </p>
+            </div>
+
+            <div className="tidy-settings-list">
+                {fields.map((field) => (
+                    <div className="tidy-setting-row" key={field.key}>
+                        <ToggleControl
+                            label={field.label}
+                            help={field.help}
+                            checked={values[field.key]}
+                            disabled={saving}
+                            onChange={(next) => update(field.key, next)}
+                        />
+                    </div>
+                ))}
+            </div>
+
+            <h3>{__('Live preview', 'seo-tidy')}</h3>
+            <div style={{
+                padding: 24,
+                borderRadius: 12,
+                background: theme === 'transparent'
+                    ? '#e8edf3'
+                    : '#f0f2f5',
+                color: '#263449',
+                textAlign: 'center',
+            }}>
+                <div
+                    role="group"
+                    aria-label={__('Badge preview', 'seo-tidy')}
+                    style={{
+                        display: 'inline-flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '10px 16px',
+                        maxWidth: '100%',
+                        padding: '10px 14px',
+                        border: '1px solid ' + palette.border,
+                        borderRadius: 10,
+                        background: palette.background,
+                        color: palette.color,
+                        fontSize: 12,
+                        fontFamily: 'system-ui, sans-serif',
+                    }}
+                >
+                    {previewMetrics.map((metric) => (
+                        <span
+                            key={metric.id}
+                            title={metric.label}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: 6,
+                            }}
+                        >
+                            <span aria-hidden="true">{metric.icon}</span>
+                            <strong>{metric.value.toLocaleString()}</strong>
+                            {values.seo_tidy_badge_labels ? (
+                                <span>{metric.label}</span>
+                            ) : (
+                                <span className="screen-reader-text">
+                                    {metric.label}
+                                </span>
+                            )}
+                        </span>
+                    ))}
+
+                    {values.seo_tidy_badge_branding && (
+                        <span style={{ textDecoration: 'underline' }}>
+                            {__('Powered by SEO-TidY', 'seo-tidy')}
+                        </span>
+                    )}
+
+                    {previewMetrics.length === 0 &&
+                        !values.seo_tidy_badge_branding && (
+                        <span>
+                            {__('Badge contains no visible items.', 'seo-tidy')}
+                        </span>
+                    )}
+                </div>
+            </div>
+
+            <p className="tidy-dashboard-footnote">
+                {__(
+                    'Preview uses the current 30-day statistics. Changes are not published until saved. The final badge uses SVG icons.',
+                    'seo-tidy'
+                )}
+            </p>
+
+            <p>
+                <strong>{__('Shortcode:', 'seo-tidy')}</strong>{' '}
+                <code>[seo_tidy_stats]</code>
+            </p>
+            <p>
+                <code>[seo_tidy_stats theme="dark"]</code>
+            </p>
+
+            {error && (
+                <Notice status="error" isDismissible={false}>
+                    {error}
+                </Notice>
+            )}
+
+            {success && (
+                <Notice status="success" isDismissible={false}>
+                    {__('Badge settings saved.', 'seo-tidy')}
+                </Notice>
+            )}
+
+            <Button
+                variant="primary"
+                disabled={!changed || saving}
+                isBusy={saving}
+                onClick={save}
+            >
+                {__('Save badge settings', 'seo-tidy')}
+            </Button>
+        </div>
+    );
+}
+
+
+
+function WallOfFame() {
+    const [profile, setProfile] = useState(null);
+    const [saved, setSaved] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState(false);
+
+    useEffect(() => {
+        let active = true;
+
+        apiFetch({ path: '/wp/v2/settings' })
+            .then((settings) => {
+                if (!active) return;
+
+                const initial = {
+                    seo_tidy_community_opt_in:
+                        [true, 1, '1'].includes(
+                            settings.seo_tidy_community_opt_in
+                        ),
+                    seo_tidy_community_name:
+                        settings.seo_tidy_community_name || '',
+                    seo_tidy_community_url:
+                        settings.seo_tidy_community_url || '',
+                    seo_tidy_community_description:
+                        settings.seo_tidy_community_description || '',
+                };
+
+                setProfile(initial);
+                setSaved(initial);
+            })
+            .catch(() => {
+                if (active) {
+                    setError(__('Could not load community profile.', 'seo-tidy'));
+                }
+            })
+            .finally(() => {
+                if (active) setLoading(false);
+            });
+
+        return () => { active = false; };
+    }, []);
+
+    const change = (key, value) => {
+        setSuccess(false);
+        setProfile((current) => ({
+            ...current,
+            [key]: value,
+        }));
+    };
+
+    const save = async () => {
+        setSaving(true);
+        setError('');
+        setSuccess(false);
+
+        try {
+            const result = await apiFetch({
+                path: '/wp/v2/settings',
+                method: 'POST',
+                data: profile,
+            });
+
+            const confirmed = {
+                seo_tidy_community_opt_in:
+                    [true, 1, '1'].includes(
+                        result.seo_tidy_community_opt_in
+                    ),
+                seo_tidy_community_name:
+                    result.seo_tidy_community_name || '',
+                seo_tidy_community_url:
+                    result.seo_tidy_community_url || '',
+                seo_tidy_community_description:
+                    result.seo_tidy_community_description || '',
+            };
+
+            setProfile(confirmed);
+            setSaved(confirmed);
+            setSuccess(true);
+        } catch {
+            setError(__('Could not save community profile.', 'seo-tidy'));
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    if (loading) return <Spinner />;
+
+    if (!profile) {
+        return (
+            <Notice status="error" isDismissible={false}>
+                {error || __('Community profile unavailable.', 'seo-tidy')}
+            </Notice>
+        );
+    }
+
+    const changed = Object.keys(profile).some(
+        (key) => profile[key] !== saved?.[key]
+    );
+
+    return (
+        <div className="tidy-settings-panel">
+            <p>
+                {__(
+                    'Prepare your website profile for the future SEO-TidY community showcase.',
+                    'seo-tidy'
+                )}
+            </p>
+
+            <Notice status="info" isDismissible={false}>
+                {__(
+                    'The public Wall of Fame directory is not active yet. Saving this profile stores data only on your WordPress website. No information is submitted or published externally.',
+                    'seo-tidy'
+                )}
+            </Notice>
+
+            <div className="tidy-setting-row">
+                <ToggleControl
+                    label={__('I would like to join Wall of Fame', 'seo-tidy')}
+                    help={__(
+                        'Express interest in future voluntary registration. No automatic submission takes place.',
+                        'seo-tidy'
+                    )}
+                    checked={profile.seo_tidy_community_opt_in}
+                    disabled={saving}
+                    onChange={(value) =>
+                        change('seo_tidy_community_opt_in', value)
+                    }
+                />
+            </div>
+
+            <div className="tidy-setting-row">
+                <TextControl
+                    label={__('Website name', 'seo-tidy')}
+                    value={profile.seo_tidy_community_name}
+                    disabled={saving}
+                    maxLength={100}
+                    onChange={(value) =>
+                        change('seo_tidy_community_name', value)
+                    }
+                />
+            </div>
+
+            <div className="tidy-setting-row">
+                <TextControl
+                    label={__('Public website URL', 'seo-tidy')}
+                    type="url"
+                    value={profile.seo_tidy_community_url}
+                    disabled={saving}
+                    onChange={(value) =>
+                        change('seo_tidy_community_url', value)
+                    }
+                />
+            </div>
+
+            <div className="tidy-setting-row">
+                <TextareaControl
+                    label={__('Short website description', 'seo-tidy')}
+                    value={profile.seo_tidy_community_description}
+                    disabled={saving}
+                    maxLength={300}
+                    onChange={(value) =>
+                        change('seo_tidy_community_description', value)
+                    }
+                />
+            </div>
+
+            <h3>{__('Profile preview', 'seo-tidy')}</h3>
+
+            <div className="tidy-metric-card" style={{
+                maxWidth: 520,
+                padding: 18,
+            }}>
+                <strong>
+                    {profile.seo_tidy_community_name ||
+                        __('Your website name', 'seo-tidy')}
+                </strong>
+                <p style={{ overflowWrap: 'anywhere' }}>
+                    {profile.seo_tidy_community_url ||
+                        __('Your website URL', 'seo-tidy')}
+                </p>
+                <p>
+                    {profile.seo_tidy_community_description ||
+                        __('Your website description', 'seo-tidy')}
+                </p>
+            </div>
+
+            {error && (
+                <Notice status="error" isDismissible={false}>
+                    {error}
+                </Notice>
+            )}
+
+            {success && (
+                <Notice status="success" isDismissible={false}>
+                    {__('Community profile saved locally.', 'seo-tidy')}
+                </Notice>
+            )}
+
+            <p>
+                <Button
+                    variant="primary"
+                    disabled={!changed || saving}
+                    isBusy={saving}
+                    onClick={save}
+                >
+                    {__('Save community profile', 'seo-tidy')}
+                </Button>
             </p>
         </div>
     );
@@ -1686,6 +2482,12 @@ function App() {
 
                     {active === 'settings' ? (
                         <GeneralSettings />
+                    ) : active === 'community' ? (
+                        <WallOfFame />
+                    ) : active === 'badge' ? (
+                        <StatsBadgeSettings />
+                    ) : active === 'analytics' ? (
+                        <AnalyticsOverview />
                     ) : active === 'migration' ? (
                         <MigrationOverview />
                     ) : active === 'answers' ? (
