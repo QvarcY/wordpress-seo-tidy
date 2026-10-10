@@ -8,11 +8,11 @@ Clean SEO. Smarter discovery. Completely free.
 
 ## Release status
 
-**Recommended download: [SEO-TidY 0.1.0-beta.13](https://github.com/QvarcY/wordpress-seo-tidy/releases/tag/v0.1.0-beta.13)**
+**Latest stable release: [SEO-TidY 1.0.0](https://github.com/QvarcY/wordpress-seo-tidy/releases/tag/v1.0.0)**
 
-Download **`seo-tidy-0.1.0-beta.13.zip`** from the release's **Assets** section. This is the ready-to-install WordPress plugin. Do **not** download GitHub's automatically generated `Source code (zip)` or `Source code (tar.gz)` files.
+Download **[seo-tidy-1.0.0.zip](https://github.com/QvarcY/wordpress-seo-tidy/releases/download/v1.0.0/seo-tidy-1.0.0.zip)** from GitHub Releases under **Assets**. This is the ready-to-install WordPress plugin. Do not use GitHub's automatically generated source archives.
 
-Beta.13 is the current recommended tested beta release. It remains a pre-release, not a final stable 1.0 release. Back up your site and test compatibility before enabling it on production websites.
+SEO-TidY 1.0.0 is the first stable release, intended for regular WordPress use. Requirements: WordPress 6.8+ and PHP 8.1+. As with any site plugin, keep a backup before updating.
 
 ## Features
 
@@ -35,7 +35,7 @@ Beta.13 is the current recommended tested beta release. It remains a pre-release
 - Configurable statistics badge with shortcode `[seo_tidy_stats]`
 - Optional statistics badge in the website footer
 - Light, dark and transparent badge themes
-- Opt-in Wall of Fame directory with verified applications, administrator approval and a compact paginated website list on the dashboard
+- Opt-in Wall of Fame directory with verified submissions, moderated editable website profiles, public SEO-friendly profile pages, moderator notifications and a compact paginated directory
 - Administrator-controlled statistics deletion and daily data retention
 
 Content recommendations are heuristic and do not guarantee search
@@ -48,8 +48,8 @@ rankings, indexing, or inclusion in AI-generated answers.
 
 ## Installation
 
-1. Open the [recommended beta.13 release](https://github.com/QvarcY/wordpress-seo-tidy/releases/tag/v0.1.0-beta.13) and expand **Assets**.
-2. Download **[seo-tidy-0.1.0-beta.13.zip](https://github.com/QvarcY/wordpress-seo-tidy/releases/download/v0.1.0-beta.13/seo-tidy-0.1.0-beta.13.zip)** (not the GitHub-generated source code archives).
+1. Open the [stable 1.0.0 release](https://github.com/QvarcY/wordpress-seo-tidy/releases/tag/v1.0.0) and expand **Assets**.
+2. Download **[seo-tidy-1.0.0.zip](https://github.com/QvarcY/wordpress-seo-tidy/releases/download/v1.0.0/seo-tidy-1.0.0.zip)** (not the source archives).
 3. In WordPress, open Plugins > Add New Plugin > Upload Plugin.
 4. Select the downloaded ZIP and choose Install Now.
 5. Activate SEO-TidY.
@@ -99,7 +99,7 @@ The statistics badge is optional. The footer badge and the
 Powered by SEO-TidY attribution are disabled by default.
 The shortcode can be used where a badge is wanted.
 
-Wall of Fame is optional. Owners can submit their website for ownership verification and moderator review. Only approved website names, URLs and descriptions appear in the public community directory. The directory is also shown in the SEO-TidY dashboard with pagination.
+Wall of Fame is optional. Owners submit their website for verification and moderator review. Approved website names, URLs and descriptions appear in the public community directory. Approved site owners can submit a detailed profile with category and tags for moderation; public profiles have crawlable HTML pages. The directory is also shown in the SEO-TidY dashboard with pagination and profile links. Central moderation is limited to the authorized hosting environment.
 
 Site owners remain responsible for providing appropriate privacy
 information to their visitors.
