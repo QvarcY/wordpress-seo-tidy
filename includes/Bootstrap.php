@@ -20,6 +20,7 @@ final class Bootstrap
         require_once __DIR__ . '/Analytics.php';
         require_once __DIR__ . '/StatsBadge.php';
         require_once __DIR__ . '/WallOfFame.php';
+        require_once __DIR__ . '/WallModeration.php';
         Metadata::init();
         Schema::init();
         Dashboard::init();
@@ -30,6 +31,7 @@ final class Bootstrap
         Analytics::init();
         StatsBadge::init();
         WallOfFame::init();
+        WallModeration::init();
         add_action('init', [self::class, 'loadTranslations']);
         add_action('init', [self::class, 'registerSettings']);
         if (is_admin()) {

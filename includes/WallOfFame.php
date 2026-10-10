@@ -12,6 +12,12 @@ final class WallOfFame
 
     public static function init(): void
     {
+        add_action('admin_menu', static function (): void {
+            add_submenu_page('seo-tidy', __('Wall of Fame profile', 'seo-tidy'),
+                __('Wall of Fame profile', 'seo-tidy'), 'manage_options',
+                'seo-tidy-wall-profile', [self::class, 'profileEditor']);
+        }, 20);
+        add_action('admin_post_seo_tidy_wall_profile_save', [self::class, 'saveProfile']);
         add_action('rest_api_init', static function (): void {
             register_rest_route('seo-tidy/v1', '/wall', [
                 'methods' => 'GET',
@@ -22,6 +28,16 @@ final class WallOfFame
                 'methods' => 'POST',
                 'permission_callback' => static fn(): bool => current_user_can('manage_options'),
                 'callback' => [self::class, 'join'],
+            ]);
+            register_rest_route('seo-tidy/v1', '/wall/profile', [
+                'methods' => 'GET',
+                'permission_callback' => static fn(): bool => current_user_can('manage_options'),
+                'callback' => [self::class, 'profile'],
+            ]);
+            register_rest_route('seo-tidy/v1', '/wall/profile', [
+                'methods' => 'POST',
+                'permission_callback' => static fn(): bool => current_user_can('manage_options'),
+                'callback' => [self::class, 'updateProfile'],
             ]);
             register_rest_route('seo-tidy/v1', '/wall/leave', [
                 'methods' => 'POST',
@@ -162,6 +178,104 @@ final class WallOfFame
             return ['status' => 'not_joined'];
         }
         return $result;
+    }
+
+    private static function credentials(): array
+    {
+        $creds = get_option(self::REGISTRATION_OPTION, []);
+        return is_array($creds) ? $creds : [];
+    }
+
+    public static function profile()
+    {
+        $creds = self::credentials();
+        if (empty($creds['id']) || empty($creds['secret'])) {
+            return new \WP_Error('not_joined', 'Join the Wall of Fame first', ['status' => 409]);
+        }
+        return self::remote('profile', ['id' => $creds['id'], 'secret' => $creds['secret']]);
+    }
+
+    public static function updateProfile(\WP_REST_Request $request)
+    {
+        $creds = self::credentials();
+        if (empty($creds['id']) || empty($creds['secret'])) {
+            return new \WP_Error('not_joined', 'Join the Wall of Fame first', ['status' => 409]);
+        }
+        $tags = $request->get_param('tags');
+        if (is_string($tags)) $tags = array_map('trim', explode(',', $tags));
+        if (!is_array($tags)) $tags = [];
+        $tags = array_values(array_filter(array_map('sanitize_text_field', $tags)));
+        return self::remote('profile/update', [
+            'id' => $creds['id'], 'secret' => $creds['secret'],
+            'shortDescription' => sanitize_text_field((string) $request->get_param('shortDescription')),
+            'longDescription' => sanitize_textarea_field((string) $request->get_param('longDescription')),
+            'category' => sanitize_text_field((string) $request->get_param('category')),
+            'tags' => $tags,
+            'locale' => in_array($request->get_param('locale'), ['lv','en'],true) ? $request->get_param('locale') : 'lv',
+            'country' => strtoupper(sanitize_text_field((string) ($request->get_param('country') ?: 'LV'))),
+        ]);
+    }
+
+    public static function saveProfile(): void
+    {
+        if (!current_user_can('manage_options')) wp_die(esc_html__('Not allowed', 'seo-tidy'));
+        check_admin_referer('seo_tidy_wall_profile');
+        $input = new \WP_REST_Request('POST', '/seo-tidy/v1/wall/profile');
+        foreach (['shortDescription','longDescription','category','tags','locale','country'] as $key) {
+            $input->set_param($key, wp_unslash($_POST[$key] ?? ''));
+        }
+        $result = self::updateProfile($input);
+        $state = is_wp_error($result) ? 'error' : 'pending';
+        set_transient('seo_tidy_wall_profile_feedback_'.get_current_user_id(),
+            is_wp_error($result) ? $result->get_error_message() : __('Profile submitted for review', 'seo-tidy'), 90);
+        wp_safe_redirect(admin_url('admin.php?page=seo-tidy-wall-profile&state='.$state));
+        exit;
+    }
+
+    public static function profileEditor(): void
+    {
+        if (!current_user_can('manage_options')) return;
+        $data = self::profile();
+        echo '<div class="wrap"><h1>'.esc_html__('Wall of Fame profile','seo-tidy').'</h1>';
+        $flash = get_transient('seo_tidy_wall_profile_feedback_'.get_current_user_id());
+        if (is_string($flash)) {
+            echo '<div class="notice notice-info"><p>'.esc_html($flash).'</p></div>';
+            delete_transient('seo_tidy_wall_profile_feedback_'.get_current_user_id());
+        }
+        if (is_wp_error($data)) {
+            echo '<p>'.esc_html($data->get_error_message()).'</p></div>';
+            return;
+        }
+        $profile = $data['latest'] ?? $data['published'] ?? [];
+        if (!is_array($profile)) $profile = [];
+        $tags = json_decode((string)($profile['tags_json'] ?? '[]'),true);
+        if (!is_array($tags)) $tags = [];
+        if (($data['latest']['state'] ?? '') === 'pending') {
+            echo '<p><strong>'.esc_html__('Your most recent profile changes are awaiting approval.','seo-tidy').'</strong></p>';
+        }
+        echo '<p>'.esc_html__('Describe your website accurately. Avoid keyword stuffing. Changes are reviewed before publication.','seo-tidy').'</p>';
+        echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
+        wp_nonce_field('seo_tidy_wall_profile');
+        echo '<input type="hidden" name="action" value="seo_tidy_wall_profile_save">';
+        $fields = [
+            'shortDescription'=>[__('Short description (30–180 characters)','seo-tidy'),$profile['short_description'] ?? '', 'input'],
+            'longDescription'=>[__('Extended description (300–2000 characters)','seo-tidy'),$profile['long_description'] ?? '', 'textarea'],
+            'category'=>[__('Category','seo-tidy'),$profile['category'] ?? '', 'input'],
+            'tags'=>[__('Tags (up to 8, separated by commas)','seo-tidy'),implode(', ', $tags),'input'],
+            'locale'=>[__('Language (lv or en)','seo-tidy'),$profile['locale'] ?? 'lv','input'],
+            'country'=>[__('Country code','seo-tidy'),$profile['country'] ?? 'LV','input'],
+        ];
+        foreach ($fields as $key=>$field) {
+            echo '<p><label for="'.esc_attr($key).'"><strong>'.esc_html($field[0]).'</strong></label><br>';
+            if ($field[2] === 'textarea') {
+                echo '<textarea id="'.esc_attr($key).'" name="'.esc_attr($key).'" rows="8" cols="85" maxlength="2000">'.esc_textarea($field[1]).'</textarea>';
+            } else {
+                echo '<input class="regular-text" type="text" id="'.esc_attr($key).'" name="'.esc_attr($key).'" value="'.esc_attr($field[1]).'">';
+            }
+            echo '</p>';
+        }
+        submit_button(__('Submit profile for review','seo-tidy'));
+        echo '</form></div>';
     }
 
     public static function leave()

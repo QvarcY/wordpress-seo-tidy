@@ -76,7 +76,14 @@ function siteCard(site) {
   head.append(monogram, a);
   const body = document.createElement('p'); body.textContent = site.description;
   const domain = document.createElement('small'); domain.textContent = new URL(site.url).hostname;
-  card.append(head, body, domain); return card;
+  card.append(head, body, domain);
+  if (Number(site.hasProfile) === 1) {
+    const link = document.createElement('a'); link.className = 'profile-open';
+    link.href = '?site=' + encodeURIComponent(new URL(site.url).hostname);
+    link.textContent = lang === 'lv' ? 'Skatīt profilu ↗' : 'View profile ↗';
+    card.append(link);
+  }
+  return card;
 }
 let loading = false;
 async function listings(nextPage = 1) {
