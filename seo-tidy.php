@@ -35,4 +35,9 @@ if (!\QvarcY\SeoTidy\Requirements::supported()) {
     return;
 }
 
+register_activation_hook(
+    __FILE__,
+    [\QvarcY\SeoTidy\Analytics::class, 'install']
+);
+
 \QvarcY\SeoTidy\Bootstrap::init();

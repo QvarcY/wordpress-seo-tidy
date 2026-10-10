@@ -17,6 +17,7 @@ final class Bootstrap
         require_once __DIR__ . '/AnswerReadiness.php';
         require_once __DIR__ . '/Migration.php';
         require_once __DIR__ . '/GitHubUpdater.php';
+        require_once __DIR__ . '/Analytics.php';
         Metadata::init();
         Schema::init();
         Dashboard::init();
@@ -57,6 +58,17 @@ final class Bootstrap
                 'show_in_rest' => true,
             ]);
         }
+
+        register_setting(
+            'seo_tidy',
+            'seo_tidy_analytics_enabled',
+            [
+                'type' => 'boolean',
+                'default' => false,
+                'sanitize_callback' => 'rest_sanitize_boolean',
+                'show_in_rest' => true,
+            ]
+        );
 
         register_setting('seo_tidy', 'seo_tidy_beta_updates', [
             'type' => 'boolean',
