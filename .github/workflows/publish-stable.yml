@@ -1,0 +1,163 @@
+name: SEO-TidY Publish Stable
+
+on:
+  push:
+    tags:
+      - 'v1.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Verify and publish stable
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout tagged source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Verify tag points to current main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main:refs/remotes/origin/main
+          TAG_SHA="$(git rev-parse HEAD)"
+          MAIN_SHA="$(git rev-parse refs/remotes/origin/main)"
+          if [[ "$TAG_SHA" != "$MAIN_SHA" ]]; then
+            echo "Stable tag must point to current main"
+            exit 1
+          fi
+
+      - name: Verify stable version
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+
+          VERSION="${RELEASE_TAG#v}"
+
+          if [[ "$VERSION" != "1.0.0" ]]; then
+            echo "Invalid stable tag"
+            exit 1
+          fi
+
+          node scripts/check-release-version.cjs "$RELEASE_TAG"
+
+
+
+      - name: Ensure release does not exist
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Release already exists: $RELEASE_TAG"
+            exit 1
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate translations
+        run: npm run check:i18n
+
+      - name: Build interfaces
+        run: npm run build
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: none
+          coverage: none
+
+      - name: Validate GitHub updater
+        run: npm run test:updater
+      - name: Validate PHP syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l seo-tidy.php
+          find includes tests/integration -name '*.php' -print0 |
+            xargs -0 -n1 php -l
+
+      - name: Validate integration runner
+        run: node --check tests/integration/run.cjs
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Start WordPress
+        run: npm exec --no -- wp-env start
+
+      - name: Run WordPress integration tests
+        env:
+          SEO_TIDY_DNS_BOOTSTRAP: ''
+          SEO_TIDY_BASE_URL: http://localhost:8898
+        run: npm run test:integration
+
+      - name: Stop WordPress
+        if: always()
+        run: npm exec --no -- wp-env stop
+
+      - name: Build portable WordPress ZIP
+        shell: pwsh
+        run: ./scripts/build-release.ps1
+
+      - name: Prepare checksums
+        shell: bash
+        run: |
+          cd dist
+          sha256sum seo-tidy-*.zip > SHA256SUMS.txt
+
+      - name: Publish GitHub stable release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          VERSION="${RELEASE_TAG#v}"
+
+          gh release create "$RELEASE_TAG" \
+            dist/seo-tidy-*.zip \
+            dist/SHA256SUMS.txt \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --latest \
+            --title "SEO-TidY $RELEASE_TAG" \
+            --notes "## Installation
+
+          Download **seo-tidy-${VERSION}.zip** under Assets below. Do not use GitHub's automatically generated Source code archives.
+
+          In WordPress, go to Plugins → Add New Plugin → Upload Plugin, select the ZIP, install and activate SEO-TidY.
+
+          ## About
+
+          Free and open-source WordPress SEO and AI-search readiness tools with English and Latvian interface support. No paywalls.
+
+          This release includes SEO metadata tools, structured data, audits, analytics, and optional Wall of Fame participation.
+
+          ## Release status
+
+          This is the first stable SEO-TidY 1.0 release for everyday WordPress use. Keeping a website backup before updates is recommended. Requirements: WordPress 6.8+ and PHP 8.1+.
+
+          Report issues: https://github.com/QvarcY/wordpress-seo-tidy/issues
+
+          Optional support: https://buymeacoffee.com/craftin"
