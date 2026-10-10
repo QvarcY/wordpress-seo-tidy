@@ -143,6 +143,7 @@ async function main() {
         'audit-smoke.php',
         'audit-full-scan.php',
         'updater-settings.php',
+        'm13-smoke.php',
     ]) {
         console.log(`\n=== ${file} ===`);
 
