@@ -91,7 +91,11 @@ final class WallOfFame
     {
         $existing = get_option(self::REGISTRATION_OPTION, []);
         if (is_array($existing) && !empty($existing['id'])) {
-            return new \WP_Error('already_registered', 'This WordPress site has already applied', ['status' => 409]);
+            $current = self::status();
+            if (is_wp_error($current)) return $current;
+            if (($current['status'] ?? '') !== 'not_joined') {
+                return new \WP_Error('already_registered', 'This WordPress site has already applied', ['status' => 409]);
+            }
         }
         $consent = $request->get_param('consent');
         if ($consent !== true) {
@@ -133,13 +137,31 @@ final class WallOfFame
         return ['status' => 'verified'];
     }
 
+    private static function isMissingApplication($result): bool
+    {
+        return is_wp_error($result)
+            && $result->get_error_code() === 'wall_remote'
+            && (int) ($result->get_error_data()['status'] ?? 0) === 404;
+    }
+
+    private static function clearRegistration(): void
+    {
+        delete_option(self::REGISTRATION_OPTION);
+        update_option('seo_tidy_community_opt_in', false, false);
+    }
+
     public static function status()
     {
         $credentials = get_option(self::REGISTRATION_OPTION, []);
         if (empty($credentials['id']) || empty($credentials['secret'])) return ['status' => 'not_joined'];
-        return self::remote('status', [
+        $result = self::remote('status', [
             'id' => $credentials['id'], 'secret' => $credentials['secret'],
         ]);
+        if (self::isMissingApplication($result)) {
+            self::clearRegistration();
+            return ['status' => 'not_joined'];
+        }
+        return $result;
     }
 
     public static function leave()
@@ -151,9 +173,12 @@ final class WallOfFame
         $response = self::remote('remove', [
             'id' => $credentials['id'], 'secret' => $credentials['secret'],
         ]);
+        if (self::isMissingApplication($response)) {
+            self::clearRegistration();
+            return ['removed' => true];
+        }
         if (is_wp_error($response)) return $response;
-        delete_option(self::REGISTRATION_OPTION);
-        update_option('seo_tidy_community_opt_in', false, false);
+        self::clearRegistration();
         return ['removed' => true];
     }
 }
