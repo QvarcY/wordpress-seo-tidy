@@ -15,6 +15,47 @@ final class Analytics
             [self::class, 'recordRequest'],
             20
         );
+
+        add_action(
+            'rest_api_init',
+            [self::class, 'registerRoutes']
+        );
+    }
+
+    public static function registerRoutes(): void
+    {
+        register_rest_route(
+            'seo-tidy/v1',
+            '/analytics',
+            [
+                'methods' => 'GET',
+                'permission_callback' => static function (): bool {
+                    return current_user_can('manage_options');
+                },
+                'callback' => [self::class, 'getRestSummary'],
+                'args' => [
+                    'days' => [
+                        'default' => 30,
+                        'type' => 'integer',
+                        'minimum' => 1,
+                        'maximum' => 365,
+                    ],
+                ],
+            ]
+        );
+    }
+
+    public static function getRestSummary(
+        \WP_REST_Request $request
+    ): \WP_REST_Response {
+        $days = min(
+            365,
+            max(1, (int) $request->get_param('days'))
+        );
+
+        return new \WP_REST_Response(
+            self::summary($days)
+        );
     }
 
     public static function tableName(): string
