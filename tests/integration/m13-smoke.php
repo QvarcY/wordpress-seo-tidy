@@ -210,7 +210,7 @@ try {
     );
 
     m13_assert(
-        !str_contains($badge, 'Powered by SEO-TidY'),
+        !str_contains($badge, '>SEO-TidY</a>'),
         'Branding absent when disabled'
     );
 
@@ -219,7 +219,7 @@ try {
     $badge = StatsBadge::render([]);
 
     m13_assert(
-        str_contains($badge, 'Powered by SEO-TidY'),
+        str_contains($badge, '>SEO-TidY</a>'),
         'Branding appears only when enabled'
     );
 
