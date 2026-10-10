@@ -1,0 +1,28 @@
+name: Wall of Fame
+
+on:
+  push:
+    paths:
+      - 'wall-of-fame/**'
+      - '.github/workflows/wall-of-fame.yml'
+  pull_request:
+    paths:
+      - 'wall-of-fame/**'
+      - '.github/workflows/wall-of-fame.yml'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate syntax
+        working-directory: wall-of-fame
+        run: |
+          node --check src/worker.js
+          node --check public/app.js
+      - name: Test service
+        working-directory: wall-of-fame
+        run: node --test tests/*.test.mjs
