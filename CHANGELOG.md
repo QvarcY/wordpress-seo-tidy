@@ -4,6 +4,12 @@ All notable changes to SEO-TidY will be documented here.
 
 ## [Unreleased]
 
+## [0.1.0-beta.9] - Pending release
+
+### Fixed
+- Restored 59 corrupted Latvian administration translations
+- Detect corrupted Latvian translation characters during validation
+
 ## [0.1.0-beta.8] - Pending release
 
 ### Fixed
