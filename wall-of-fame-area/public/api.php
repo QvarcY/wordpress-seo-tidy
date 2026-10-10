@@ -274,6 +274,55 @@ try {
         respond(['status'=>'verified','message'=>'Domain verified; awaiting review']);
     }
 
+    if ($route === 'profile' && $method === 'POST') {
+        $input = payload();
+        $row = owner($db, $input);
+        if ($row['status'] !== 'approved') fail('Website must be approved first', 409);
+        $latest = sql($db, "SELECT short_description,long_description,category,tags_json,locale,country,state
+            FROM profile_revisions WHERE submission_id=? ORDER BY id DESC LIMIT 1", [$row['id']])->fetch();
+        $published = sql($db, "SELECT short_description,long_description,category,tags_json,locale,country
+            FROM profile_revisions WHERE submission_id=? AND state='approved' ORDER BY id DESC LIMIT 1", [$row['id']])->fetch();
+        respond(['published'=>$published ?: null,'latest'=>$latest ?: null]);
+    }
+    if ($route === 'profile/update' && $method === 'POST') {
+        $input = payload();
+        $row = owner($db, $input);
+        if ($row['status'] !== 'approved') fail('Website must be approved first', 409);
+        $short = value($input,'shortDescription',180);
+        $long = value($input,'longDescription',2000);
+        $category = value($input,'category',60);
+        $locale = value($input,'locale',5);
+        $country = strtoupper(value($input,'country',2));
+        $tags = $input['tags'] ?? null;
+        if (mb_strlen($short,'UTF-8') < 30 || mb_strlen($short,'UTF-8') > 180 ||
+            mb_strlen($long,'UTF-8') < 300 || mb_strlen($long,'UTF-8') > 2000 ||
+            !preg_match('/^[\\p{L}\\p{N} ,.&()\\-]{2,60}$/uD',$category) ||
+            !in_array($locale,['lv','en'],true) ||
+            !preg_match('/^[A-Z]{2}$/D',$country) ||
+            !is_array($tags) || !array_is_list($tags) || count($tags) > 8) fail('Invalid profile',400);
+        $clean = [];
+        foreach ($tags as $tag) {
+            if (!is_string($tag)) fail('Invalid tag',400);
+            $tag = trim($tag);
+            if (!preg_match('/^[\\p{L}\\p{N}][\\p{L}\\p{N} \\-_]{1,29}$/uD',$tag)) fail('Invalid tag',400);
+            $clean[mb_strtolower($tag,'UTF-8')] = $tag;
+        }
+        if (count($clean) !== count($tags)) fail('Duplicate tags',400);
+        $pending = sql($db,"SELECT id FROM profile_revisions WHERE submission_id=? AND state='pending'
+            ORDER BY id DESC LIMIT 1",[$row['id']])->fetch();
+        if ($pending) {
+            sql($db,"UPDATE profile_revisions SET short_description=?,long_description=?,category=?,tags_json=?,
+                locale=?,country=?,submitted_at=UTC_TIMESTAMP() WHERE id=?",[$short,$long,$category,
+                json_encode(array_values($clean),JSON_UNESCAPED_UNICODE),$locale,$country,$pending['id']]);
+        } else {
+            sql($db,"INSERT INTO profile_revisions
+                (submission_id,short_description,long_description,category,tags_json,locale,country,state,submitted_at)
+                VALUES (?,?,?,?,?,?,?,'pending',UTC_TIMESTAMP())",[$row['id'],$short,$long,$category,
+                json_encode(array_values($clean),JSON_UNESCAPED_UNICODE),$locale,$country]);
+        }
+        notify_moderator($config,$row['host']);
+        respond(['state'=>'pending','message'=>'Profile changes awaiting review']);
+    }
     if ($route === 'admin/login' && $method === 'POST') {
         $data = payload();
         $supplied = value($data, 'token', 256);
@@ -299,6 +348,32 @@ try {
         }
         if ($method === 'POST' && ($_SERVER['HTTP_X_SEO_TIDY_ADMIN'] ?? '') !== '1') {
             fail('Missing moderator request header', 403);
+        }
+        if ($route === 'admin/profiles' && $method === 'GET') {
+            $rows=sql($db,"SELECT r.id,r.submission_id,s.host,r.short_description,r.long_description,
+                r.category,r.tags_json,r.locale,r.country,r.submitted_at
+                FROM profile_revisions r JOIN submissions s ON s.id=r.submission_id
+                WHERE r.state='pending' ORDER BY r.submitted_at ASC LIMIT 100")->fetchAll();
+            respond(['items'=>$rows]);
+        }
+        if ($route === 'admin/profile-moderate' && $method === 'POST') {
+            $input=payload();
+            $id=filter_var($input['id'] ?? null,FILTER_VALIDATE_INT);
+            $decision=$input['decision'] ?? '';
+            if (!$id || !in_array($decision,['approve','reject'],true)) fail('Invalid moderation request',400);
+            $revision=sql($db,"SELECT id,submission_id FROM profile_revisions WHERE id=? AND state='pending'",[$id])->fetch();
+            if (!$revision) fail('Pending profile not found',404);
+            $db->beginTransaction();
+            try {
+                if ($decision === 'approve') {
+                    sql($db,"UPDATE profile_revisions SET state='rejected',reviewed_at=UTC_TIMESTAMP()
+                        WHERE submission_id=? AND state='approved'",[$revision['submission_id']]);
+                }
+                sql($db,"UPDATE profile_revisions SET state=?,reviewed_at=UTC_TIMESTAMP()
+                    WHERE id=? AND state='pending'",[$decision==='approve'?'approved':'rejected',$id]);
+                $db->commit();
+            } catch (Throwable $e) {$db->rollBack();throw $e;}
+            respond(['ok'=>true,'state'=>$decision==='approve'?'approved':'rejected']);
         }
         if ($route === 'admin/submissions' && $method === 'GET') {
             $rows = sql($db, 'SELECT id,host,name,url,description,status,consent_at,verified_at,approved_at
