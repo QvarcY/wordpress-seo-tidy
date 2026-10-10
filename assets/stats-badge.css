@@ -1,0 +1,85 @@
+.seo-tidy-badge {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px 16px;
+    width: fit-content;
+    max-width: 100%;
+    margin: 12px auto;
+    padding: 10px 14px;
+    border: 1px solid var(--tidy-badge-border);
+    border-radius: 10px;
+    background: var(--tidy-badge-background);
+    color: var(--tidy-badge-text);
+    font: 500 12px/1.5 system-ui, sans-serif;
+}
+
+.seo-tidy-badge--light {
+    --tidy-badge-background: #ffffff;
+    --tidy-badge-border: #d9e0e9;
+    --tidy-badge-text: #263449;
+}
+
+.seo-tidy-badge--dark {
+    --tidy-badge-background: #152033;
+    --tidy-badge-border: #34435b;
+    --tidy-badge-text: #eef4fb;
+}
+
+.seo-tidy-badge--transparent {
+    --tidy-badge-background: transparent;
+    --tidy-badge-border: currentColor;
+    --tidy-badge-text: inherit;
+}
+
+.seo-tidy-badge__metrics {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+}
+
+.seo-tidy-badge__metric {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: inherit;
+}
+
+.seo-tidy-badge__icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+}
+
+.seo-tidy-badge__metric strong {
+    font-weight: 700;
+    color: inherit;
+}
+
+.seo-tidy-badge__label {
+    color: inherit;
+    opacity: .8;
+}
+
+.seo-tidy-badge__brand {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    opacity: .85;
+}
+
+.seo-tidy-badge__brand:hover,
+.seo-tidy-badge__brand:focus-visible {
+    color: inherit;
+    opacity: 1;
+}
+
+@media (max-width: 480px) {
+    .seo-tidy-badge {
+        width: auto;
+        padding: 9px 11px;
+    }
+}
