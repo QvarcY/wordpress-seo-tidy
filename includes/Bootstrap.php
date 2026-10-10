@@ -101,6 +101,34 @@ final class Bootstrap
             'show_in_rest' => true,
         ]);
 
+        register_setting('seo_tidy', 'seo_tidy_community_opt_in', [
+            'type' => 'boolean',
+            'default' => false,
+            'sanitize_callback' => 'rest_sanitize_boolean',
+            'show_in_rest' => true,
+        ]);
+
+        register_setting('seo_tidy', 'seo_tidy_community_name', [
+            'type' => 'string',
+            'default' => '',
+            'sanitize_callback' => 'sanitize_text_field',
+            'show_in_rest' => true,
+        ]);
+
+        register_setting('seo_tidy', 'seo_tidy_community_url', [
+            'type' => 'string',
+            'default' => '',
+            'sanitize_callback' => 'esc_url_raw',
+            'show_in_rest' => true,
+        ]);
+
+        register_setting('seo_tidy', 'seo_tidy_community_description', [
+            'type' => 'string',
+            'default' => '',
+            'sanitize_callback' => 'sanitize_textarea_field',
+            'show_in_rest' => true,
+        ]);
+
         register_setting('seo_tidy', 'seo_tidy_beta_updates', [
             'type' => 'boolean',
             'default' => false,

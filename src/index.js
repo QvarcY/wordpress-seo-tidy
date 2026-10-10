@@ -8,6 +8,7 @@ const sections = [
     { id: 'metadata', label: __('Metadata', 'seo-tidy') },
     { id: 'analytics', label: __('Analytics', 'seo-tidy') },
     { id: 'badge', label: __('Stats Badge', 'seo-tidy') },
+    { id: 'community', label: __('Wall of Fame', 'seo-tidy') },
     { id: 'schema', label: __('Smart Schema', 'seo-tidy') },
     { id: 'audit', label: __('SEO Audit', 'seo-tidy') },
     { id: 'answers', label: __('Answer Readiness', 'seo-tidy') },
@@ -780,6 +781,221 @@ function StatsBadgeSettings() {
             >
                 {__('Save badge settings', 'seo-tidy')}
             </Button>
+        </div>
+    );
+}
+
+
+
+function WallOfFame() {
+    const [profile, setProfile] = useState(null);
+    const [saved, setSaved] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState(false);
+
+    useEffect(() => {
+        let active = true;
+
+        apiFetch({ path: '/wp/v2/settings' })
+            .then((settings) => {
+                if (!active) return;
+
+                const initial = {
+                    seo_tidy_community_opt_in:
+                        [true, 1, '1'].includes(
+                            settings.seo_tidy_community_opt_in
+                        ),
+                    seo_tidy_community_name:
+                        settings.seo_tidy_community_name || '',
+                    seo_tidy_community_url:
+                        settings.seo_tidy_community_url || '',
+                    seo_tidy_community_description:
+                        settings.seo_tidy_community_description || '',
+                };
+
+                setProfile(initial);
+                setSaved(initial);
+            })
+            .catch(() => {
+                if (active) {
+                    setError(__('Could not load community profile.', 'seo-tidy'));
+                }
+            })
+            .finally(() => {
+                if (active) setLoading(false);
+            });
+
+        return () => { active = false; };
+    }, []);
+
+    const change = (key, value) => {
+        setSuccess(false);
+        setProfile((current) => ({
+            ...current,
+            [key]: value,
+        }));
+    };
+
+    const save = async () => {
+        setSaving(true);
+        setError('');
+        setSuccess(false);
+
+        try {
+            const result = await apiFetch({
+                path: '/wp/v2/settings',
+                method: 'POST',
+                data: profile,
+            });
+
+            const confirmed = {
+                seo_tidy_community_opt_in:
+                    [true, 1, '1'].includes(
+                        result.seo_tidy_community_opt_in
+                    ),
+                seo_tidy_community_name:
+                    result.seo_tidy_community_name || '',
+                seo_tidy_community_url:
+                    result.seo_tidy_community_url || '',
+                seo_tidy_community_description:
+                    result.seo_tidy_community_description || '',
+            };
+
+            setProfile(confirmed);
+            setSaved(confirmed);
+            setSuccess(true);
+        } catch {
+            setError(__('Could not save community profile.', 'seo-tidy'));
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    if (loading) return <Spinner />;
+
+    if (!profile) {
+        return (
+            <Notice status="error" isDismissible={false}>
+                {error || __('Community profile unavailable.', 'seo-tidy')}
+            </Notice>
+        );
+    }
+
+    const changed = Object.keys(profile).some(
+        (key) => profile[key] !== saved?.[key]
+    );
+
+    return (
+        <div className="tidy-settings-panel">
+            <p>
+                {__(
+                    'Prepare your website profile for the future SEO-TidY community showcase.',
+                    'seo-tidy'
+                )}
+            </p>
+
+            <Notice status="info" isDismissible={false}>
+                {__(
+                    'The public Wall of Fame directory is not active yet. Saving this profile stores data only on your WordPress website. No information is submitted or published externally.',
+                    'seo-tidy'
+                )}
+            </Notice>
+
+            <div className="tidy-setting-row">
+                <ToggleControl
+                    label={__('I would like to join Wall of Fame', 'seo-tidy')}
+                    help={__(
+                        'Express interest in future voluntary registration. No automatic submission takes place.',
+                        'seo-tidy'
+                    )}
+                    checked={profile.seo_tidy_community_opt_in}
+                    disabled={saving}
+                    onChange={(value) =>
+                        change('seo_tidy_community_opt_in', value)
+                    }
+                />
+            </div>
+
+            <div className="tidy-setting-row">
+                <TextControl
+                    label={__('Website name', 'seo-tidy')}
+                    value={profile.seo_tidy_community_name}
+                    disabled={saving}
+                    maxLength={100}
+                    onChange={(value) =>
+                        change('seo_tidy_community_name', value)
+                    }
+                />
+            </div>
+
+            <div className="tidy-setting-row">
+                <TextControl
+                    label={__('Public website URL', 'seo-tidy')}
+                    type="url"
+                    value={profile.seo_tidy_community_url}
+                    disabled={saving}
+                    onChange={(value) =>
+                        change('seo_tidy_community_url', value)
+                    }
+                />
+            </div>
+
+            <div className="tidy-setting-row">
+                <TextareaControl
+                    label={__('Short website description', 'seo-tidy')}
+                    value={profile.seo_tidy_community_description}
+                    disabled={saving}
+                    maxLength={300}
+                    onChange={(value) =>
+                        change('seo_tidy_community_description', value)
+                    }
+                />
+            </div>
+
+            <h3>{__('Profile preview', 'seo-tidy')}</h3>
+
+            <div className="tidy-metric-card" style={{
+                maxWidth: 520,
+                padding: 18,
+            }}>
+                <strong>
+                    {profile.seo_tidy_community_name ||
+                        __('Your website name', 'seo-tidy')}
+                </strong>
+                <p style={{ overflowWrap: 'anywhere' }}>
+                    {profile.seo_tidy_community_url ||
+                        __('Your website URL', 'seo-tidy')}
+                </p>
+                <p>
+                    {profile.seo_tidy_community_description ||
+                        __('Your website description', 'seo-tidy')}
+                </p>
+            </div>
+
+            {error && (
+                <Notice status="error" isDismissible={false}>
+                    {error}
+                </Notice>
+            )}
+
+            {success && (
+                <Notice status="success" isDismissible={false}>
+                    {__('Community profile saved locally.', 'seo-tidy')}
+                </Notice>
+            )}
+
+            <p>
+                <Button
+                    variant="primary"
+                    disabled={!changed || saving}
+                    isBusy={saving}
+                    onClick={save}
+                >
+                    {__('Save community profile', 'seo-tidy')}
+                </Button>
+            </p>
         </div>
     );
 }
@@ -2215,6 +2431,8 @@ function App() {
 
                     {active === 'settings' ? (
                         <GeneralSettings />
+                    ) : active === 'community' ? (
+                        <WallOfFame />
                     ) : active === 'badge' ? (
                         <StatsBadgeSettings />
                     ) : active === 'analytics' ? (
