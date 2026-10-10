@@ -3,8 +3,8 @@ const path = require('node:path');
 
 const tag = process.argv[2];
 
-if (!/^v\d+\.\d+\.\d+-beta\.\d+$/.test(tag || '')) {
-    console.error('FAIL: Invalid beta tag');
+if (!/^v\d+\.\d+\.\d+(?:-beta\.\d+)?$/.test(tag || '')) {
+    console.error('FAIL: Invalid release tag');
     process.exit(1);
 }
 
