@@ -863,213 +863,122 @@ function StatsBadgeSettings() {
 
 function WallOfFame() {
     const [profile, setProfile] = useState(null);
-    const [saved, setSaved] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [saving, setSaving] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState(false);
+    const [sites, setSites] = useState([]);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(false);
+    const [status, setStatus] = useState('not_joined');
+    const [busy, setBusy] = useState(false);
+    const [message, setMessage] = useState(null);
 
-    useEffect(() => {
-        let active = true;
-
-        apiFetch({ path: '/wp/v2/settings' })
-            .then((settings) => {
-                if (!active) return;
-
-                const initial = {
-                    seo_tidy_community_opt_in:
-                        [true, 1, '1'].includes(
-                            settings.seo_tidy_community_opt_in
-                        ),
-                    seo_tidy_community_name:
-                        settings.seo_tidy_community_name || '',
-                    seo_tidy_community_url:
-                        settings.seo_tidy_community_url || '',
-                    seo_tidy_community_description:
-                        settings.seo_tidy_community_description || '',
-                };
-
-                setProfile(initial);
-                setSaved(initial);
-            })
-            .catch(() => {
-                if (active) {
-                    setError(__('Could not load community profile.', 'seo-tidy'));
-                }
-            })
-            .finally(() => {
-                if (active) setLoading(false);
-            });
-
-        return () => { active = false; };
-    }, []);
-
-    const change = (key, value) => {
-        setSuccess(false);
-        setProfile((current) => ({
-            ...current,
-            [key]: value,
-        }));
-    };
-
-    const save = async () => {
-        setSaving(true);
-        setError('');
-        setSuccess(false);
-
+    const loadDirectory = async (nextPage = 1) => {
         try {
-            const result = await apiFetch({
-                path: '/wp/v2/settings',
-                method: 'POST',
-                data: profile,
-            });
-
-            const confirmed = {
-                seo_tidy_community_opt_in:
-                    [true, 1, '1'].includes(
-                        result.seo_tidy_community_opt_in
-                    ),
-                seo_tidy_community_name:
-                    result.seo_tidy_community_name || '',
-                seo_tidy_community_url:
-                    result.seo_tidy_community_url || '',
-                seo_tidy_community_description:
-                    result.seo_tidy_community_description || '',
-            };
-
-            setProfile(confirmed);
-            setSaved(confirmed);
-            setSuccess(true);
+            const data = await apiFetch({ path: '/seo-tidy/v1/wall?page=' + nextPage });
+            setSites((previous) => nextPage === 1 ? data.items : [...previous, ...data.items]);
+            setPage(nextPage);
+            setHasMore(Boolean(data.hasMore));
         } catch {
-            setError(__('Could not save community profile.', 'seo-tidy'));
-        } finally {
-            setSaving(false);
+            setMessage({ type: 'error', text: __('Could not load Wall of Fame directory.', 'seo-tidy') });
         }
     };
 
-    if (loading) return <Spinner />;
+    useEffect(() => {
+        let active = true;
+        apiFetch({ path: '/wp/v2/settings' }).then((settings) => {
+            if (!active) return;
+            setProfile({
+                name: settings.seo_tidy_community_name || '',
+                description: settings.seo_tidy_community_description || '',
+            });
+        }).catch(() => {
+            if (active) setMessage({ type: 'error', text: __('Could not load community profile.', 'seo-tidy') });
+        });
+        apiFetch({ path: '/seo-tidy/v1/wall/status' })
+            .then((data) => { if (active) setStatus(data.status || 'not_joined'); })
+            .catch(() => { if (active) setStatus('error'); });
+        loadDirectory();
+        return () => { active = false; };
+    }, []);
 
-    if (!profile) {
-        return (
-            <Notice status="error" isDismissible={false}>
-                {error || __('Community profile unavailable.', 'seo-tidy')}
-            </Notice>
-        );
-    }
+    const join = async () => {
+        setBusy(true);
+        setMessage(null);
+        try {
+            await apiFetch({
+                path: '/wp/v2/settings', method: 'POST',
+                data: {
+                    seo_tidy_community_name: profile.name,
+                    seo_tidy_community_description: profile.description,
+                },
+            });
+            const result = await apiFetch({
+                path: '/seo-tidy/v1/wall/join', method: 'POST',
+                data: { consent: true },
+            });
+            setStatus(result.status);
+            setMessage({ type: 'success', text: __('Application submitted and ownership verified. Awaiting review.', 'seo-tidy') });
+        } catch (e) {
+            setMessage({ type: 'error', text: e?.message || __('Could not submit application.', 'seo-tidy') });
+        } finally { setBusy(false); }
+    };
 
-    const changed = Object.keys(profile).some(
-        (key) => profile[key] !== saved?.[key]
-    );
+    const leave = async () => {
+        if (!window.confirm(__('Remove your site from Wall of Fame?', 'seo-tidy'))) return;
+        setBusy(true);
+        setMessage(null);
+        try {
+            await apiFetch({ path: '/seo-tidy/v1/wall/leave', method: 'POST' });
+            setStatus('not_joined');
+            setMessage({ type: 'success', text: __('Your Wall of Fame entry was removed.', 'seo-tidy') });
+            loadDirectory(1);
+        } catch (e) {
+            setMessage({ type: 'error', text: e?.message || __('Could not remove your entry.', 'seo-tidy') });
+        } finally { setBusy(false); }
+    };
 
     return (
         <div className="tidy-settings-panel">
-            <p>
-                {__(
-                    'Prepare your website profile for the future SEO-TidY community showcase.',
-                    'seo-tidy'
-                )}
-            </p>
-
-            <Notice status="info" isDismissible={false}>
-                {__(
-                    'The public Wall of Fame directory is not active yet. Saving this profile stores data only on your WordPress website. No information is submitted or published externally.',
-                    'seo-tidy'
-                )}
-            </Notice>
-
-            <div className="tidy-setting-row">
-                <ToggleControl
-                    label={__('I would like to join Wall of Fame', 'seo-tidy')}
-                    help={__(
-                        'Express interest in future voluntary registration. No automatic submission takes place.',
-                        'seo-tidy'
-                    )}
-                    checked={profile.seo_tidy_community_opt_in}
-                    disabled={saving}
-                    onChange={(value) =>
-                        change('seo_tidy_community_opt_in', value)
-                    }
-                />
+            <h3>{__('SEO-TidY Wall of Fame', 'seo-tidy')}</h3>
+            <p>{__('Discover websites in the SEO-TidY community. Only approved applications are public.', 'seo-tidy')}</p>
+            <div className="tidy-metrics-grid">
+                {sites.map((site) => (
+                    <div className="tidy-metric-card" key={site.url}>
+                        <strong><a href={site.url} target="_blank" rel="noopener noreferrer nofollow">{site.name}</a></strong>
+                        <p style={{ overflowWrap: 'anywhere' }}>{site.description}</p>
+                        <small>{site.url}</small>
+                    </div>
+                ))}
             </div>
-
-            <div className="tidy-setting-row">
-                <TextControl
-                    label={__('Website name', 'seo-tidy')}
-                    value={profile.seo_tidy_community_name}
-                    disabled={saving}
-                    maxLength={100}
-                    onChange={(value) =>
-                        change('seo_tidy_community_name', value)
-                    }
-                />
-            </div>
-
-            <div className="tidy-setting-row">
-                <TextControl
-                    label={__('Public website URL', 'seo-tidy')}
-                    type="url"
-                    value={profile.seo_tidy_community_url}
-                    disabled={saving}
-                    onChange={(value) =>
-                        change('seo_tidy_community_url', value)
-                    }
-                />
-            </div>
-
-            <div className="tidy-setting-row">
-                <TextareaControl
-                    label={__('Short website description', 'seo-tidy')}
-                    value={profile.seo_tidy_community_description}
-                    disabled={saving}
-                    maxLength={300}
-                    onChange={(value) =>
-                        change('seo_tidy_community_description', value)
-                    }
-                />
-            </div>
-
-            <h3>{__('Profile preview', 'seo-tidy')}</h3>
-
-            <div className="tidy-metric-card" style={{
-                maxWidth: 520,
-                padding: 18,
-            }}>
-                <strong>
-                    {profile.seo_tidy_community_name ||
-                        __('Your website name', 'seo-tidy')}
-                </strong>
-                <p style={{ overflowWrap: 'anywhere' }}>
-                    {profile.seo_tidy_community_url ||
-                        __('Your website URL', 'seo-tidy')}
-                </p>
-                <p>
-                    {profile.seo_tidy_community_description ||
-                        __('Your website description', 'seo-tidy')}
-                </p>
-            </div>
-
-            {error && (
-                <Notice status="error" isDismissible={false}>
-                    {error}
-                </Notice>
+            {sites.length === 0 && <p>{__('No approved websites yet.', 'seo-tidy')}</p>}
+            {hasMore && <Button variant="secondary" disabled={busy} onClick={() => loadDirectory(page + 1)}>
+                {__('Load more websites', 'seo-tidy')}
+            </Button>}
+            <hr />
+            <h3>{__('Your website', 'seo-tidy')}</h3>
+            {status === 'not_joined' && profile && (
+                <>
+                    <p>{__('Join with one click. Your site is verified automatically; publication requires review.', 'seo-tidy')}</p>
+                    <TextControl label={__('Website name', 'seo-tidy')} maxLength={100}
+                        value={profile.name} disabled={busy}
+                        onChange={(name) => setProfile((previous) => ({ ...previous, name }))} />
+                    <TextareaControl label={__('Short website description', 'seo-tidy')} maxLength={300}
+                        value={profile.description} disabled={busy}
+                        onChange={(description) => setProfile((previous) => ({ ...previous, description }))} />
+                    <p>{__('By joining, you consent to showing your website name, address and description publicly after approval.', 'seo-tidy')}</p>
+                    <Button variant="primary" disabled={busy || !profile.name.trim() || !profile.description.trim()}
+                        isBusy={busy} onClick={join}>{__('Join Wall of Fame', 'seo-tidy')}</Button>
+                </>
             )}
-
-            {success && (
-                <Notice status="success" isDismissible={false}>
-                    {__('Community profile saved locally.', 'seo-tidy')}
-                </Notice>
+            {status !== 'not_joined' && status !== 'error' && (
+                <>
+                    <p><strong>{__('Application status:', 'seo-tidy')}</strong> {status}</p>
+                    <Button variant="secondary" isDestructive disabled={busy} isBusy={busy}
+                        onClick={leave}>{__('Leave Wall of Fame', 'seo-tidy')}</Button>
+                </>
             )}
-
-            <p>
-                <Button
-                    variant="primary"
-                    disabled={!changed || saving}
-                    isBusy={saving}
-                    onClick={save}
-                >
-                    {__('Save community profile', 'seo-tidy')}
-                </Button>
-            </p>
+            {status === 'error' && <Notice status="error" isDismissible={false}>
+                {__('Could not check your application status.', 'seo-tidy')}
+            </Notice>}
+            {message && <Notice status={message.type} isDismissible>{message.text}</Notice>}
         </div>
     );
 }

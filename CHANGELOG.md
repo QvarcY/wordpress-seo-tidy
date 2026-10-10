@@ -4,6 +4,17 @@ All notable changes to SEO-TidY will be documented here.
 
 ## [Unreleased]
 
+## [0.1.0-beta.11] - Pending release
+
+### Added
+- One-click opt-in from the WordPress Wall of Fame tab with short-lived ownership proof.
+- Approved community directory directly inside WordPress admin.
+- Applicant status, review workflow, and self-service removal through WordPress.
+- Latvian translations for the new interface.
+
+### Notes
+- The separate AREA-hosted PHP API must be updated before activating this plugin version.
+
 ## [0.1.0-beta.10] - Pending release
 
 ### Fixed

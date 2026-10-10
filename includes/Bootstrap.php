@@ -19,6 +19,7 @@ final class Bootstrap
         require_once __DIR__ . '/GitHubUpdater.php';
         require_once __DIR__ . '/Analytics.php';
         require_once __DIR__ . '/StatsBadge.php';
+        require_once __DIR__ . '/WallOfFame.php';
         Metadata::init();
         Schema::init();
         Dashboard::init();
@@ -28,6 +29,7 @@ final class Bootstrap
         GitHubUpdater::init();
         Analytics::init();
         StatsBadge::init();
+        WallOfFame::init();
         add_action('init', [self::class, 'loadTranslations']);
         add_action('init', [self::class, 'registerSettings']);
         if (is_admin()) {

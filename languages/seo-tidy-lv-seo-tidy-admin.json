@@ -645,6 +645,57 @@
       ],
       "Bots": [
         "Boti"
+      ],
+      "SEO-TidY Wall of Fame": [
+        "SEO-TidY Slavas siena"
+      ],
+      "Discover websites in the SEO-TidY community. Only approved applications are public.": [
+        "Iepazīsti SEO-TidY kopienas vietnes. Publiski redzami tikai apstiprināti pieteikumi."
+      ],
+      "Could not load Wall of Fame directory.": [
+        "Neizdevās ielādēt Slavas sienas katalogu."
+      ],
+      "No approved websites yet.": [
+        "Vēl nav apstiprinātu vietņu."
+      ],
+      "Load more websites": [
+        "Rādīt vairāk vietņu"
+      ],
+      "Your website": [
+        "Tava vietne"
+      ],
+      "Join with one click. Your site is verified automatically; publication requires review.": [
+        "Pievienojies ar vienu klikšķi. Vietne tiks pārbaudīta automātiski, bet publicēšanai vajadzīgs apstiprinājums."
+      ],
+      "By joining, you consent to showing your website name, address and description publicly after approval.": [
+        "Pievienojoties piekrīti, ka pēc apstiprināšanas publiski būs redzams vietnes nosaukums, adrese un apraksts."
+      ],
+      "Join Wall of Fame": [
+        "Pievienoties Slavas sienai"
+      ],
+      "Application status:": [
+        "Pieteikuma statuss:"
+      ],
+      "Leave Wall of Fame": [
+        "Izstāties no Slavas sienas"
+      ],
+      "Remove your site from Wall of Fame?": [
+        "Vai dzēst savu vietni no Slavas sienas?"
+      ],
+      "Application submitted and ownership verified. Awaiting review.": [
+        "Pieteikums nosūtīts, vietnes īpašumtiesības pārbaudītas. Gaida apstiprinājumu."
+      ],
+      "Could not submit application.": [
+        "Neizdevās nosūtīt pieteikumu."
+      ],
+      "Your Wall of Fame entry was removed.": [
+        "Tavs Slavas sienas ieraksts ir dzēsts."
+      ],
+      "Could not remove your entry.": [
+        "Neizdevās dzēst ierakstu."
+      ],
+      "Could not check your application status.": [
+        "Neizdevās pārbaudīt pieteikuma statusu."
       ]
     }
   }

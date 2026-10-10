@@ -136,6 +136,89 @@ try {
         respond(['items' => array_slice($rows, 0, 12), 'hasMore' => count($rows) > 12, 'page' => $page]);
     }
 
+    if ($route === 'wp-apply' && $method === 'POST') {
+        $input = payload();
+        $name = value($input, 'name', 100);
+        $description = value($input, 'description', 300);
+        $site = domain(value($input, 'url', 2048));
+        $proofToken = value($input, 'proofToken', 64);
+        $proofUrl = value($input, 'proofUrl', 2048);
+        if (($input['consent'] ?? false) !== true ||
+            !preg_match('/^[\p{L}\p{N} .,\x27()&@_-]{2,100}$/uD', $name) ||
+            $description === '' || mb_strlen($description, 'UTF-8') > 300 ||
+            !$site || !preg_match('/^[a-f0-9]{64}$/D', $proofToken)) {
+            fail('Invalid WordPress application', 400);
+        }
+        $proofParts = parse_url($proofUrl);
+        if (!$proofParts || ($proofParts['scheme'] ?? '') !== 'https' ||
+            strtolower($proofParts['host'] ?? '') !== $site['host'] ||
+            isset($proofParts['port']) || isset($proofParts['user']) ||
+            isset($proofParts['pass']) || isset($proofParts['fragment']) ||
+            ($proofParts['query'] ?? '') !== '' ||
+            !str_ends_with($proofParts['path'] ?? '', '/wp-json/seo-tidy/v1/wall/proof')) {
+            fail('Invalid WordPress proof URL', 400);
+        }
+        // Resolve the public IPv4 address before HTTP. Never follow redirects.
+        $ips = gethostbynamel($site['host']);
+        if (!is_array($ips) || !$ips) fail('Website DNS not available', 409);
+        $publicIp = null;
+        foreach ($ips as $ip) {
+            if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 |
+                FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                fail('Private or reserved IP is not allowed', 400);
+            }
+            $publicIp = $ip;
+        }
+        if (!function_exists('curl_init')) fail('Server verification unavailable', 503);
+        $ch = curl_init($proofUrl);
+        if ($ch === false) fail('Verification failed', 502);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_TIMEOUT => 8,
+            CURLOPT_MAXREDIRS => 0,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
+            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYHOST => 2,
+            CURLOPT_RESOLVE => [$site['host'] . ':443:' . $publicIp],
+            CURLOPT_HTTPHEADER => ['Accept: application/json'],
+        ]);
+        $proofBody = curl_exec($ch);
+        $proofStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        $proof = is_string($proofBody) && strlen($proofBody) <= 8192
+            ? json_decode($proofBody, true) : null;
+        if ($proofStatus !== 200 || !is_array($proof) ||
+            !hash_equals($proofToken, (string) ($proof['token'] ?? '')) ||
+            ($proof['site'] ?? null) !== $input['url'] ||
+            !is_numeric($proof['expires'] ?? null) ||
+            (int) $proof['expires'] < time() || (int) $proof['expires'] > time() + 300) {
+            fail('WordPress ownership verification failed', 409);
+        }
+        $existing = sql($db, 'SELECT id,status FROM submissions WHERE host=?', [$site['host']])->fetch();
+        if ($existing && $existing['status'] !== 'rejected') fail('This domain already has an active application', 409);
+        $id = uuid();
+        $ownerSecret = bin2hex(random_bytes(32));
+        $challenge = 'wp-' . bin2hex(random_bytes(30));
+        try {
+            if ($existing) {
+                sql($db, "UPDATE submissions SET id=?, name=?, url=?, description=?, owner_hash=?,
+                    challenge=?, status='verified', consent_at=UTC_TIMESTAMP(), verified_at=UTC_TIMESTAMP(),
+                    approved_at=NULL WHERE host=? AND status='rejected'",
+                    [$id,$name,$site['url'],$description,secret_hash($ownerSecret),$challenge,$site['host']]);
+            } else {
+                sql($db, "INSERT INTO submissions (id,host,name,url,description,owner_hash,challenge,status,consent_at,verified_at)
+                    VALUES (?,?,?,?,?,?,?,'verified',UTC_TIMESTAMP(),UTC_TIMESTAMP())",
+                    [$id,$site['host'],$name,$site['url'],$description,secret_hash($ownerSecret),$challenge]);
+            }
+        } catch (PDOException $e) {
+            if ($e->getCode() === '23000') fail('This domain already has an active application', 409);
+            throw $e;
+        }
+        respond(['id' => $id, 'ownerSecret' => $ownerSecret, 'status' => 'verified'], 201);
+    }
+
     if ($route === 'apply' && $method === 'POST') {
         $input = payload(); $name = value($input, 'name', 100);
         $description = value($input, 'description', 300);
@@ -200,7 +283,7 @@ try {
                 sql($db,"UPDATE submissions SET status='rejected', approved_at=NULL WHERE id=?",[$id]);
             else {
                 if (!in_array($row['status'],['verified','approved'],true)) fail('Domain has not been verified',409);
-                if (!dns_verified($row['host'],$row['challenge'])) fail('DNS proof expired or missing',409);
+                if (!str_starts_with($row['challenge'], 'wp-') && !dns_verified($row['host'],$row['challenge'])) fail('DNS proof expired or missing',409);
                 sql($db,"UPDATE submissions SET status='approved',
                     approved_at=COALESCE(approved_at,UTC_TIMESTAMP()) WHERE id=?",[$id]);
             }
