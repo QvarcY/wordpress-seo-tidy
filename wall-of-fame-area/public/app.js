@@ -47,7 +47,7 @@ const labels = {
   }
 };
 let lang = (navigator.language || '').toLowerCase().startsWith('lv') ? 'lv' : 'en';
-let page = 1, hasMore = false;
+let page = Math.max(1, Math.min(100, Number.parseInt(new URLSearchParams(location.search).get('page') || '1', 10) || 1)), hasMore = false;
 const $ = (id) => document.getElementById(id), t = (key) => labels[lang][key] || key;
 const show = (value, bad = false) => { $('message').textContent = value; $('message').className = bad ? 'error' : 'success'; };
 const request = async (url, options) => {
@@ -102,4 +102,4 @@ try {
   if (saved === 'lv' || saved === 'en') lang = saved;
 } catch {}
 setLang(lang);
-listings();
+listings(page);
