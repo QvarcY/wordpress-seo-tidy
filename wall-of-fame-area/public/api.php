@@ -167,7 +167,7 @@ try {
     if ($route === 'sites' && $method === 'GET') {
         $page = max(1, min(100, (int) ($_GET['page'] ?? 1)));
         $rows = sql($db,
-            "SELECT name, url, description, approved_at AS joinedAt FROM submissions WHERE status = 'approved' ORDER BY approved_at DESC, id DESC LIMIT 13 OFFSET " . (($page - 1) * 12))->fetchAll();
+            "SELECT name, url, description, approved_at AS joinedAt, EXISTS(SELECT 1 FROM profile_revisions r WHERE r.submission_id=submissions.id AND r.state='approved') AS hasProfile FROM submissions WHERE status = 'approved' ORDER BY approved_at DESC, id DESC LIMIT 13 OFFSET " . (($page - 1) * 12))->fetchAll();
         respond(['items' => array_slice($rows, 0, 12), 'hasMore' => count($rows) > 12, 'page' => $page]);
     }
 
