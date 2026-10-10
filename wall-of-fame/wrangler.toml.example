@@ -1,0 +1,18 @@
+name = "seo-tidy-wall-of-fame"
+main = "src/worker.js"
+compatibility_date = "2026-10-10"
+
+# Set your actual dedicated domain before deployment.
+[vars]
+PUBLIC_ORIGIN = "https://wall-of-fame.example.org"
+TURNSTILE_SITE_KEY = "replace-with-public-site-key"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "seo-tidy-wall-of-fame"
+database_id = "replace-with-d1-database-id"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
