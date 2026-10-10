@@ -37,10 +37,35 @@ function card(item) {
   }
   element.append(h,host,desc,status,actions); return element;
 }
+function profileCard(item) {
+  const el = document.createElement('article'); el.className = 'site-card';
+  const title = textNode('h3', item.host);
+  const info = textNode('p', item.short_description + ' — ' + item.category);
+  const full = textNode('p', item.long_description);
+  const tags = textNode('small', item.tags_json);
+  const buttons = document.createElement('div'); buttons.className = 'buttons';
+  for (const decision of ['approve','reject']) {
+    const btn = textNode('button', decision); btn.type = 'button';
+    btn.addEventListener('click', async () => {
+      if (!confirm(decision + ' profile for ' + item.host + '?')) return;
+      btn.disabled = true;
+      try { await api('api/admin/profile-moderate',{id:Number(item.id),decision}); await load(); }
+      catch(e) { message(e.message); btn.disabled = false; }
+    });
+    buttons.append(btn);
+  }
+  el.append(title,info,full,tags,buttons);
+  return el;
+}
+async function loadProfiles() {
+  const data = await api('api/admin/profiles');
+  $('profiles').replaceChildren(...data.items.map(profileCard));
+}
 async function load() {
   try {
     const data = await api('api/admin/submissions');
     $('applications').replaceChildren(...data.items.map(card));
+    await loadProfiles();
     message(data.items.length + ' applications loaded');
   } catch(e) { message(e.message); }
 }
@@ -53,6 +78,7 @@ $('load').addEventListener('click', async () => {
 $('clear').addEventListener('click', async () => {
   try { await api('api/admin/logout', {}); } catch {}
   $('applications').replaceChildren();
+  $('profiles').replaceChildren();
   $('login-panel').hidden = false;
   message('Signed out');
 });
