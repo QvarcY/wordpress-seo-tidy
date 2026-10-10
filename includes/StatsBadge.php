@@ -111,7 +111,7 @@ final class StatsBadge
         if ($showHumans) {
             $items[] = self::metric(
                 'users',
-                $latvian ? 'Skat?jumi' : 'Views',
+                $latvian ? 'Skat' . "\u{012B}" . 'jumi' : 'Views',
                 (int) ($summary['humanPageviews'] ?? 0),
                 $showLabels
             );
