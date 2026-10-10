@@ -47,7 +47,11 @@ Applicant adds the TXT record to the site's DNS, then clicks **Verify DNS record
 
 The management key also enables status lookup and permanent deletion at any time, including after approval. Losing it requires contacting the operator; no recovery email or email addresses are collected.
 
-## Moderation (private CLI, no admin token in public JavaScript)
+## Moderation
+
+A standalone browser interface is available at `/admin.html`. The operator pastes the administrator token per session; it is kept in JavaScript memory only, not in cookies or localStorage. For stronger access control, protect `/admin.html` with Cloudflare Access before launch. Admin endpoints always require the server-side bearer token regardless of access to the HTML.
+
+### CLI alternative
 
 Use a secret stored only in the moderator's local shell:
 
