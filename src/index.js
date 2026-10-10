@@ -268,6 +268,7 @@ function AnalyticsOverview() {
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
     const [refresh, setRefresh] = useState(0);
+    const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
         let active = true;
@@ -331,6 +332,33 @@ function AnalyticsOverview() {
             );
         } finally {
             setSaving(false);
+        }
+    };
+
+    const resetStatistics = async () => {
+        if (!window.confirm(
+            __('Delete all SEO-TidY analytics statistics? This cannot be undone.', 'seo-tidy')
+        )) {
+            return;
+        }
+
+        setDeleting(true);
+        setError('');
+
+        try {
+            await apiFetch({
+                path: '/seo-tidy/v1/analytics/reset',
+                method: 'POST',
+                data: { confirm: 'DELETE' },
+            });
+
+            setRefresh((current) => current + 1);
+        } catch {
+            setError(
+                __('Could not delete analytics statistics.', 'seo-tidy')
+            );
+        } finally {
+            setDeleting(false);
         }
     };
 
@@ -444,6 +472,29 @@ function AnalyticsOverview() {
                     >
                         {__('Refresh statistics', 'seo-tidy')}
                     </Button>
+
+                    <div style={{
+                        marginTop: 24,
+                        paddingTop: 16,
+                        borderTop: '1px solid #dcdcde',
+                    }}>
+                        <h3>{__('Data management', 'seo-tidy')}</h3>
+                        <p>
+                            {__(
+                                'Statistics older than 365 days are removed automatically. You can also delete all collected statistics now.',
+                                'seo-tidy'
+                            )}
+                        </p>
+                        <Button
+                            variant="secondary"
+                            isDestructive
+                            isBusy={deleting}
+                            disabled={deleting || loading || saving}
+                            onClick={resetStatistics}
+                        >
+                            {__('Delete all statistics', 'seo-tidy')}
+                        </Button>
+                    </div>
                 </>
             )}
         </div>
