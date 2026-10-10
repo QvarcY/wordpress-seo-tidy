@@ -116,12 +116,13 @@ function admin_cookie(string $token): void {
         'samesite' => 'Strict',
     ]);
 }
-function notify_moderator(array $config, string $host): void {
+function notify_moderator(array $config, string $host, string $kind = 'site'): void {
     $email = $config['admin_email'] ?? '';
     if (!is_string($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) return;
     $url = rtrim($config['public_origin'], '/') . '/admin.html';
-    $subject = 'SEO-TidY Wall of Fame - new verified application';
-    $message = "A website is awaiting moderation.\n\nWebsite: " . $host .
+    $isProfile = $kind === 'profile';
+    $subject = $isProfile ? 'SEO-TidY Wall of Fame - profile edit awaiting review' : 'SEO-TidY Wall of Fame - new verified application';
+    $message = ($isProfile ? "A profile edit is awaiting moderation.\n\nWebsite: " : "A website is awaiting moderation.\n\nWebsite: ") . $host .
         "\nModeration panel: " . $url . "\n\nLog in using your administrator access.\n";
     if (!@mail($email, $subject, $message, [
         'From' => 'SEO-TidY <no-reply@kas.id.lv>',
@@ -324,7 +325,7 @@ try {
                 VALUES (?,?,?,?,?,?,?,'pending',UTC_TIMESTAMP())",[$row['id'],$short,$long,$category,
                 json_encode(array_values($clean),JSON_UNESCAPED_UNICODE),$locale,$country]);
         }
-        notify_moderator($config,$row['host']);
+        notify_moderator($config,$row['host'],'profile');
         respond(['state'=>'pending','message'=>'Profile changes awaiting review']);
     }
     if ($route === 'admin/login' && $method === 'POST') {
