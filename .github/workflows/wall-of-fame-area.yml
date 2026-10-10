@@ -1,0 +1,37 @@
+name: Wall of Fame AREA
+
+on:
+  pull_request:
+    paths:
+      - 'wall-of-fame-area/**'
+      - '.github/workflows/wall-of-fame-area.yml'
+  push:
+    paths:
+      - 'wall-of-fame-area/**'
+      - '.github/workflows/wall-of-fame-area.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, pdo_mysql, curl
+      - name: Validate PHP syntax
+        run: |
+          php -l wall-of-fame-area/public/api.php
+          php -l wall-of-fame-area/private/config.example.php
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate frontend JavaScript
+        run: |
+          node --check wall-of-fame-area/public/app.js
+          node --check wall-of-fame-area/public/admin.js
+      - name: Check safe deployment layout
+        run: |
+          test ! -e wall-of-fame-area/private/config.php
+          grep -q 'RewriteRule.*api/' wall-of-fame-area/public/.htaccess
+          grep -q 'CREATE TABLE IF NOT EXISTS submissions' wall-of-fame-area/schema.sql
