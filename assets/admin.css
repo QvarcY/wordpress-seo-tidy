@@ -1123,3 +1123,22 @@
         flex-direction: column;
     }
 }
+
+/* Compact Wall of Fame directory */
+.tidy-wall-dashboard { margin-top: 24px; padding: 20px; background: #fff; border: 1px solid #dcdcde; border-radius: 8px; }
+.tidy-wall-dashboard-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.tidy-wall-dashboard-heading h3 { margin: 0; }
+.tidy-wall-list { display: grid; gap: 6px; max-width: 100%; }
+.tidy-wall-site { display: flex; gap: 12px; align-items: center; padding: 10px 12px; min-width: 0; border: 1px solid #e4e5e7; border-radius: 7px; background: #fff; text-decoration: none; color: inherit; }
+.tidy-wall-site:hover, .tidy-wall-site:focus { background: #f6f8fb; border-color: #8c9db7; }
+.tidy-wall-site-icon { width: 36px; height: 36px; flex: 0 0 36px; display: flex; justify-content: center; align-items: center; border-radius: 8px; color: #fff; font-weight: 700; font-size: 13px; }
+.tidy-wall-site-copy { display: grid; gap: 3px; min-width: 0; flex: 1; }
+.tidy-wall-site-copy strong, .tidy-wall-site-copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tidy-wall-site-copy small { color: #646970; }
+.tidy-wall-site-host { color: #646970; font-size: 12px; overflow-wrap: anywhere; text-align: right; max-width: 35%; }
+.tidy-wall-pagination { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 14px 0; }
+@media (max-width: 600px) {
+    .tidy-wall-site-host { display: none; }
+    .tidy-wall-dashboard { padding: 12px; }
+    .tidy-wall-dashboard-heading { flex-wrap: wrap; }
+}
