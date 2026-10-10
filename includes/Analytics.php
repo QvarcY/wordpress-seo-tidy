@@ -20,10 +20,28 @@ final class Analytics
             'rest_api_init',
             [self::class, 'registerRoutes']
         );
+
+        add_action(
+            'seo_tidy_analytics_daily_cleanup',
+            [self::class, 'cleanupOldData']
+        );
+
+        if (
+            self::enabled() &&
+            !wp_next_scheduled('seo_tidy_analytics_daily_cleanup')
+        ) {
+            wp_schedule_event(
+                time() + HOUR_IN_SECONDS,
+                'daily',
+                'seo_tidy_analytics_daily_cleanup'
+            );
+        }
     }
 
     public static function registerRoutes(): void
     {
+        self::registerResetRoute();
+
         register_rest_route(
             'seo-tidy/v1',
             '/analytics',
@@ -45,6 +63,63 @@ final class Analytics
         );
     }
 
+    public static function registerResetRoute(): void
+    {
+        register_rest_route(
+            'seo-tidy/v1',
+            '/analytics/reset',
+            [
+                'methods' => 'POST',
+                'permission_callback' => static function (): bool {
+                    return current_user_can('manage_options');
+                },
+                'callback' => [self::class, 'resetStatistics'],
+                'args' => [
+                    'confirm' => [
+                        'required' => true,
+                        'type' => 'string',
+                    ],
+                ],
+            ]
+        );
+    }
+
+    public static function resetStatistics(
+        \WP_REST_Request $request
+    ): \WP_REST_Response {
+        if ($request->get_param('confirm') !== 'DELETE') {
+            return new \WP_REST_Response(
+                ['message' => 'Explicit deletion confirmation required.'],
+                400
+            );
+        }
+
+        global $wpdb;
+
+        $table = self::tableName();
+
+        if (!self::tableExists()) {
+            return new \WP_REST_Response(
+                ['message' => 'Statistics table does not exist.'],
+                404
+            );
+        }
+
+        $deleted = $wpdb->query("DELETE FROM {$table}");
+
+        if ($deleted === false) {
+            return new \WP_REST_Response(
+                ['message' => 'Could not delete statistics.'],
+                500
+            );
+        }
+
+        return new \WP_REST_Response([
+            'deleted' => true,
+            'deletedRows' => (int) $deleted,
+        ]);
+    }
+
     public static function getRestSummary(
         \WP_REST_Request $request
     ): \WP_REST_Response {
@@ -55,6 +130,43 @@ final class Analytics
 
         return new \WP_REST_Response(
             self::summary($days)
+        );
+    }
+
+    public static function tableExists(): bool
+    {
+        global $wpdb;
+
+        $table = self::tableName();
+
+        return $wpdb->get_var(
+            $wpdb->prepare(
+                'SHOW TABLES LIKE %s',
+                $wpdb->esc_like($table)
+            )
+        ) === $table;
+    }
+
+    public static function cleanupOldData(): void
+    {
+        global $wpdb;
+
+        if (!self::tableExists()) {
+            return;
+        }
+
+        $timezone = wp_timezone();
+        $cutoff = (new \DateTimeImmutable('today', $timezone))
+            ->modify('-364 days')
+            ->format('Y-m-d');
+
+        $table = self::tableName();
+
+        $wpdb->query(
+            $wpdb->prepare(
+                "DELETE FROM {$table} WHERE stat_date < %s",
+                $cutoff
+            )
         );
     }
 
