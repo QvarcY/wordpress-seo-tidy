@@ -3,7 +3,7 @@ const labels = {
     eyebrow:'The open-source community', headline:'Real websites. Real people. Shared progress.',
     intro:'A public directory of verified websites using the SEO-TidY WordPress plugin. Join through the plugin; listings can be discovered by people and crawlers.',
     browse:'Explore websites',join:'Join Wall of Fame',members:'COMMUNITY',directory:'Featured websites',
-    'directory-note':'Only verified, approved sites appear here.',more:'Load more',
+    'directory-note':'Only verified, approved sites appear here.',more:'Load more',previous:'Previous',next:'Next',page:'Page',
     participate:'PARTICIPATE','join-title':'Put your website on the map.',
     'join-info':'Install SEO-TidY on your WordPress website and submit from the plugin. Ownership is verified automatically; an administrator reviews the entry. Participation is free and optional.',
     step1:'Install SEO-TidY',step2:'Apply from the plugin',step3:'Await approval',name:'Website name',
@@ -25,7 +25,7 @@ const labels = {
     eyebrow:'Atvērtā koda kopiena',headline:'Īstas vietnes. Īsti cilvēki. Kopīga izaugsme.',
     intro:'Publisks SEO-TidY WordPress spraudņa lietotāju vietņu katalogs. Pieteikšanās notiek tikai caur spraudni; vietnes var atklāt cilvēki un meklēšanas roboti.',
     browse:'Apskatīt vietnes',join:'Pievienoties Slavas sienai',members:'KOPIENA',directory:'Kopienas vietnes',
-    'directory-note':'Redzamas tikai verificētas un apstiprinātas vietnes.',more:'Rādīt vēl',
+    'directory-note':'Redzamas tikai verificētas un apstiprinātas vietnes.',more:'Rādīt vēl',previous:'Iepriekšējā',next:'Nākamā',page:'Lapa',
     participate:'PIEDALIES','join-title':'Parādi savu vietni kopienai.',
     'join-info':'Uzstādi SEO-TidY savā WordPress vietnē un piesakies caur spraudni. Vietnes īpašumtiesības tiek pārbaudītas automātiski, bet ierakstu apstiprina administrators. Dalība ir brīvprātīga un bez maksas.',
     step1:'Uzstādi SEO-TidY',step2:'Piesakies spraudnī',step3:'Sagaidi apstiprinājumu',
@@ -47,7 +47,7 @@ const labels = {
   }
 };
 let lang = (navigator.language || '').toLowerCase().startsWith('lv') ? 'lv' : 'en';
-let page = 1, hasMore = false, config = {}, newDetails = null;
+let page = 1, hasMore = false;
 const $ = (id) => document.getElementById(id), t = (key) => labels[lang][key] || key;
 const show = (value, bad = false) => { $('message').textContent = value; $('message').className = bad ? 'error' : 'success'; };
 const request = async (url, options) => {
@@ -78,16 +78,25 @@ function siteCard(site) {
   const domain = document.createElement('small'); domain.textContent = new URL(site.url).hostname;
   card.append(head, body, domain); return card;
 }
-async function listings(append = false) {
+let loading = false;
+async function listings(nextPage = 1) {
+  if (loading) return;
+  loading = true;
   try {
-    const data = await request('api/sites?page=' + page);
-    if (!append) $('sites').replaceChildren();
-    for (const site of data.items) $('sites').append(siteCard(site));
+    const data = await request('api/sites?page=' + nextPage);
+    page = nextPage;
+    hasMore = Boolean(data.hasMore);
+    $('sites').replaceChildren();
+    for (const site of (data.items || [])) $('sites').append(siteCard(site));
     if (!$('sites').children.length) $('sites').textContent = t('empty');
-    hasMore = data.hasMore; $('more').hidden = !hasMore;
+    $('previous').disabled = page === 1;
+    $('next').disabled = !hasMore;
+    $('current-page').textContent = String(page);
   } catch { show(t('failed'), true); }
+  finally { loading = false; }
 }
-$('more').addEventListener('click', () => { page++; listings(true); });
+$('previous').addEventListener('click', () => listings(page - 1));
+$('next').addEventListener('click', () => listings(page + 1));
 try {
   const saved = localStorage.getItem('seo-tidy-lang');
   if (saved === 'lv' || saved === 'en') lang = saved;
