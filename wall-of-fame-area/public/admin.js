@@ -1,15 +1,21 @@
-let token = '';
 const $ = id => document.getElementById(id);
 const message = text => { $('admin-message').textContent = text; };
 async function api(path, body) {
   const res = await fetch(path, {
-    method: body ? 'POST' : 'GET', credentials:'omit',
-    headers: { authorization: 'Bearer ' + token, ...(body ? {'content-type':'application/json'} : {}) },
+    method: body ? 'POST' : 'GET', credentials: 'same-origin',
+    headers: { ...(body ? {'content-type':'application/json', 'x-seo-tidy-admin':'1'} : {}) },
     ...(body ? {body:JSON.stringify(body)} : {})
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Request failed');
   return data;
+}
+async function login(token) {
+  const res = await fetch('api/admin/login', { method:'POST',credentials:'same-origin',
+    headers:{'content-type':'application/json'},body:JSON.stringify({token}) });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Invalid token');
+  await load();
 }
 function textNode(type, value) { const el = document.createElement(type); el.textContent = value; return el; }
 function card(item) {
@@ -38,13 +44,18 @@ async function load() {
     message(data.items.length + ' applications loaded');
   } catch(e) { message(e.message); }
 }
-$('load').addEventListener('click', () => {
-  token = $('admin-token').value;
+$('load').addEventListener('click', async () => {
+  const key = $('admin-token').value;
   $('admin-token').value = '';
-  if (token.length < 32) { token = ''; message('Invalid token'); return; }
-  load();
+  try { await login(key); $('login-panel').hidden = true; }
+  catch(e) { message(e.message); }
 });
-$('clear').addEventListener('click', () => {
-  token = ''; $('admin-token').value = ''; $('applications').replaceChildren(); message('Key cleared');
+$('clear').addEventListener('click', async () => {
+  try { await api('api/admin/logout', {}); } catch {}
+  $('applications').replaceChildren();
+  $('login-panel').hidden = false;
+  message('Signed out');
 });
-window.addEventListener('pagehide', () => { token = ''; });
+api('api/admin/session').then(data => {
+  if (data.authenticated) { $('login-panel').hidden = true; load(); }
+}).catch(() => message('Could not check login session'));
