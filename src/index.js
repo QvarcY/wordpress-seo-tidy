@@ -658,8 +658,8 @@ function StatsBadgeSettings() {
     if (values.seo_tidy_badge_humans) {
         previewMetrics.push({
             id: 'human',
-            icon: '?',
-            label: __('Human-classified pageviews', 'seo-tidy'),
+            icon: 'human',
+            label: __('Views', 'seo-tidy'),
             value: Number(analytics?.humanPageviews || 0),
         });
     }
@@ -667,8 +667,8 @@ function StatsBadgeSettings() {
     if (values.seo_tidy_badge_bots) {
         previewMetrics.push({
             id: 'bot',
-            icon: '?',
-            label: __('Suspected bot requests', 'seo-tidy'),
+            icon: 'bot',
+            label: __('Bots', 'seo-tidy'),
             value: Number(analytics?.suspectedBotRequests || 0),
         });
     }
@@ -770,7 +770,30 @@ function StatsBadgeSettings() {
                                 gap: 6,
                             }}
                         >
-                            <span aria-hidden="true">{metric.icon}</span>
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                aria-hidden="true"
+                                focusable="false"
+                            >
+                                {metric.icon === 'bot' ? (
+                                    <>
+                                        <rect x="5" y="7" width="14" height="12" rx="3" />
+                                        <path d="M12 3v4M9 12h.01M15 12h.01M9 16h6" />
+                                    </>
+                                ) : (
+                                    <>
+                                        <circle cx="12" cy="8" r="3" />
+                                        <path d="M5 20v-2a7 7 0 0 1 14 0v2" />
+                                    </>
+                                )}
+                            </svg>
                             <strong>{metric.value.toLocaleString()}</strong>
                             {values.seo_tidy_badge_labels ? (
                                 <span>{metric.label}</span>
@@ -784,7 +807,7 @@ function StatsBadgeSettings() {
 
                     {values.seo_tidy_badge_branding && (
                         <span style={{ textDecoration: 'underline' }}>
-                            {__('Powered by SEO-TidY', 'seo-tidy')}
+                            SEO-TidY
                         </span>
                     )}
 

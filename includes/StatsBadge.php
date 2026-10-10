@@ -104,13 +104,14 @@ final class StatsBadge
             return '';
         }
 
+        $latvian = str_starts_with(determine_locale(), 'lv');
         $summary = Analytics::summary(30);
         $items = [];
 
         if ($showHumans) {
             $items[] = self::metric(
                 'users',
-                __('Human-classified pageviews', 'seo-tidy'),
+                $latvian ? 'Skat?jumi' : 'Views',
                 (int) ($summary['humanPageviews'] ?? 0),
                 $showLabels
             );
@@ -119,7 +120,7 @@ final class StatsBadge
         if ($showBots) {
             $items[] = self::metric(
                 'bot',
-                __('Suspected bot requests', 'seo-tidy'),
+                $latvian ? 'Boti' : 'Bots',
                 (int) ($summary['suspectedBotRequests'] ?? 0),
                 $showLabels
             );
@@ -143,7 +144,7 @@ final class StatsBadge
                 ) .
                 '" rel="nofollow noopener noreferrer" ' .
                 'target="_blank">' .
-                esc_html__('Powered by SEO-TidY', 'seo-tidy') .
+                esc_html('SEO-TidY') .
                 '</a>';
         }
 
