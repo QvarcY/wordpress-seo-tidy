@@ -25,6 +25,7 @@ final class Bootstrap
         AnswerReadiness::init();
         Migration::init();
         GitHubUpdater::init();
+        Analytics::init();
         add_action('init', [self::class, 'loadTranslations']);
         add_action('init', [self::class, 'registerSettings']);
         if (is_admin()) {

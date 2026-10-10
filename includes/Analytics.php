@@ -6,6 +6,17 @@ defined('ABSPATH') || exit;
 
 final class Analytics
 {
+    private const SCHEMA_VERSION = '1';
+
+    public static function init(): void
+    {
+        add_action(
+            'template_redirect',
+            [self::class, 'recordRequest'],
+            20
+        );
+    }
+
     public static function tableName(): string
     {
         global $wpdb;
@@ -34,6 +45,22 @@ final class Analytics
         ) {$charset};";
 
         dbDelta($sql);
+
+        // Mark installed only when the table really exists.
+        $existing = $wpdb->get_var(
+            $wpdb->prepare(
+                'SHOW TABLES LIKE %s',
+                $wpdb->esc_like($table)
+            )
+        );
+
+        if ($existing === $table) {
+            update_option(
+                'seo_tidy_analytics_schema_version',
+                self::SCHEMA_VERSION,
+                false
+            );
+        }
     }
 
     public static function enabled(): bool
@@ -42,5 +69,143 @@ final class Analytics
             'seo_tidy_analytics_enabled',
             false
         );
+    }
+
+    public static function recordRequest(): void
+    {
+        if (!self::enabled() || !self::shouldCount()) {
+            return;
+        }
+
+        global $wpdb;
+
+        if (
+            get_option(
+                'seo_tidy_analytics_schema_version',
+                ''
+            ) !== self::SCHEMA_VERSION
+        ) {
+            self::install();
+
+            if (
+                get_option(
+                    'seo_tidy_analytics_schema_version',
+                    ''
+                ) !== self::SCHEMA_VERSION
+            ) {
+                return;
+            }
+        }
+
+        $agent = isset($_SERVER['HTTP_USER_AGENT'])
+            && is_string($_SERVER['HTTP_USER_AGENT'])
+            ? substr($_SERVER['HTTP_USER_AGENT'], 0, 512)
+            : '';
+
+        $bot = self::suspectedBot($agent);
+
+        $column = $bot
+            ? 'suspected_bot_requests'
+            : 'human_pageviews';
+
+        $date = wp_date('Y-m-d');
+        $updated = current_time('mysql');
+        $table = self::tableName();
+
+        $sql = "INSERT INTO {$table}
+            (stat_date, {$column}, updated_at)
+            VALUES (%s, 1, %s)
+            ON DUPLICATE KEY UPDATE
+                {$column} = {$column} + 1,
+                updated_at = VALUES(updated_at)";
+
+        $wpdb->query(
+            $wpdb->prepare($sql, $date, $updated)
+        );
+    }
+
+    public static function shouldCount(): bool
+    {
+        if (
+            ($_SERVER['REQUEST_METHOD'] ?? '') !== 'GET' ||
+            is_admin() ||
+            is_user_logged_in() ||
+            wp_doing_ajax() ||
+            (defined('REST_REQUEST') && REST_REQUEST) ||
+            is_404() ||
+            is_feed() ||
+            is_preview() ||
+            is_trackback() ||
+            is_robots()
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function suspectedBot(string $agent): bool
+    {
+        if ($agent === '') {
+            return true;
+        }
+
+        return (bool) preg_match(
+            '/bot|crawl|spider|slurp|bingpreview|facebookexternalhit|' .
+            'chatgpt-user|gptbot|claudebot|bytespider|headless|' .
+            'curl\/|wget\/|python-requests|go-http-client|' .
+            'uptimerobot|monitoring/i',
+            $agent
+        );
+    }
+
+    public static function summary(int $days = 30): array
+    {
+        global $wpdb;
+
+        $days = min(365, max(1, $days));
+        $from = wp_date(
+            'Y-m-d',
+            time() - (($days - 1) * DAY_IN_SECONDS)
+        );
+
+        $table = self::tableName();
+
+        if (!self::enabled()) {
+            return [
+                'enabled' => false,
+                'humanPageviews' => 0,
+                'suspectedBotRequests' => 0,
+                'periodDays' => $days,
+            ];
+        }
+
+        if (
+            get_option(
+                'seo_tidy_analytics_schema_version',
+                ''
+            ) !== self::SCHEMA_VERSION
+        ) {
+            self::install();
+        }
+
+        $row = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT
+                    COALESCE(SUM(human_pageviews), 0) AS humans,
+                    COALESCE(SUM(suspected_bot_requests), 0) AS bots
+                FROM {$table}
+                WHERE stat_date >= %s",
+                $from
+            ),
+            ARRAY_A
+        );
+
+        return [
+            'enabled' => true,
+            'humanPageviews' => (int) ($row['humans'] ?? 0),
+            'suspectedBotRequests' => (int) ($row['bots'] ?? 0),
+            'periodDays' => $days,
+        ];
     }
 }
