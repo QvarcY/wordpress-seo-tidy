@@ -6,6 +6,7 @@ import { __ } from '@wordpress/i18n';
 const sections = [
     { id: 'dashboard', label: __('Dashboard', 'seo-tidy') },
     { id: 'metadata', label: __('Metadata', 'seo-tidy') },
+    { id: 'analytics', label: __('Analytics', 'seo-tidy') },
     { id: 'schema', label: __('Smart Schema', 'seo-tidy') },
     { id: 'audit', label: __('SEO Audit', 'seo-tidy') },
     { id: 'answers', label: __('Answer Readiness', 'seo-tidy') },
@@ -251,6 +252,198 @@ function DashboardOverview({ onOpenSchema, onOpenMetadata }) {
             <p className="tidy-dashboard-footnote">
                 {__('Counts include published posts and pages only.', 'seo-tidy')}
             </p>
+        </div>
+    );
+}
+
+
+
+function AnalyticsOverview() {
+    const [enabled, setEnabled] = useState(null);
+    const [days, setDays] = useState(30);
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState('');
+    const [refresh, setRefresh] = useState(0);
+
+    useEffect(() => {
+        let active = true;
+
+        setLoading(true);
+        setError('');
+
+        Promise.all([
+            apiFetch({ path: '/wp/v2/settings' }),
+            apiFetch({ path: '/seo-tidy/v1/analytics?days=' + days }),
+        ])
+            .then(([settings, summary]) => {
+                if (!active) return;
+
+                setEnabled(
+                    [true, 1, '1'].includes(
+                        settings.seo_tidy_analytics_enabled
+                    )
+                );
+                setData(summary);
+            })
+            .catch(() => {
+                if (active) {
+                    setError(
+                        __('Could not load analytics.', 'seo-tidy')
+                    );
+                }
+            })
+            .finally(() => {
+                if (active) setLoading(false);
+            });
+
+        return () => {
+            active = false;
+        };
+    }, [days, refresh]);
+
+    const toggle = async (next) => {
+        setSaving(true);
+        setError('');
+
+        try {
+            const result = await apiFetch({
+                path: '/wp/v2/settings',
+                method: 'POST',
+                data: {
+                    seo_tidy_analytics_enabled: next,
+                },
+            });
+
+            setEnabled(
+                [true, 1, '1'].includes(
+                    result.seo_tidy_analytics_enabled
+                )
+            );
+
+            setRefresh((current) => current + 1);
+        } catch {
+            setError(
+                __('Could not save analytics settings.', 'seo-tidy')
+            );
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    return (
+        <div className="tidy-dashboard">
+            <p>
+                {__(
+                    'Optional local pageview statistics. Collection is disabled by default.',
+                    'seo-tidy'
+                )}
+            </p>
+
+            {enabled !== null && (
+                <div className="tidy-setting-row">
+                    <ToggleControl
+                        label={__('Enable local analytics', 'seo-tidy')}
+                        help={__(
+                            'Counts eligible WordPress page requests without storing visitor IP addresses.',
+                            'seo-tidy'
+                        )}
+                        checked={enabled}
+                        disabled={saving || loading}
+                        onChange={toggle}
+                    />
+                </div>
+            )}
+
+            {(loading || saving) && <Spinner />}
+
+            {error && (
+                <Notice status="error" isDismissible={false}>
+                    {error}
+                </Notice>
+            )}
+
+            {enabled === false && !loading && (
+                <Notice status="info" isDismissible={false}>
+                    {__(
+                        'Analytics is disabled. No visits are being recorded by SEO-TidY.',
+                        'seo-tidy'
+                    )}
+                </Notice>
+            )}
+
+            {enabled === true && data && !loading && (
+                <>
+                    <p>
+                        <label>
+                            {__('Statistics period', 'seo-tidy')}{' '}
+                            <select
+                                value={days}
+                                onChange={(event) =>
+                                    setDays(Number(event.target.value))
+                                }
+                            >
+                                <option value={1}>
+                                    {__('Today', 'seo-tidy')}
+                                </option>
+                                <option value={7}>
+                                    {__('Last 7 days', 'seo-tidy')}
+                                </option>
+                                <option value={30}>
+                                    {__('Last 30 days', 'seo-tidy')}
+                                </option>
+                                <option value={90}>
+                                    {__('Last 90 days', 'seo-tidy')}
+                                </option>
+                                <option value={365}>
+                                    {__('Last 365 days', 'seo-tidy')}
+                                </option>
+                            </select>
+                        </label>
+                    </p>
+
+                    <div className="tidy-metrics-grid">
+                        <div className="tidy-metric-card">
+                            <span className="tidy-metric-label">
+                                {__('Human-classified pageviews', 'seo-tidy')}
+                            </span>
+                            <strong className="tidy-metric-value">
+                                {Number(
+                                    data.humanPageviews || 0
+                                ).toLocaleString()}
+                            </strong>
+                        </div>
+                        <div className="tidy-metric-card">
+                            <span className="tidy-metric-label">
+                                {__('Suspected bot requests', 'seo-tidy')}
+                            </span>
+                            <strong className="tidy-metric-value">
+                                {Number(
+                                    data.suspectedBotRequests || 0
+                                ).toLocaleString()}
+                            </strong>
+                        </div>
+                    </div>
+
+                    <p className="tidy-dashboard-footnote">
+                        {__(
+                            'Pageviews are not unique visitors. Bot identification is approximate. Cached pages and some requests may not be counted.',
+                            'seo-tidy'
+                        )}
+                    </p>
+
+                    <Button
+                        variant="secondary"
+                        onClick={() =>
+                            setRefresh((current) => current + 1)
+                        }
+                        disabled={loading || saving}
+                    >
+                        {__('Refresh statistics', 'seo-tidy')}
+                    </Button>
+                </>
+            )}
         </div>
     );
 }
@@ -1686,6 +1879,8 @@ function App() {
 
                     {active === 'settings' ? (
                         <GeneralSettings />
+                    ) : active === 'analytics' ? (
+                        <AnalyticsOverview />
                     ) : active === 'migration' ? (
                         <MigrationOverview />
                     ) : active === 'answers' ? (
