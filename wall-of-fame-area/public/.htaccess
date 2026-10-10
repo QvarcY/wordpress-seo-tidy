@@ -1,6 +1,7 @@
 Options -Indexes
 DirectoryIndex index.php index.html
 RewriteEngine On
+RewriteRule ^sitemap\.xml$ sitemap.php [L,NC]
 RewriteRule ^api/(.*)$ api.php?route=$1 [QSA,L,NC]
 <FilesMatch "^(api\.php|\.ht.*)$">
   Require all denied
