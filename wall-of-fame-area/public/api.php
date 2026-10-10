@@ -102,7 +102,7 @@ function sql(PDO $db, string $query, array $args = []): PDOStatement {
     return $s;
 }
 
-$configPath = getenv('SEO_TIDY_WOF_CONFIG') ?: dirname(__DIR__, 3) . '/seo-tidy-wall-of-fame-private/config.php';
+$configPath = getenv('SEO_TIDY_WOF_CONFIG') ?: '/home/kasidlv/seo-tidy-wall-of-fame-private/config.php';
 if (!is_file($configPath)) fail('Service not configured', 503);
 $config = require $configPath;
 if (!is_array($config)) fail('Service not configured', 503);
