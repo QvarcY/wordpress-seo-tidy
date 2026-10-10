@@ -1142,3 +1142,10 @@
     .tidy-wall-dashboard { padding: 12px; }
     .tidy-wall-dashboard-heading { flex-wrap: wrap; }
 }
+
+/* Keep public profile and website links separate in the compact directory. */
+.tidy-wall-site { flex-wrap: wrap; }
+.tidy-wall-site-actions { display: flex; justify-content: flex-end; gap: 12px; align-items: center; flex-wrap: wrap; margin-left: auto; }
+.tidy-wall-site-actions a { color: #135e96; font-size: 12px; font-weight: 600; white-space: nowrap; text-decoration: none; }
+.tidy-wall-site-actions a:hover, .tidy-wall-site-actions a:focus { text-decoration: underline; }
+@media(max-width: 760px) { .tidy-wall-site-host { display: none; } .tidy-wall-site-actions { width: 100%; margin-left: 48px; justify-content: flex-start; } }
