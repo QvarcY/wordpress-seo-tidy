@@ -881,22 +881,50 @@ function WallSiteRow({ site }) {
 
 function DashboardWallOfFame({ onOpen }) {
     const [sites, setSites] = useState([]);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
+
     useEffect(() => {
         let mounted = true;
-        apiFetch({ path: '/seo-tidy/v1/wall?page=1' })
-            .then((data) => { if (mounted) setSites((data.items || []).slice(0, 5)); })
-            .catch(() => {});
+        setLoading(true);
+        setError(false);
+        apiFetch({ path: '/seo-tidy/v1/wall?page=' + page })
+            .then((data) => {
+                if (!mounted) return;
+                setSites(data.items || []);
+                setHasMore(Boolean(data.hasMore));
+                setLoading(false);
+            })
+            .catch(() => {
+                if (!mounted) return;
+                setError(true);
+                setLoading(false);
+            });
         return () => { mounted = false; };
-    }, []);
+    }, [page]);
+
     return (
         <section className="tidy-wall-dashboard">
             <div className="tidy-wall-dashboard-heading">
                 <h3>{__('Wall of Fame', 'seo-tidy')}</h3>
                 <Button variant="secondary" onClick={onOpen}>{__('Wall of Fame', 'seo-tidy')} →</Button>
             </div>
-            {sites.length > 0 ? (
-                <div className="tidy-wall-list">{sites.map((site) => <WallSiteRow key={site.url} site={site} />)}</div>
-            ) : <p>{__('No approved websites yet.', 'seo-tidy')}</p>}
+            {loading && <p>{__('Loading...', 'seo-tidy')}</p>}
+            {error && <p>{__('Could not load Wall of Fame directory.', 'seo-tidy')}</p>}
+            {!loading && !error && (
+                <>
+                    {sites.length > 0 ? (
+                        <div className="tidy-wall-list">{sites.map((site) => <WallSiteRow key={site.url} site={site} />)}</div>
+                    ) : <p>{__('No approved websites yet.', 'seo-tidy')}</p>}
+                    <div className="tidy-wall-pagination">
+                        <Button variant="secondary" disabled={page <= 1} onClick={() => setPage((previous) => previous - 1)}>{__('Previous', 'seo-tidy')}</Button>
+                        <span>{page}</span>
+                        <Button variant="secondary" disabled={!hasMore} onClick={() => setPage((previous) => previous + 1)}>{__('Next', 'seo-tidy')}</Button>
+                    </div>
+                </>
+            )}
         </section>
     );
 }
