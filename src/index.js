@@ -861,6 +861,46 @@ function StatsBadgeSettings() {
 
 
 
+function WallSiteRow({ site }) {
+    let host = '';
+    try { host = new URL(site.url).hostname; } catch {}
+    const initials = (site.name || host || '?').trim().slice(0, 2).toUpperCase();
+    const colors = ['#4667a8', '#287b74', '#895fa5', '#a46437', '#527b45'];
+    const color = colors[Array.from(host).reduce((sum, char) => sum + char.charCodeAt(0), 0) % colors.length];
+    return (
+        <a className="tidy-wall-site" href={site.url} target="_blank" rel="noopener noreferrer nofollow">
+            <span className="tidy-wall-site-icon" style={{ backgroundColor: color }} aria-hidden="true">{initials}</span>
+            <span className="tidy-wall-site-copy">
+                <strong>{site.name}</strong>
+                <small>{site.description}</small>
+            </span>
+            <span className="tidy-wall-site-host">{host}</span>
+        </a>
+    );
+}
+
+function DashboardWallOfFame({ onOpen }) {
+    const [sites, setSites] = useState([]);
+    useEffect(() => {
+        let mounted = true;
+        apiFetch({ path: '/seo-tidy/v1/wall?page=1' })
+            .then((data) => { if (mounted) setSites((data.items || []).slice(0, 5)); })
+            .catch(() => {});
+        return () => { mounted = false; };
+    }, []);
+    return (
+        <section className="tidy-wall-dashboard">
+            <div className="tidy-wall-dashboard-heading">
+                <h3>{__('Wall of Fame', 'seo-tidy')}</h3>
+                <Button variant="secondary" onClick={onOpen}>{__('Wall of Fame', 'seo-tidy')} →</Button>
+            </div>
+            {sites.length > 0 ? (
+                <div className="tidy-wall-list">{sites.map((site) => <WallSiteRow key={site.url} site={site} />)}</div>
+            ) : <p>{__('No approved websites yet.', 'seo-tidy')}</p>}
+        </section>
+    );
+}
+
 function WallOfFame() {
     const [profile, setProfile] = useState(null);
     const [sites, setSites] = useState([]);
@@ -873,7 +913,7 @@ function WallOfFame() {
     const loadDirectory = async (nextPage = 1) => {
         try {
             const data = await apiFetch({ path: '/seo-tidy/v1/wall?page=' + nextPage });
-            setSites((previous) => nextPage === 1 ? data.items : [...previous, ...data.items]);
+            setSites(data.items || []);
             setPage(nextPage);
             setHasMore(Boolean(data.hasMore));
         } catch {
@@ -939,19 +979,15 @@ function WallOfFame() {
         <div className="tidy-settings-panel">
             <h3>{__('SEO-TidY Wall of Fame', 'seo-tidy')}</h3>
             <p>{__('Discover websites in the SEO-TidY community. Only approved applications are public.', 'seo-tidy')}</p>
-            <div className="tidy-metrics-grid">
-                {sites.map((site) => (
-                    <div className="tidy-metric-card" key={site.url}>
-                        <strong><a href={site.url} target="_blank" rel="noopener noreferrer nofollow">{site.name}</a></strong>
-                        <p style={{ overflowWrap: 'anywhere' }}>{site.description}</p>
-                        <small>{site.url}</small>
-                    </div>
-                ))}
+            <div className="tidy-wall-list">
+                {sites.map((site) => <WallSiteRow key={site.url} site={site} />)}
             </div>
             {sites.length === 0 && <p>{__('No approved websites yet.', 'seo-tidy')}</p>}
-            {hasMore && <Button variant="secondary" disabled={busy} onClick={() => loadDirectory(page + 1)}>
-                {__('Load more websites', 'seo-tidy')}
-            </Button>}
+            <div className="tidy-wall-pagination">
+                <Button variant="secondary" disabled={busy || page <= 1} onClick={() => loadDirectory(page - 1)}>←</Button>
+                <span>{page}</span>
+                <Button variant="secondary" disabled={busy || !hasMore} onClick={() => loadDirectory(page + 1)}>→</Button>
+            </div>
             <hr />
             <h3>{__('Your website', 'seo-tidy')}</h3>
             {status === 'not_joined' && profile && (
@@ -2434,10 +2470,13 @@ function App() {
                             setFilter={setMetadataFilter}
                         />
                     ) : active === 'dashboard' ? (
-                        <DashboardOverview
-                            onOpenSchema={() => setActive('schema')}
-                            onOpenMetadata={openMetadata}
-                        />
+                        <>
+                            <DashboardOverview
+                                onOpenSchema={() => setActive('schema')}
+                                onOpenMetadata={openMetadata}
+                            />
+                            <DashboardWallOfFame onOpen={() => setActive('community')} />
+                        </>
                     ) : (
                         <p>
                             {__('This feature is planned and not available yet.', 'seo-tidy')}
