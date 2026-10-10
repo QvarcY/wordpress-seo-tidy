@@ -41,6 +41,14 @@ SEO-TidY 1.0.0 is the first stable release, intended for regular WordPress use. 
 Content recommendations are heuristic and do not guarantee search
 rankings, indexing, or inclusion in AI-generated answers.
 
+## Wall of Fame — public directory
+
+**[Explore the SEO-TidY Wall of Fame](https://kas.id.lv/SEO-TidY/Wall-Of-Fame/)**
+
+The public Wall of Fame showcases websites that have joined through SEO-TidY. Website owners can submit their sites for ownership verification and moderator review. Approved owners can also publish a detailed, moderated profile featuring a description, category and tags.
+
+Participation is optional. The public directory and approved profiles are available to visitors without installing the plugin.
+
 ## Requirements
 
 - WordPress 6.8 or newer
