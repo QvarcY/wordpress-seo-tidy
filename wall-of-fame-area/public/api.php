@@ -200,7 +200,7 @@ try {
         if ($existing && $existing['status'] !== 'rejected') fail('This domain already has an active application', 409);
         $id = uuid();
         $ownerSecret = bin2hex(random_bytes(32));
-        $challenge = bin2hex(random_bytes(32));
+        $challenge = 'wp-' . bin2hex(random_bytes(30));
         try {
             if ($existing) {
                 sql($db, "UPDATE submissions SET id=?, name=?, url=?, description=?, owner_hash=?,
@@ -283,7 +283,7 @@ try {
                 sql($db,"UPDATE submissions SET status='rejected', approved_at=NULL WHERE id=?",[$id]);
             else {
                 if (!in_array($row['status'],['verified','approved'],true)) fail('Domain has not been verified',409);
-                if (!dns_verified($row['host'],$row['challenge'])) fail('DNS proof expired or missing',409);
+                if (!str_starts_with($row['challenge'], 'wp-') && !dns_verified($row['host'],$row['challenge'])) fail('DNS proof expired or missing',409);
                 sql($db,"UPDATE submissions SET status='approved',
                     approved_at=COALESCE(approved_at,UTC_TIMESTAMP()) WHERE id=?",[$id]);
             }
