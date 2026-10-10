@@ -65,3 +65,30 @@ configurable public badge, followed by an opt-in community showcase.
 Do not automatically publish a website to a central catalogue.
 Do not add backlinks without the site owner's explicit choice.
 Do not claim bot or unique visitor counts are exact.
+
+## Implementation audit ? 2026-10-10
+
+M13 has a local WordPress smoke test at
+`tests/integration/m13-smoke.php`. The existing integration
+runner invokes this test, including in GitHub Actions.
+
+The Analytics implementation provides daily aggregate counts,
+not unique visitors or an online-user counter. The database
+includes a reserved unique-estimate column, but no reliable
+unique-estimate feature is exposed.
+
+The Stats Badge currently supports configurable themes,
+metrics, labels and attribution. The planned compact/expanded
+variant distinction is not implemented.
+
+The Wall of Fame stores an opt-in profile only in the local
+WordPress settings. Ownership verification, central submission,
+moderation and public listing are not implemented.
+
+Known limitations and follow-up review:
+- Cached pages may not reach WordPress for counting
+- Each counted request performs a database write
+- WordPress cron does not provide guaranteed wall-clock execution
+- User-agent bot heuristics are not authoritative
+- npm audit dependency findings require separate triage
+- Public release requires a separate approval and version bump
