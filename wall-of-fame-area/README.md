@@ -28,6 +28,12 @@ Both sides must be updated together: `wall-of-fame-area/public/api.php` on AREA 
 
 The hosting operator must apply WAF/rate limits to `api/wp-apply` before production use. The server validates that the proof URL belongs to the declared HTTPS domain and connects to a public, pinned IPv4 address without HTTP redirects to reduce SSRF risk.
 
+## Moderation notifications and remembered login
+
+Add `'admin_email' => 'your-real-email@example.com',` to the private `config.php` on the AREA host. The PHP API uses the hosting provider's configured `mail()` transport to send one message when a website first becomes verified and awaits moderation. Each email includes the website hostname and a link to `admin.html`, never the admin secret or a public approval token. Sending may require correctly configured outbound mail/SPF/DKIM at the host; test it with a real verified application. Failed delivery is recorded in the PHP error log, without blocking registration. Do not claim delivery based on a successful submission alone.
+
+The moderation page accepts the existing `admin_token` once and remembers the login for up to seven days using an HTTPS-only, HttpOnly, SameSite=Strict cookie. The cookie is HMAC-signed using the server-side admin token and scoped to the Wall of Fame API. The raw admin token is not saved in localStorage or a JavaScript-accessible cookie. Changing the private admin token invalidates existing signed sessions. Use the **Clear key** button to sign out. Explicitly restrict moderator page access through hosting access controls where possible. Login endpoints should have IP-based rate limiting and use HTTPS only.
+
 ## Registration
 
 An applicant supplies website name, HTTPS domain and short description and consents to public display after verification and approval. Registration requires Turnstile. The service returns a one-time private 64-character management key, an application ID and a DNS TXT challenge.
