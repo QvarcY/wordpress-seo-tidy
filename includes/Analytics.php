@@ -26,14 +26,37 @@ final class Analytics
             [self::class, 'cleanupOldData']
         );
 
-        if (
-            self::enabled() &&
-            !wp_next_scheduled('seo_tidy_analytics_daily_cleanup')
-        ) {
+        add_action(
+            'update_option_seo_tidy_analytics_enabled',
+            [self::class, 'syncCleanupSchedule'],
+            10,
+            0
+        );
+
+        add_action(
+            'add_option_seo_tidy_analytics_enabled',
+            [self::class, 'syncCleanupSchedule'],
+            10,
+            0
+        );
+
+        self::syncCleanupSchedule();
+    }
+
+    public static function syncCleanupSchedule(): void
+    {
+        $hook = 'seo_tidy_analytics_daily_cleanup';
+
+        if (!self::enabled()) {
+            wp_clear_scheduled_hook($hook);
+            return;
+        }
+
+        if (!wp_next_scheduled($hook)) {
             wp_schedule_event(
                 time() + HOUR_IN_SECONDS,
                 'daily',
-                'seo_tidy_analytics_daily_cleanup'
+                $hook
             );
         }
     }
@@ -317,10 +340,12 @@ final class Analytics
         global $wpdb;
 
         $days = min(365, max(1, $days));
-        $from = wp_date(
-            'Y-m-d',
-            time() - (($days - 1) * DAY_IN_SECONDS)
-        );
+        $from = (new \DateTimeImmutable(
+            'today',
+            wp_timezone()
+        ))
+            ->modify('-' . ($days - 1) . ' days')
+            ->format('Y-m-d');
 
         $table = self::tableName();
 
