@@ -11,11 +11,43 @@ final class WallModeration
     public static function init(): void
     {
         add_action('admin_menu', static function (): void {
+            if (!self::central()) return;
             add_submenu_page('seo-tidy', __('Wall of Fame moderation', 'seo-tidy'),
                 __('Moderation', 'seo-tidy'), 'manage_options',
                 'seo-tidy-wall-moderation', [self::class, 'render']);
         }, 21);
         add_action('admin_post_seo_tidy_wall_moderate', [self::class, 'moderate']);
+        add_action('admin_menu', [self::class, 'menuBadge'], 99);
+    }
+
+    private static function central(): bool
+    {
+        return wp_parse_url(home_url('/'), PHP_URL_HOST) === 'kas.id.lv';
+    }
+
+    public static function menuBadge(): void
+    {
+        global $submenu;
+        if (!current_user_can('manage_options') || !self::central() || !isset($submenu['seo-tidy'])) return;
+        $counts = get_transient('seo_tidy_wall_pending_counts');
+        if (!is_array($counts)) {
+            $sites = self::request('admin/submissions');
+            $profiles = self::request('admin/profiles');
+            if (is_wp_error($sites) || is_wp_error($profiles)) return;
+            $pendingSites = count(array_filter($sites['items'] ?? [], static fn($site): bool =>
+                in_array($site['status'] ?? '', ['pending', 'verified'], true)));
+            $counts = ['site'=>$pendingSites,'profile'=>count($profiles['items'] ?? [])];
+            set_transient('seo_tidy_wall_pending_counts', $counts, 60);
+        }
+        $total = (int)$counts['site'] + (int)$counts['profile'];
+        if ($total === 0) return;
+        foreach ($submenu['seo-tidy'] as &$item) {
+            if (($item[2] ?? '') !== 'seo-tidy-wall-moderation') continue;
+            $item[0] .= ' <span class="update-plugins count-'.$total.'"><span class="plugin-count">'.
+                esc_html((string)$total).'</span></span>';
+            break;
+        }
+        unset($item);
     }
 
     private static function token(): string
@@ -76,6 +108,7 @@ final class WallModeration
         }
         $route = $kind === 'site' ? 'admin/moderate' : 'admin/profile-moderate';
         $result = self::request($route, ['id' => $kind === 'profile' ? (int)$id : $id, 'decision' => $decision]);
+        if (!is_wp_error($result)) delete_transient('seo_tidy_wall_pending_counts');
         $feedback = is_wp_error($result) ? $result->get_error_message() : __('Moderation saved successfully', 'seo-tidy');
         set_transient('seo_tidy_wall_moderation_'.get_current_user_id(), $feedback, 90);
         wp_safe_redirect(admin_url('admin.php?page=seo-tidy-wall-moderation'));
