@@ -49,11 +49,16 @@ if ($profileHost !== '') {
     }
     $profileUrl=$base.'?site='.rawurlencode($profileHost);
     $heading=$esc($name).' | SEO-TidY Wall of Fame';
+    $structured=json_encode([
+        '@context'=>'https://schema.org','@type'=>'WebPage','name'=>$name,
+        'description'=>$summary,'url'=>$profileUrl,
+        'about'=>['@type'=>'WebSite','name'=>$name,'url'=>$siteUrl,'description'=>$detail]
+    ],JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT);
     $profileHtml='<!doctype html><html lang="'.$esc($profile['locale']).'"><head><meta charset="utf-8">'.
         '<meta name="viewport" content="width=device-width,initial-scale=1">'.
         '<meta name="robots" content="index,follow">'.
         '<title>'.$heading.'</title><meta name="description" content="'.$esc($summary).'">'.
-        '<link rel="canonical" href="'.$esc($profileUrl).'"><link rel="stylesheet" href="style.css">'.
+        '<link rel="canonical" href="'.$esc($profileUrl).'"><link rel="stylesheet" href="style.css">'.'<script type="application/ld+json">'.$structured.'</script>'.
         '</head><body><header class="shell"><div class="brand">SEO-TidY <small>Wall of Fame</small></div>'.
         '<nav><a href="'.$esc($base).'">← Directory</a></nav></header>'.
         '<main class="shell profile-detail"><div class="eyebrow">'.$esc($profile['category']).' · '.
