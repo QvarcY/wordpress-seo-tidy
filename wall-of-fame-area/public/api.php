@@ -36,7 +36,7 @@ function payload(): array {
 function domain(string $raw): ?array {
     $parts = parse_url($raw);
     if (!$parts || ($parts['scheme'] ?? '') !== 'https' ||
-        isset($parts['user'], $parts['pass']) || isset($parts['port']) ||
+        isset($parts['user']) || isset($parts['pass']) || isset($parts['port']) ||
         isset($parts['query']) || isset($parts['fragment'])) return null;
     $host = strtolower(rtrim($parts['host'] ?? '', '.'));
     if ($host === '' || strlen($host) > 253 ||
@@ -113,7 +113,7 @@ if ($config['turnstile_secret'] === '' || strlen($config['admin_token']) < 32 ||
     !str_starts_with($config['public_origin'], 'https://')) fail('Service not configured', 503);
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-if ($origin !== '' && $origin !== rtrim($config['public_origin'], '/')) fail('Origin not allowed', 403);
+if ($origin !== '' && $origin !== (parse_url($config['public_origin'], PHP_URL_SCHEME) . '://' . parse_url($config['public_origin'], PHP_URL_HOST))) fail('Origin not allowed', 403);
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') fail('Not supported', 405);
 
 $route = trim($_GET['route'] ?? '', '/');
