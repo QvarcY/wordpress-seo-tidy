@@ -54,7 +54,9 @@ for (const target of targets) {
             if (typeof value !== 'string') continue;
 
             if (value.includes('\uFFFD') ||
-                /(?:30|70)\?(?:65|160)/.test(value)) {
+                /(?:30|70)\?(?:65|160)/.test(value) ||
+                /\?(?=\p{L})/u.test(value) ||
+                /\p{L}\?\p{L}/u.test(value)) {
                 console.error('ENCODING: ' + key + ': ' + value);
                 ++errors;
             }
