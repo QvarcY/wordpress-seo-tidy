@@ -4,6 +4,13 @@ All notable changes to SEO-TidY will be documented here.
 
 ## [Unreleased]
 
+## [0.1.0-beta.8] - Pending release
+
+### Fixed
+- Shortened public statistics badge labels
+- Replaced badge preview question marks with SVG icons
+- Improved Latvian and English badge presentation
+
 ## [0.1.0-beta.7] - Pending release
 
 ### M13 ? Analytics, Stats Badge and Community
