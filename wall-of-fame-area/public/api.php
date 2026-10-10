@@ -294,12 +294,16 @@ try {
         $locale = value($input,'locale',5);
         $country = strtoupper(value($input,'country',2));
         $tags = $input['tags'] ?? null;
-        if (mb_strlen($short,'UTF-8') < 30 || mb_strlen($short,'UTF-8') > 180 ||
-            mb_strlen($long,'UTF-8') < 300 || mb_strlen($long,'UTF-8') > 2000 ||
-            !preg_match('/^[\\p{L}\\p{N} ,.&()\\-]{2,60}$/uD',$category) ||
-            !in_array($locale,['lv','en'],true) ||
-            !preg_match('/^[A-Z]{2}$/D',$country) ||
-            !is_array($tags) || !array_is_list($tags) || count($tags) > 8) fail('Invalid profile',400);
+        $shortLen = mb_strlen($short, 'UTF-8');
+        $longLen = mb_strlen($long, 'UTF-8');
+        if ($shortLen < 30 || $shortLen > 180) fail('Short description must be 30–180 characters', 400);
+        if ($longLen < 300 || $longLen > 2000) fail('Extended description must be 300–2000 characters', 400);
+        if (!preg_match('/^[\\p{L}\\p{N} ,.&()\\-]{2,60}$/uD', $category))
+            fail('Category must be 2–60 letters or numbers', 400);
+        if (!in_array($locale, ['lv', 'en'], true)) fail('Language must be lv or en', 400);
+        if (!preg_match('/^[A-Z]{2}$/D', $country)) fail('Country must be a two-letter code', 400);
+        if (!is_array($tags) || !array_is_list($tags) || count($tags) > 8)
+            fail('Provide up to eight tags', 400);
         $clean = [];
         foreach ($tags as $tag) {
             if (!is_string($tag)) fail('Invalid tag',400);
