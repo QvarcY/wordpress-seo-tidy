@@ -133,6 +133,7 @@ jobs:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
           set -euo pipefail
+          VERSION="${RELEASE_TAG#v}"
 
           gh release create "$RELEASE_TAG" \
             dist/seo-tidy-*.zip \
@@ -141,17 +142,22 @@ jobs:
             --target "$GITHUB_SHA" \
             --prerelease \
             --title "SEO-TidY $RELEASE_TAG" \
-            --notes "Automated SEO-TidY beta release.
+            --notes "## Installation
 
-          Free and open-source WordPress SEO and AI-search readiness tools.
-          English and Latvian interface support.
+          Download **seo-tidy-${VERSION}.zip** under Assets below. Do not use GitHub's automatically generated Source code archives.
 
-          This is a pre-release for testing.
-          Back up your WordPress website before installation.
+          In WordPress, go to Plugins → Add New Plugin → Upload Plugin, select the ZIP, install and activate SEO-TidY.
 
-          Requirements: WordPress 6.8+, PHP 8.1+.
+          ## About
 
-          Clean WordPress ZIP installation is not yet independently verified.
+          Free and open-source WordPress SEO and AI-search readiness tools with English and Latvian interface support. No paywalls.
 
-          Issues: https://github.com/QvarcY/wordpress-seo-tidy/issues
-          Support: https://buymeacoffee.com/craftin"
+          This release includes SEO metadata tools, structured data, audits, analytics, and optional Wall of Fame participation.
+
+          ## Release status
+
+          This is a beta build. Back up your website and check compatibility before installation. Requirements: WordPress 6.8+ and PHP 8.1+.
+
+          Report issues: https://github.com/QvarcY/wordpress-seo-tidy/issues
+
+          Optional support: https://buymeacoffee.com/craftin"
