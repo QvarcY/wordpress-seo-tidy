@@ -8,10 +8,11 @@ Clean SEO. Smarter discovery. Completely free.
 
 ## Release status
 
-Version: **0.1.0-beta.12** (release candidate)
+**Recommended download: [SEO-TidY 0.1.0-beta.13](https://github.com/QvarcY/wordpress-seo-tidy/releases/tag/v0.1.0-beta.13)**
 
-This is a beta release for testing. It is not yet recommended
-for production websites without backups and compatibility testing.
+Download **`seo-tidy-0.1.0-beta.13.zip`** from the release's **Assets** section. This is the ready-to-install WordPress plugin. Do **not** download GitHub's automatically generated `Source code (zip)` or `Source code (tar.gz)` files.
+
+Beta.13 is the current recommended tested beta release. It remains a pre-release, not a final stable 1.0 release. Back up your site and test compatibility before enabling it on production websites.
 
 ## Features
 
@@ -34,7 +35,7 @@ for production websites without backups and compatibility testing.
 - Configurable statistics badge with shortcode `[seo_tidy_stats]`
 - Optional statistics badge in the website footer
 - Light, dark and transparent badge themes
-- Local-only Wall of Fame community profile settings
+- Opt-in Wall of Fame directory with verified applications, administrator approval and a compact paginated website list on the dashboard
 - Administrator-controlled statistics deletion and daily data retention
 
 Content recommendations are heuristic and do not guarantee search
@@ -47,11 +48,12 @@ rankings, indexing, or inclusion in AI-generated answers.
 
 ## Installation
 
-1. Download the release ZIP from GitHub Releases.
-2. In WordPress, open Plugins > Add New Plugin > Upload Plugin.
-3. Select the ZIP and choose Install Now.
-4. Activate SEO-TidY.
-5. Open SEO-TidY in the WordPress administration menu.
+1. Open the [recommended beta.13 release](https://github.com/QvarcY/wordpress-seo-tidy/releases/tag/v0.1.0-beta.13) and expand **Assets**.
+2. Download **[seo-tidy-0.1.0-beta.13.zip](https://github.com/QvarcY/wordpress-seo-tidy/releases/download/v0.1.0-beta.13/seo-tidy-0.1.0-beta.13.zip)** (not the GitHub-generated source code archives).
+3. In WordPress, open Plugins > Add New Plugin > Upload Plugin.
+4. Select the downloaded ZIP and choose Install Now.
+5. Activate SEO-TidY.
+6. Open SEO-TidY in the WordPress administration menu.
 
 The ZIP already contains compiled JavaScript assets.
 Node.js and npm are not required for normal installation.
@@ -97,11 +99,7 @@ The statistics badge is optional. The footer badge and the
 Powered by SEO-TidY attribution are disabled by default.
 The shortcode can be used where a badge is wanted.
 
-Wall of Fame currently saves an optional site profile locally
-inside WordPress. It does not submit the profile to any central
-catalogue, verify site ownership or publish a public listing.
-A public community directory requires separate development and
-review.
+Wall of Fame is optional. Owners can submit their website for ownership verification and moderator review. Only approved website names, URLs and descriptions appear in the public community directory. The directory is also shown in the SEO-TidY dashboard with pagination.
 
 Site owners remain responsible for providing appropriate privacy
 information to their visitors.
