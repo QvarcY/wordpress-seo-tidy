@@ -18,6 +18,16 @@ By default, api.php searches for the private configuration three directory level
 
 The public .htaccess rewrites api/ requests to api.php. The API uses PDO MySQL with utf8mb4. Configure Turnstile for the kas.id.lv hostname, restrict moderator access, and set endpoint rate limits through the host or WAF before accepting registrations.
 
+## WordPress one-click enrollment
+
+The WordPress plugin's Wall of Fame tab lists approved community sites using its authenticated server-side directory proxy. Site administrators can fill a website name/description and select **Join Wall of Fame** (explicit consent). WordPress generates a random, temporary proof valid for five minutes; the Wall of Fame server verifies that proof against the submitting site's public WordPress REST endpoint via HTTPS (DNS/IP restrictions and no redirects), then creates a **verified, non-public** application. A moderator must still approve publication.
+
+No DNS edits, Turnstile form or manually copied management tokens are required for WordPress administrators. Private ownership credentials are saved within the WordPress installation and never exposed to the browser. The administrator can use **Leave Wall of Fame** to delete the application and its public listing.
+
+Both sides must be updated together: `wall-of-fame-area/public/api.php` on AREA hosting **and** a newly released version of the WordPress plugin. The original website registration form remains available as a manual fallback; it still requires DNS ownership proof.
+
+The hosting operator must apply WAF/rate limits to `api/wp-apply` before production use. The server validates that the proof URL belongs to the declared HTTPS domain and connects to a public, pinned IPv4 address without HTTP redirects to reduce SSRF risk.
+
 ## Registration
 
 An applicant supplies website name, HTTPS domain and short description and consents to public display after verification and approval. Registration requires Turnstile. The service returns a one-time private 64-character management key, an application ID and a DNS TXT challenge.
