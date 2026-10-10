@@ -96,6 +96,41 @@ function admin_allowed(string $token): bool {
     return strlen($token) >= 32 && str_starts_with($auth, 'Bearer ') &&
         strlen($auth) <= 256 && hash_equals($token, substr($auth, 7));
 }
+
+function admin_session_valid(string $token): bool {
+    $cookie = $_COOKIE['seo_tidy_wall_admin'] ?? '';
+    if (!is_string($cookie) || !preg_match('/^([0-9]{10})\.([a-f0-9]{64})$/D', $cookie, $match)) return false;
+    $expires = (int) $match[1];
+    if ($expires < time() || $expires > time() + 8 * 86400) return false;
+    $expected = hash_hmac('sha256', 'seo-tidy-wall-admin|' . $match[1], $token);
+    return hash_equals($expected, $match[2]);
+}
+function admin_cookie(string $token): void {
+    $expires = time() + 7 * 86400;
+    $message = (string) $expires;
+    setcookie('seo_tidy_wall_admin', $message . '.' . hash_hmac('sha256', 'seo-tidy-wall-admin|' . $message, $token), [
+        'expires' => $expires,
+        'path' => '/SEO-TidY/Wall-Of-Fame/api/',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Strict',
+    ]);
+}
+function notify_moderator(array $config, string $host): void {
+    $email = $config['admin_email'] ?? '';
+    if (!is_string($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) return;
+    $url = rtrim($config['public_origin'], '/') . '/admin.html';
+    $subject = 'SEO-TidY Wall of Fame - new verified application';
+    $message = "A website is awaiting moderation.\n\nWebsite: " . $host .
+        "\nModeration panel: " . $url . "\n\nLog in using your administrator access.\n";
+    if (!@mail($email, $subject, $message, [
+        'From' => 'SEO-TidY <no-reply@kas.id.lv>',
+        'Content-Type' => 'text/plain; charset=UTF-8',
+    ])) {
+        error_log('Wall of Fame moderator notification delivery failed');
+    }
+}
+
 function sql(PDO $db, string $query, array $args = []): PDOStatement {
     $s = $db->prepare($query);
     $s->execute($args);
@@ -216,6 +251,7 @@ try {
             if ($e->getCode() === '23000') fail('This domain already has an active application', 409);
             throw $e;
         }
+        notify_moderator($config, $site['host']);
         respond(['id' => $id, 'ownerSecret' => $ownerSecret, 'status' => 'verified'], 201);
     }
 
@@ -262,11 +298,36 @@ try {
         if (!dns_verified($row['host'], $row['challenge'])) fail('DNS TXT record not found yet',409);
         sql($db, "UPDATE submissions SET status='verified', verified_at=UTC_TIMESTAMP()
             WHERE id=? AND status IN ('pending','verified')", [$row['id']]);
+        if ($row['status'] === 'pending') notify_moderator($config, $row['host']);
         respond(['status'=>'verified','message'=>'Domain verified; awaiting review']);
     }
 
+    if ($route === 'admin/login' && $method === 'POST') {
+        $data = payload();
+        $supplied = value($data, 'token', 256);
+        if (strlen($supplied) < 32 || !hash_equals($config['admin_token'], $supplied)) {
+            fail('Unauthorized', 401);
+        }
+        admin_cookie($config['admin_token']);
+        respond(['authenticated' => true]);
+    }
+    if ($route === 'admin/session' && $method === 'GET') {
+        respond(['authenticated' => admin_session_valid($config['admin_token'])]);
+    }
+    if ($route === 'admin/logout' && $method === 'POST') {
+        setcookie('seo_tidy_wall_admin', '', [
+            'expires' => time() - 3600, 'path' => '/SEO-TidY/Wall-Of-Fame/api/',
+            'secure' => true, 'httponly' => true, 'samesite' => 'Strict',
+        ]);
+        respond(['authenticated' => false]);
+    }
     if (str_starts_with($route, 'admin/')) {
-        if (!admin_allowed($config['admin_token'])) fail('Unauthorized', 401);
+        if (!admin_allowed($config['admin_token']) && !admin_session_valid($config['admin_token'])) {
+            fail('Unauthorized', 401);
+        }
+        if ($method === 'POST' && ($_SERVER['HTTP_X_SEO_TIDY_ADMIN'] ?? '') !== '1') {
+            fail('Missing moderator request header', 403);
+        }
         if ($route === 'admin/submissions' && $method === 'GET') {
             $rows = sql($db, 'SELECT id,host,name,url,description,status,consent_at,verified_at,approved_at
                 FROM submissions ORDER BY consent_at DESC LIMIT 200')->fetchAll();
