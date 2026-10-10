@@ -440,190 +440,190 @@
         "Saņemt eksperimentālos SEO-TidY laidienus no GitHub. Ja iespēja ir izslēgta, stabilie atjauninājumi joprojām ir pieejami."
       ],
       "Analytics": [
-        "Anal?tika"
+        "Analītika"
       ],
       "Stats Badge": [
-        "Statistikas embl?ma"
+        "Statistikas emblēma"
       ],
       "Wall of Fame": [
         "Slavas siena"
       ],
       "Could not load analytics.": [
-        "Neizdev?s iel?d?t anal?tikas datus."
+        "Neizdevās ielādēt analītikas datus."
       ],
       "Could not save analytics settings.": [
-        "Neizdev?s saglab?t anal?tikas iestat?jumus."
+        "Neizdevās saglabāt analītikas iestatījumus."
       ],
       "Delete all SEO-TidY analytics statistics? This cannot be undone.": [
-        "Vai dz?st visu SEO-TidY statistiku? ?o darb?bu nevar atsaukt."
+        "Vai dzēst visu SEO-TidY statistiku? Šo darbību nevar atsaukt."
       ],
       "Could not delete analytics statistics.": [
-        "Neizdev?s izdz?st anal?tikas statistiku."
+        "Neizdevās izdzēst analītikas statistiku."
       ],
       "Optional local pageview statistics. Collection is disabled by default.": [
-        "Neoblig?ta viet?j? lapu skat?jumu statistika. P?c noklus?juma datu v?k?ana ir izsl?gta."
+        "Neobligāta vietējā lapu skatījumu statistika. Pēc noklusējuma datu vākšana ir izslēgta."
       ],
       "Enable local analytics": [
-        "Iesl?gt viet?jo anal?tiku"
+        "Ieslēgt vietējo analītiku"
       ],
       "Counts eligible WordPress page requests without storing visitor IP addresses.": [
-        "Uzskaita piem?rotos WordPress lapu piepras?jumus, nesaglab?jot apmekl?t?ju IP adreses."
+        "Uzskaita piemērotos WordPress lapu pieprasījumus, nesaglabājot apmeklētāju IP adreses."
       ],
       "Analytics is disabled. No visits are being recorded by SEO-TidY.": [
-        "Anal?tika ir izsl?gta. SEO-TidY pa?laik nere?istr? apmekl?jumus."
+        "Analītika ir izslēgta. SEO-TidY pašlaik nereģistrē apmeklējumus."
       ],
       "Statistics period": [
         "Statistikas periods"
       ],
       "Today": [
-        "?odien"
+        "Šodien"
       ],
       "Last 7 days": [
-        "P?d?j?s 7 dienas"
+        "Pēdējās 7 dienas"
       ],
       "Last 30 days": [
-        "P?d?j?s 30 dienas"
+        "Pēdējās 30 dienas"
       ],
       "Last 90 days": [
-        "P?d?j?s 90 dienas"
+        "Pēdējās 90 dienas"
       ],
       "Last 365 days": [
-        "P?d?j?s 365 dienas"
+        "Pēdējās 365 dienas"
       ],
       "Human-classified pageviews": [
-        "Par cilv?ku piepras?jumiem uzskat?tie lapu skat?jumi"
+        "Par cilvēku pieprasījumiem uzskatītie lapu skatījumi"
       ],
       "Suspected bot requests": [
-        "Iesp?jamie robotu piepras?jumi"
+        "Iespējamie robotu pieprasījumi"
       ],
       "Pageviews are not unique visitors. Bot identification is approximate. Cached pages and some requests may not be counted.": [
-        "Lapu skat?jumi nav unik?lie apmekl?t?ji. Robotu noteik?ana ir aptuvena. Ke?atmi?? saglab?t?s lapas un da?i piepras?jumi var netikt uzskait?ti."
+        "Lapu skatījumi nav unikālie apmeklētāji. Robotu noteikšana ir aptuvena. Kešatmiņā saglabātās lapas un daži pieprasījumi var netikt uzskaitīti."
       ],
       "Refresh statistics": [
         "Atjaunot statistiku"
       ],
       "Data management": [
-        "Datu p?rvald?ba"
+        "Datu pārvaldība"
       ],
       "Statistics older than 365 days are removed automatically. You can also delete all collected statistics now.": [
-        "Statistika, kas vec?ka par 365 dien?m, tiek autom?tiski dz?sta. Vari ar? tagad izdz?st visu sav?kto statistiku."
+        "Statistika, kas vecāka par 365 dienām, tiek automātiski dzēsta. Vari arī tagad izdzēst visu savākto statistiku."
       ],
       "Delete all statistics": [
-        "Dz?st visu statistiku"
+        "Dzēst visu statistiku"
       ],
       "Could not load badge settings.": [
-        "Neizdev?s iel?d?t embl?mas iestat?jumus."
+        "Neizdevās ielādēt emblēmas iestatījumus."
       ],
       "Could not save badge settings.": [
-        "Neizdev?s saglab?t embl?mas iestat?jumus."
+        "Neizdevās saglabāt emblēmas iestatījumus."
       ],
       "Badge settings unavailable.": [
-        "Embl?mas iestat?jumi nav pieejami."
+        "Emblēmas iestatījumi nav pieejami."
       ],
       "Automatically show badge in footer": [
-        "Autom?tiski r?d?t embl?mu lapas k?jen?"
+        "Automātiski rādīt emblēmu lapas kājenē"
       ],
       "Optional. Off by default.": [
-        "Neoblig?ti. P?c noklus?juma izsl?gts."
+        "Neobligāti. Pēc noklusējuma izslēgts."
       ],
       "Show pageviews": [
-        "R?d?t lapu skat?jumus"
+        "Rādīt lapu skatījumus"
       ],
       "Human-classified page requests, not unique people.": [
-        "Par cilv?ku piepras?jumiem uzskat?tie lapu skat?jumi, nevis unik?lie cilv?ki."
+        "Par cilvēku pieprasījumiem uzskatītie lapu skatījumi, nevis unikālie cilvēki."
       ],
       "Show suspected bot requests": [
-        "R?d?t iesp?jamos robotu piepras?jumus"
+        "Rādīt iespējamos robotu pieprasījumus"
       ],
       "Bot detection is approximate.": [
-        "Robotu noteik?ana ir aptuvena."
+        "Robotu noteikšana ir aptuvena."
       ],
       "Show descriptions next to icons": [
-        "R?d?t aprakstus blakus ikon?m"
+        "Rādīt aprakstus blakus ikonām"
       ],
       "When disabled, accessible descriptions remain available.": [
-        "Izsl?dzot aprakstus, tie joproj?m b?s pieejami piek??stam?bas r?kiem."
+        "Izslēdzot aprakstus, tie joprojām būs pieejami piekļūstamības rīkiem."
       ],
       "Show Powered by SEO-TidY link": [
-        "R?d?t saiti ?Darbojas ar SEO-TidY?"
+        "Rādīt saiti „Darbojas ar SEO-TidY”"
       ],
       "Optional project attribution. Off by default.": [
-        "Neoblig?ta atsauce uz projektu. P?c noklus?juma izsl?gta."
+        "Neobligāta atsauce uz projektu. Pēc noklusējuma izslēgta."
       ],
       "Customize the optional public statistics badge.": [
-        "Piel?go neoblig?to publisk?s statistikas embl?mu."
+        "Pielāgo neobligāto publiskās statistikas emblēmu."
       ],
       "Analytics is disabled. Enable it in the Analytics tab before publishing the badge.": [
-        "Anal?tika ir izsl?gta. Pirms embl?mas public??anas iesl?dz to sada?? ?Anal?tika?."
+        "Analītika ir izslēgta. Pirms emblēmas publicēšanas ieslēdz to sadaļā „Analītika”."
       ],
       "Badge appearance": [
-        "Embl?mas izskats"
+        "Emblēmas izskats"
       ],
       "Transparent": [
-        "Caursp?d?gs"
+        "Caurspīdīgs"
       ],
       "Light": [
-        "Gai?s"
+        "Gaišs"
       ],
       "Dark": [
-        "Tum?s"
+        "Tumšs"
       ],
       "Live preview": [
-        "T?l?t?jais priek?skat?jums"
+        "Tūlītējais priekšskatījums"
       ],
       "Badge preview": [
-        "Embl?mas priek?skat?jums"
+        "Emblēmas priekšskatījums"
       ],
       "Powered by SEO-TidY": [
         "Darbojas ar SEO-TidY"
       ],
       "Badge contains no visible items.": [
-        "Embl?m? nav redzamu elementu."
+        "Emblēmā nav redzamu elementu."
       ],
       "Preview uses the current 30-day statistics. Changes are not published until saved. The final badge uses SVG icons.": [
-        "Priek?skat?jum? izmantota pa?reiz?j? 30 dienu statistika. Izmai?as netiek public?tas l?dz saglab??anai. Gala embl?m? izmantotas SVG ikonas."
+        "Priekšskatījumā izmantota pašreizējā 30 dienu statistika. Izmaiņas netiek publicētas līdz saglabāšanai. Gala emblēmā izmantotas SVG ikonas."
       ],
       "Shortcode:": [
-        "?skods:"
+        "Īskods:"
       ],
       "Badge settings saved.": [
-        "Embl?mas iestat?jumi saglab?ti."
+        "Emblēmas iestatījumi saglabāti."
       ],
       "Save badge settings": [
-        "Saglab?t embl?mas iestat?jumus"
+        "Saglabāt emblēmas iestatījumus"
       ],
       "Could not load community profile.": [
-        "Neizdev?s iel?d?t kopienas profilu."
+        "Neizdevās ielādēt kopienas profilu."
       ],
       "Could not save community profile.": [
-        "Neizdev?s saglab?t kopienas profilu."
+        "Neizdevās saglabāt kopienas profilu."
       ],
       "Community profile unavailable.": [
         "Kopienas profils nav pieejams."
       ],
       "Prepare your website profile for the future SEO-TidY community showcase.": [
-        "Sagatavo savas vietnes profilu n?kotnes SEO-TidY kopienas katalogam."
+        "Sagatavo savas vietnes profilu nākotnes SEO-TidY kopienas katalogam."
       ],
       "The public Wall of Fame directory is not active yet. Saving this profile stores data only on your WordPress website. No information is submitted or published externally.": [
-        "Publiskais Slavas sienas katalogs v?l nedarbojas. Saglab?jot ?o profilu, dati paliek tikai tav? WordPress vietn?. Nek?da inform?cija netiek nos?t?ta vai public?ta ?r?ji."
+        "Publiskais Slavas sienas katalogs vēl nedarbojas. Saglabājot šo profilu, dati paliek tikai tavā WordPress vietnē. Nekāda informācija netiek nosūtīta vai publicēta ārēji."
       ],
       "I would like to join Wall of Fame": [
-        "V?los pievienoties Slavas sienai"
+        "Vēlos pievienoties Slavas sienai"
       ],
       "Express interest in future voluntary registration. No automatic submission takes place.": [
-        "Izr?di interesi par turpm?ku br?vpr?t?gu re?istr?ciju. Autom?tiska pieteikuma nos?t??ana nenotiek."
+        "Izrādi interesi par turpmāku brīvprātīgu reģistrāciju. Automātiska pieteikuma nosūtīšana nenotiek."
       ],
       "Website name": [
         "Vietnes nosaukums"
       ],
       "Public website URL": [
-        "Publisk? vietnes adrese"
+        "Publiskā vietnes adrese"
       ],
       "Short website description": [
-        "?ss vietnes apraksts"
+        "Īss vietnes apraksts"
       ],
       "Profile preview": [
-        "Profila priek?skat?jums"
+        "Profila priekšskatījums"
       ],
       "Your website name": [
         "Tavas vietnes nosaukums"
@@ -635,13 +635,13 @@
         "Tavas vietnes apraksts"
       ],
       "Community profile saved locally.": [
-        "Kopienas profils saglab?ts vietn?."
+        "Kopienas profils saglabāts vietnē."
       ],
       "Save community profile": [
-        "Saglab?t kopienas profilu"
+        "Saglabāt kopienas profilu"
       ],
       "Views": [
-        "Skat?jumi"
+        "Skatījumi"
       ],
       "Bots": [
         "Boti"
