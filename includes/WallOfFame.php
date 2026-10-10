@@ -16,7 +16,7 @@ final class WallOfFame
             add_submenu_page('seo-tidy', __('Wall of Fame profile', 'seo-tidy'),
                 __('Wall of Fame profile', 'seo-tidy'), 'manage_options',
                 'seo-tidy-wall-profile', [self::class, 'profileEditor']);
-        });
+        }, 20);
         add_action('admin_post_seo_tidy_wall_profile_save', [self::class, 'saveProfile']);
         add_action('rest_api_init', static function (): void {
             register_rest_route('seo-tidy/v1', '/wall', [
