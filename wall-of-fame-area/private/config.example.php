@@ -11,5 +11,6 @@ return [
     'public_origin' => 'https://kas.id.lv/SEO-TidY/Wall-Of-Fame',
     'turnstile_site_key' => 'REPLACE_WITH_PUBLIC_KEY',
     'turnstile_secret' => 'REPLACE_WITH_SECRET',
+    'admin_email' => 'owner@example.org',
     'admin_token' => 'REPLACE_WITH_AT_LEAST_32_RANDOM_CHARACTERS',
 ];
