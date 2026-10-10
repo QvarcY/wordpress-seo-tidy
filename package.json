@@ -1,6 +1,6 @@
 {
     "name": "wordpress-seo-tidy",
-    "version": "0.1.0-beta.12",
+    "version": "0.1.0-beta.13",
     "description": "Free WordPress SEO and AI search readiness plugin",
     "main": "index.js",
     "scripts": {

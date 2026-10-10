@@ -696,6 +696,9 @@
       ],
       "Could not check your application status.": [
         "Neizdevās pārbaudīt pieteikuma statusu."
+      ],
+      "Loading...": [
+        "Ielādē..."
       ]
     }
   }
