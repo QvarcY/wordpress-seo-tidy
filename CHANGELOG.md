@@ -4,6 +4,11 @@ All notable changes to SEO-TidY will be documented here.
 
 ## [Unreleased]
 
+## [0.1.0-beta.10] - Pending release
+
+### Fixed
+- Corrected the public Latvian statistics badge label Skatījumi using an encoding-safe PHP Unicode escape
+
 ## [0.1.0-beta.9] - Pending release
 
 ### Fixed
