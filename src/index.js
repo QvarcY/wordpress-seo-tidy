@@ -867,15 +867,22 @@ function WallSiteRow({ site }) {
     const initials = (site.name || host || '?').trim().slice(0, 2).toUpperCase();
     const colors = ['#4667a8', '#287b74', '#895fa5', '#a46437', '#527b45'];
     const color = colors[Array.from(host).reduce((sum, char) => sum + char.charCodeAt(0), 0) % colors.length];
+    const profileUrl = host && Number(site.hasProfile) === 1
+        ? 'https://kas.id.lv/SEO-TidY/Wall-Of-Fame/?site=' + encodeURIComponent(host)
+        : null;
     return (
-        <a className="tidy-wall-site" href={site.url} target="_blank" rel="noopener noreferrer nofollow">
+        <div className="tidy-wall-site">
             <span className="tidy-wall-site-icon" style={{ backgroundColor: color }} aria-hidden="true">{initials}</span>
             <span className="tidy-wall-site-copy">
                 <strong>{site.name}</strong>
                 <small>{site.description}</small>
             </span>
             <span className="tidy-wall-site-host">{host}</span>
-        </a>
+            <span className="tidy-wall-site-actions">
+                {profileUrl && <a href={profileUrl} target="_blank" rel="noopener noreferrer">{__('View profile', 'seo-tidy')} ↗</a>}
+                <a href={site.url} target="_blank" rel="noopener noreferrer nofollow">{__('Visit website', 'seo-tidy')} ↗</a>
+            </span>
+        </div>
     );
 }
 
