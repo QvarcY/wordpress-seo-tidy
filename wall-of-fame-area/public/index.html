@@ -4,6 +4,8 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Discover websites supporting the free and open-source SEO-TidY WordPress plugin.">
 <meta name="referrer" content="no-referrer">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<link rel="canonical" href="https://kas.id.lv/SEO-TidY/Wall-Of-Fame/">
 <title>Wall of Fame · SEO-TidY</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -13,29 +15,20 @@
 <main class="shell">
 <section class="hero"><div class="eyebrow" data-i18n="eyebrow">The open-source community</div>
 <h1 data-i18n="headline">Real websites. Real people. Shared progress.</h1>
-<p data-i18n="intro">A voluntary showcase of websites that support SEO-TidY. Listings require domain verification and approval. No analytics data is collected or displayed here.</p>
+<p data-i18n="intro">The public directory of verified websites using the free SEO-TidY WordPress plugin. Join through the plugin, verify ownership and request approval. Listings are public to visitors and search engines.</p>
 <div class="actions"><a href="#directory" class="primary" data-i18n="browse">Explore websites</a><a href="#join" class="secondary" data-i18n="join">Join Wall of Fame</a></div>
 </section>
 <section id="directory"><div class="section-title"><div><div class="eyebrow" data-i18n="members">COMMUNITY</div><h2 data-i18n="directory">Featured websites</h2></div><p data-i18n="directory-note">Only verified, approved sites appear here.</p></div>
 <div id="sites" class="cards" aria-live="polite"></div><div class="center"><button id="more" type="button" hidden data-i18n="more">Load more</button></div></section>
 <section id="join" class="form-section"><div><div class="eyebrow" data-i18n="participate">PARTICIPATE</div><h2 data-i18n="join-title">Put your website on the map.</h2>
-<p data-i18n="join-info">Joining is free and optional. Submit a profile, prove control of the domain with a DNS TXT record and wait for review. You can withdraw at any time with your private management key.</p>
-<div class="steps"><div><b>01</b><span data-i18n="step1">Submit your profile</span></div><div><b>02</b><span data-i18n="step2">Verify your domain</span></div><div><b>03</b><span data-i18n="step3">Await approval</span></div></div></div>
-<div class="panel"><form id="apply"><label for="name" data-i18n="name">Website name</label><input id="name" name="name" minlength="2" maxlength="100" required autocomplete="organization">
-<label for="url" data-i18n="url">Website HTTPS URL</label><input id="url" name="url" type="url" placeholder="https://example.com" required>
-<label for="description" data-i18n="description">Short description (max 300 characters)</label><textarea id="description" name="description" maxlength="300" rows="4" required></textarea>
-<label class="consent"><input id="consent" type="checkbox" required><span data-i18n="consent">I consent to public display of my website name, URL and description after domain verification and administrator approval.</span></label>
-<div id="turnstile" aria-label="Human verification"></div>
-<button type="submit" class="primary" data-i18n="send">Submit for review</button><p class="fine" data-i18n="privacy">No visitor analytics, WordPress credentials or IP addresses are saved with the public listing.</p></form>
-<div id="submitted" hidden><h3 data-i18n="submitted">Application received</h3><p data-i18n="save-key">Save these private details now. The management key is shown only once.</p>
-<label data-i18n="id">Application ID</label><code id="new-id"></code><label data-i18n="secret">Private management key</label><code id="new-secret"></code>
-<label data-i18n="dns">Add this DNS TXT record</label><code id="dns-name"></code><code id="dns-value"></code>
-<button type="button" id="use-details" class="secondary" data-i18n="manage-now">Manage this application</button></div>
+<p data-i18n="join-info">Install SEO-TidY on your WordPress website and submit your application from the plugin. The plugin verifies ownership automatically; an administrator reviews each entry. Participation is free and optional.</p>
+<div class="steps"><div><b>01</b><span data-i18n="step1">Install SEO-TidY</span></div><div><b>02</b><span data-i18n="step2">Apply from the plugin</span></div><div><b>03</b><span data-i18n="step3">Await approval</span></div></div></div>
+<div class="panel">
+<h3 data-i18n="plugin-title">SEO-TidY plugin required</h3>
+<p data-i18n="plugin-rule">Wall of Fame is exclusively for websites using the SEO-TidY WordPress plugin. Install and activate the plugin, then open SEO-TidY → Wall of Fame in WordPress to submit your website. Ownership is verified before moderator approval.</p>
+<p data-i18n="plugin-explanation">The Wall of Fame is an open, publicly discoverable community directory. Approved entries include your website name, address and description. Search engines and AI crawlers can visit these public listings, but indexing, traffic and recommendations are not guaranteed.</p>
+<a class="primary" href="https://github.com/QvarcY/wordpress-seo-tidy/releases/latest" data-i18n="download">Download SEO-TidY</a>
 </div></section>
-<section id="manage" class="manage"><div class="section-title"><div><div class="eyebrow" data-i18n="account">SELF-SERVICE</div><h2 data-i18n="manage">Check or withdraw your application</h2></div></div>
-<div class="panel"><form id="manage-form"><label for="application-id" data-i18n="id">Application ID</label><input id="application-id" required autocomplete="off"><label for="management-key" data-i18n="secret">Private management key</label><input id="management-key" type="password" required autocomplete="off">
-<div class="buttons"><button type="button" id="status" data-i18n="check">Check status</button><button type="button" id="verify" data-i18n="verify">Verify DNS record</button><button type="button" id="remove" class="danger" data-i18n="remove">Withdraw / delete</button></div></form></div>
-</section>
 <p id="message" role="status" aria-live="polite"></p>
 </main><footer class="shell"><span>SEO-TidY · <span data-i18n="open">Free and open source</span></span><a href="https://github.com/QvarcY/wordpress-seo-tidy" rel="noopener noreferrer">Source ↗</a></footer>
 <script type="module" src="app.js"></script>
