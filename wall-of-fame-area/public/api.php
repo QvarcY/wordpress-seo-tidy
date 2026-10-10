@@ -256,35 +256,7 @@ try {
     }
 
     if ($route === 'apply' && $method === 'POST') {
-        $input = payload(); $name = value($input, 'name', 100);
-        $description = value($input, 'description', 300);
-        $site = domain(value($input, 'url', 2048));
-        if (!preg_match('/^[\p{L}\p{N} .,\x27()&@_-]{2,100}$/uD', $name) ||
-            $description === '' || mb_strlen($description, 'UTF-8') > 300 || !$site)
-            fail('Invalid name, description or HTTPS site URL');
-        if (($input['consent'] ?? false) !== true) fail('Explicit consent required');
-        if (!turnstile(value($input, 'turnstileToken', 2048), $config['turnstile_secret'], $config['public_origin']))
-            fail('Bot verification failed', 403);
-        $existing = sql($db, 'SELECT id, status FROM submissions WHERE host = ?', [$site['host']])->fetch();
-        if ($existing && $existing['status'] !== 'rejected')
-            fail('This domain already has an active application', 409);
-        $id = uuid(); $ownerSecret = bin2hex(random_bytes(32)); $challenge = bin2hex(random_bytes(32));
-        try {
-            if ($existing) {
-                sql($db, "UPDATE submissions SET id=?, name=?, url=?, description=?, owner_hash=?, challenge=?, status='pending',
-                    consent_at=UTC_TIMESTAMP(), verified_at=NULL, approved_at=NULL WHERE host=? AND status='rejected'",
-                    [$id,$name,$site['url'],$description,secret_hash($ownerSecret),$challenge,$site['host']]);
-            } else {
-                sql($db, "INSERT INTO submissions (id,host,name,url,description,owner_hash,challenge,status,consent_at)
-                    VALUES (?,?,?,?,?,?,?,'pending',UTC_TIMESTAMP())",
-                    [$id,$site['host'],$name,$site['url'],$description,secret_hash($ownerSecret),$challenge]);
-            }
-        } catch (PDOException $e) {
-            if ($e->getCode() === '23000') fail('This domain already has an active application', 409);
-            throw $e;
-        }
-        respond(['id'=>$id,'ownerSecret'=>$ownerSecret,'dnsName'=>'_seo-tidy.'.$site['host'],
-            'dnsValue'=>'seo-tidy-verification='.$challenge,'status'=>'pending'],201);
+        fail('Applications are accepted only through the SEO-TidY WordPress plugin', 403);
     }
 
     if (in_array($route, ['verify','status','remove'], true) && $method === 'POST') {
