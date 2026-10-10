@@ -8,7 +8,7 @@ Clean SEO. Smarter discovery. Completely free.
 
 ## Release status
 
-Version: **0.1.0-beta.6** (current development baseline)
+Version: **0.1.0-beta.7** (release candidate)
 
 This is a beta release for testing. It is not yet recommended
 for production websites without backups and compatibility testing.
