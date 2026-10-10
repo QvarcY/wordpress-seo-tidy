@@ -32,7 +32,12 @@ $schema=['@context'=>'https://schema.org','@type'=>'CollectionPage','name'=>'SEO
 $json=json_encode($schema,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT);
 $html=file_get_contents(__DIR__.'/index.html');
 if ($html===false) {http_response_code(500);exit;}
-$html=str_replace('<div id="sites" class="cards" aria-live="polite"></div>','<div id="sites" class="cards" aria-live="polite">'.$cards.'</div>',$html);
+$links='<nav class="directory-crawl-pages" aria-label="Directory page links">';
+if ($page>1) $links.='<a rel="prev" href="'.$esc($base.($page===2?'':'?page='.($page-1))).'">Previous page</a> ';
+$links.='<span>Page '.$page.'</span>';
+if ($more) $links.=' <a rel="next" href="'.$esc($base.'?page='.($page+1)).'">Next page</a>';
+$links.='</nav>';
+$html=str_replace('<div id="sites" class="cards" aria-live="polite"></div>','<div id="sites" class="cards" aria-live="polite">'.$cards.'</div>'.$links,$html);
 $html=str_replace('<link rel="canonical" href="'.$base.'">','<link rel="canonical" href="'.$esc($canonical).'">',$html);
 $html=str_replace('</head>','<script type="application/ld+json">'.$json.'</script></head>',$html);
 echo $html;
