@@ -20,6 +20,7 @@ final class InternalLinkingTranslations
             return $translation;
         }
         static $lv = [
+            'Show field explanation' => 'Rādīt lauka skaidrojumu',
             'Could not clear the link index. The scan has stopped.' => 'Neizdevās notīrīt saišu indeksu. Indeksēšana apturēta.',
             'Could not update the link index. The scan has stopped.' => 'Neizdevās atjaunināt saišu indeksu. Indeksēšana apturēta.',
             'Find an article' => 'Atrast rakstu',
