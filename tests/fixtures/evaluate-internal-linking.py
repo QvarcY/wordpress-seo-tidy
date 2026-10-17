@@ -10,10 +10,13 @@ stop = set("the and for with from this that into where what are can how the your
 
 def terms(value):
     t = unicodedata.normalize("NFC", value).lower()
-    return [x for x in re.findall(r"[^\\W_]+", t, re.UNICODE) if len(x) >= 3 and x not in stop]
+    return [x for x in re.findall(r"[^\W_]+", t, re.UNICODE) if len(x) >= 3 and x not in stop]
 
 def weighted(d):
-    return Counter(terms(d["title"]))*3 + Counter(terms(d["heading"]))*2 + Counter(terms(d["body"]))
+    result = Counter(terms(d["body"]))
+    result.update({k: 3 * v for k, v in Counter(terms(d["title"])).items()})
+    result.update({k: 2 * v for k, v in Counter(terms(d["heading"])).items()})
+    return result
 
 corpus = {k: weighted(d) for k,d in docs.items()}
 lengths = {k: sum(v.values()) for k,v in corpus.items()}
