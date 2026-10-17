@@ -17,6 +17,7 @@ final class SmartTopics
         }
         add_action('add_meta_boxes', [self::class, 'registerBox']);
         add_action('save_post', [self::class, 'save'], 10, 2);
+        add_action('admin_post_seo_tidy_topics_review', [self::class, 'saveReview']);
     }
 
     public static function registerBox(): void
@@ -151,4 +152,73 @@ final class SmartTopics
             'version' => 1, 'approved' => $approved, 'rejected' => $rejected
         ]);
     }
+    public static function renderReviewPanel(\WP_Post $post): void
+    {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+        $approved = self::approved($post->ID);
+        $proposals = self::suggestions($post);
+        $data = get_post_meta($post->ID, self::META, true);
+        $rejected = is_array($data) && !empty($data['rejected']) && is_array($data['rejected'])
+            ? $data['rejected'] : [];
+        echo '<details><summary>' . esc_html__('Review Smart Topics', 'seo-tidy') . '</summary>';
+        echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
+        echo '<input type="hidden" name="action" value="seo_tidy_topics_review">';
+        echo '<input type="hidden" name="post_id" value="' . esc_attr((string) $post->ID) . '">';
+        wp_nonce_field('seo_tidy_topics_review_' . $post->ID);
+        echo '<p><label>' . esc_html__('Approved topics', 'seo-tidy') .
+            '<br><input type="text" name="approved" style="width:100%;max-width:480px" value="' .
+            esc_attr(implode(', ', $approved)) . '"></label></p>';
+        echo '<p>' . esc_html__('Suggested topics', 'seo-tidy') . '</p>';
+        foreach ($proposals as $proposal) {
+            echo '<label style="margin-right:16px"><input type="checkbox" name="accept[]" value="' .
+                esc_attr($proposal) . '"> ' . esc_html($proposal) . '</label>';
+        }
+        echo '<p><label>' . esc_html__('Rejected topics', 'seo-tidy') .
+            '<br><input type="text" name="rejected" style="width:100%;max-width:480px" value="' .
+            esc_attr(implode(', ', $rejected)) . '"></label></p>';
+        submit_button(__('Save topics', 'seo-tidy'), 'secondary', 'submit', false);
+        echo '</form></details>';
+    }
+
+    public static function saveReview(): void
+    {
+        if (!current_user_can('manage_options')) {
+            wp_die(esc_html__('Permission denied.', 'seo-tidy'));
+        }
+        $id = isset($_POST['post_id']) && is_scalar($_POST['post_id'])
+            ? absint($_POST['post_id']) : 0;
+        $post = get_post($id);
+        if (!$post instanceof \WP_Post ||
+            !in_array($post->post_type, ['post', 'page'], true) ||
+            !current_user_can('edit_post', $id)) {
+            wp_die(esc_html__('Invalid article.', 'seo-tidy'));
+        }
+        check_admin_referer('seo_tidy_topics_review_' . $id);
+        $old = get_post_meta($id, self::META, true);
+        $approved = isset($_POST['approved']) && is_string($_POST['approved'])
+            ? self::listFromText(wp_unslash($_POST['approved'])) : [];
+        $rejected = isset($_POST['rejected']) && is_string($_POST['rejected'])
+            ? self::listFromText(wp_unslash($_POST['rejected'])) : [];
+        $choices = isset($_POST['accept']) && is_array($_POST['accept'])
+            ? array_slice(wp_unslash($_POST['accept']), 0, 12) : [];
+        $allowed = array_fill_keys(self::suggestions($post), true);
+        foreach ($choices as $choice) {
+            if (is_string($choice) && isset($allowed[$choice])) {
+                $approved[] = $choice;
+            }
+        }
+        $approved = self::listFromText(implode(',', $approved));
+        $approvedKeys = array_fill_keys(array_map([self::class, 'key'], $approved), true);
+        $rejected = array_values(array_filter($rejected, static fn($t) => !isset($approvedKeys[self::key($t)])));
+        $updated = ['version' => 1, 'approved' => $approved, 'rejected' => $rejected];
+        if ($updated !== $old) {
+            update_post_meta($id, self::META, $updated);
+            InternalLinkingIndex::invalidate($id);
+        }
+        wp_safe_redirect(admin_url('admin.php?page=seo-tidy-linking-preview&topics_saved=1'));
+        exit;
+    }
+
 }
