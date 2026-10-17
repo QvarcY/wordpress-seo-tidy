@@ -183,18 +183,17 @@ final class InternalLinkingPreview
         foreach ($allCandidates as $targetPost) {
             $documents[$targetPost->ID] = self::document($targetPost);
         }
-        $df = [];
-        $totalSize = 0;
-        foreach ($documents as $doc) {
-            $totalSize += $doc['size'];
-            foreach (array_keys($doc['terms']) as $term) {
-                $df[$term] = ($df[$term] ?? 0) + 1;
-            }
+        $stats = InternalLinkingIndex::corpusStats();
+        $total = (int) $stats['count'];
+        $avg = (float) $stats['avgdl'];
+        $allQueryTerms = [];
+        foreach ($sources as $sourcePost) {
+            $src = self::document($sourcePost);
+            $allQueryTerms = array_merge($allQueryTerms, $src['title'], $src['topics']);
         }
-        $total = count($documents);
-        $avg = $total ? $totalSize / $total : 1.0;
+        $df = InternalLinkingIndex::documentFrequency($allQueryTerms);
         echo '<div class="wrap"><h1>' . esc_html__('Internal Linking Preview', 'seo-tidy') . '</h1>';
-        echo '<p>' . esc_html__('Experimental read-only preview. Suggestions need manual review. Candidate retrieval uses the completed local index, capped at 30 targets per source. Results remain experimental.', 'seo-tidy') . '</p>';
+        echo '<p>' . esc_html__('Experimental read-only preview. Suggestions need manual review. Candidate retrieval uses the indexed token table, capped at 30 targets per source. Results remain experimental.', 'seo-tidy') . '</p>';
         echo '<p>' . esc_html(sprintf(
             /* translators: %d: articles indexed */
             __('Indexed articles: %d. Indexing is manual and resumable.', 'seo-tidy'),
