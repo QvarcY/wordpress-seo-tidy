@@ -54,7 +54,7 @@ final class InternalLinkingIndex
             PRIMARY KEY  (post_id,term),
             KEY term (term)
         ) {$collation};");
-        return $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table)) === $table;
+        return $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($table))) === $table;
     }
 
     public static function corpusStats(): array
@@ -117,7 +117,7 @@ final class InternalLinkingIndex
     {
         if (get_post_type($postId) && in_array(get_post_type($postId), ['post', 'page'], true)) {
             global $wpdb;
-            $wpdb->delete(self::table(), ['post_id' => $postId], ['%d']);
+            // The whole index becomes invalid; a rebuild clears all postings.
             delete_post_meta($postId, self::META);
             $state = self::state();
             $state['stale'] = true;
