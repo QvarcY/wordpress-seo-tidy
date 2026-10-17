@@ -77,7 +77,7 @@ final class InternalLinkingPreview
             'topics' => array_keys($topics), 'size' => max(1, array_sum($terms))];
     }
 
-    private static function eligible(\WP_Post $post): bool
+    public static function eligible(\WP_Post $post): bool
     {
         if ($post->post_status !== 'publish' || $post->post_password !== '' ||
             !in_array($post->post_type, ['post', 'page'], true)) {
