@@ -58,3 +58,15 @@ A small, scoped Latvian fallback for the newly added PHP administrator texts is 
 The index currently persists at most 300 term frequencies per document as serialized WordPress post metadata. For a completed scan, candidate retrieval queries the serialized metadata using bounded `LIKE` predicates. This verifies that the persisted index is genuinely consumed but does **not** create a proper inverted search index, and may be expensive for large databases. A 1000-post time/memory/database-query benchmark is still required before performance or scalability claims. BM25 document frequencies are still computed only over the retrieved candidate sample, not all indexed documents. The same-intent and canonical/robots checks remain heuristic and incomplete.
 
 **Validation status:** exact current GitHub PHP bytes were not fetched into a runtime for `php -l` or WordPress integration tests, because direct raw-GitHub access from the container is unavailable. The new PHP code has been reviewed but not verified by the PHP interpreter. Do not install on a public/production site, and keep PR #31 in draft until a real local checkout is checked.
+
+## Focused static audit (2026-10-17)
+
+An audit of the current PHP branch identified two concrete implementation hazards and applied narrowly scoped fixes:
+
+- **Stale index snapshots across restarts:** restarting after an edit or manual rebuild previously reset only the cursor, leaving old metadata records eligible for token matching. The scanner now deletes only its regenerable `_seo_tidy_link_index_v1` metadata rows before rebuilding, then repopulates them in bounded batches. Existing Smart Topics approvals and article content are left unchanged.
+- **Indexing known noindex content:** the scanner now skips password-protected posts and noindex posts marked through the two known Yoast/Rank Math metadata paths. Full effective robots/canonical policy remains a release blocker.
+- **Malformed nonce field:** the Smart Topics editor save handler now checks that the nonce value is a string before sanitization and verification.
+
+The installed command-line PHP interpreter was confirmed present (PHP 8.4), but the container cannot resolve github.com to clone the exact PR branch. Therefore no `php -l` success for these exact committed files, real WordPress behavior, benchmark or beta readiness is claimed. The release must stay blocked until exact-file PHP lint and WordPress integration checks are performed in an accessible checkout.
+
+**Additional algorithm blockers:** candidate retrieval uses expensive serialized metadata `LIKE` queries; the retrieved-article BM25 statistics are not corpus-wide; the 300-token truncation drops terms from long articles; and LV stemming/semantic equivalence is not implemented. Do not interpret completed index progress as validated completeness or performance.
