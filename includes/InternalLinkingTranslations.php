@@ -20,6 +20,9 @@ final class InternalLinkingTranslations
             return $translation;
         }
         static $lv = [
+            'Find an article' => 'Atrast rakstu',
+            'Search titles and content' => 'Meklēt virsrakstos un saturā',
+            'Search' => 'Meklēt',
             'Complete' => 'Pabeigts',
             'Needs rebuilding' => 'Nepieciešama pārbūve',
             'In progress or not started' => 'Procesā vai vēl nav sākts',
