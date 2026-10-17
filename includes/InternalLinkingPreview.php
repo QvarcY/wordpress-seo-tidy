@@ -192,7 +192,18 @@ final class InternalLinkingPreview
             $allQueryTerms = array_merge($allQueryTerms, $src['title'], $src['topics']);
         }
         $df = InternalLinkingIndex::documentFrequency($allQueryTerms);
-        echo '<div class="wrap"><h1>' . esc_html__('Internal Linking Preview', 'seo-tidy') . '</h1>';
+        echo '<div class="wrap seo-tidy-linking"><style>
+        .seo-tidy-linking{max-width:1200px}
+        .seo-tidy-linking .seo-tidy-link-item{background:#fff;border:1px solid #dcdcde;border-radius:7px;margin:8px 0;overflow:hidden}
+        .seo-tidy-linking .seo-tidy-link-item>summary{padding:14px 18px;cursor:pointer;font-weight:600;font-size:14px;display:list-item;list-style-position:inside}
+        .seo-tidy-linking .seo-tidy-link-item[open]>summary{border-bottom:1px solid #dcdcde;background:#f6f7f7}
+        .seo-tidy-linking .seo-tidy-link-body{padding:12px 18px 18px}
+        .seo-tidy-linking .seo-tidy-link-body details{padding:8px 12px;border:1px solid #dcdcde;border-radius:4px}
+        .seo-tidy-linking .seo-tidy-link-body form{max-width:700px}
+        .seo-tidy-linking .seo-tidy-link-body input[type=text]{max-width:100%}
+        .seo-tidy-linking .seo-tidy-help{display:inline-block;margin-left:5px;text-decoration:none;border:1px solid #8c8f94;border-radius:50%;font-size:11px;font-weight:600;line-height:17px;width:17px;text-align:center}
+        .seo-tidy-linking .seo-tidy-help:focus{outline:2px solid #2271b1}
+        </style><h1>' . esc_html__('Internal Linking Preview', 'seo-tidy') . '</h1>';
         echo '<p>' . esc_html__('Experimental read-only preview. Suggestions need manual review. Candidate retrieval uses the indexed token table, capped at 30 targets per source. Results remain experimental.', 'seo-tidy') . '</p>';
         echo '<p>' . esc_html(sprintf(
             /* translators: %d: articles indexed */
@@ -205,6 +216,7 @@ final class InternalLinkingPreview
         submit_button(__('Index next 25 articles', 'seo-tidy'), 'secondary', 'submit', false);
         echo ' <label><input type="checkbox" name="restart" value="1"> ' .
             esc_html__('Rebuild index from beginning', 'seo-tidy') . '</label>';
+        echo ' <span class="seo-tidy-help" tabindex="0" title="' . esc_attr__('Rebuilding clears the existing experimental index and starts again. Only use it if content has changed substantially or the index is invalid.', 'seo-tidy') . '" aria-label="' . esc_attr__('Rebuilding clears the existing experimental index and starts again. Only use it if content has changed substantially or the index is invalid.', 'seo-tidy') . '">?</span>';
         echo '</form>';
         if (!$ready) {
             echo '<p class="notice notice-info">' .
@@ -213,7 +225,7 @@ final class InternalLinkingPreview
         }
         foreach ($sources as $post) {
             $src = self::document($post);
-            echo '<h2>' . esc_html(get_the_title($post)) . '</h2>';
+            echo '<details class="seo-tidy-link-item"><summary>' . esc_html(get_the_title($post)) . '</summary><div class="seo-tidy-link-body">';
             SmartTopics::renderReviewPanel($post);
             echo '<ul>';
             $ranked = [];
@@ -260,7 +272,7 @@ final class InternalLinkingPreview
             if (!$ranked) {
                 echo '<li>' . esc_html__('No reviewable candidates in the bounded sample.', 'seo-tidy') . '</li>';
             }
-            echo '</ul>';
+            echo '</ul></div></details>';
         }
         if ($page > 1) {
             echo '<a class="button" href="' . esc_url(add_query_arg('source_page', $page - 1)) . '">' .
