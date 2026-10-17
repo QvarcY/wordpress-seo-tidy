@@ -15,6 +15,7 @@ final class Bootstrap
         require_once __DIR__ . '/Dashboard.php';
         require_once __DIR__ . '/SEOAudit.php';
         require_once __DIR__ . '/InternalLinkingPreview.php';
+        require_once __DIR__ . '/SmartTopics.php';
         require_once __DIR__ . '/AnswerReadiness.php';
         require_once __DIR__ . '/Migration.php';
         require_once __DIR__ . '/GitHubUpdater.php';
@@ -27,6 +28,7 @@ final class Bootstrap
         Dashboard::init();
         SEOAudit::init();
         InternalLinkingPreview::init();
+        SmartTopics::init();
         AnswerReadiness::init();
         Migration::init();
         GitHubUpdater::init();
