@@ -36,6 +36,11 @@ final class InternalLinkingPreview
         }));
     }
 
+    public static function termTokens(string $text): array
+    {
+        return self::tokens($text);
+    }
+
     public static function indexTerms(\WP_Post $post): array
     {
         $body = wp_strip_all_tags(strip_shortcodes($post->post_content));
@@ -154,23 +159,24 @@ final class InternalLinkingPreview
             'posts_per_page' => 25, 'paged' => $page, 'orderby' => 'ID', 'order' => 'ASC',
             'no_found_rows' => false, 'ignore_sticky_posts' => true]);
         $sources = array_filter($query->posts, [self::class, 'eligible']);
-        // Per-source retrieval; at most 30 candidates, no first-200 cap.
+        $state = InternalLinkingIndex::state();
+        $ready = !empty($state['complete']) && empty($state['stale']);
         $candidateSets = [];
         $allCandidates = [];
-        foreach ($sources as $sourcePost) {
-            $phrase = implode(' ', array_slice(self::tokens($sourcePost->post_title), 0, 4));
-            $found = get_posts([
-                'post_type' => ['post', 'page'], 'post_status' => 'publish',
-                's' => $phrase, 'posts_per_page' => 30, 'suppress_filters' => false,
-                'ignore_sticky_posts' => true
-            ]);
-            $candidateSets[$sourcePost->ID] = [];
-            foreach ($found as $targetPost) {
-                if (!self::eligible($targetPost)) {
-                    continue;
+        if ($ready) {
+            foreach ($sources as $sourcePost) {
+                $srcDoc = self::document($sourcePost);
+                $queryTerms = array_unique(array_merge($srcDoc['title'], $srcDoc['topics']));
+                $ids = InternalLinkingIndex::candidateIds($queryTerms, $sourcePost->ID, 30);
+                $candidateSets[$sourcePost->ID] = [];
+                foreach ($ids as $id) {
+                    $targetPost = get_post($id);
+                    if (!$targetPost instanceof \WP_Post || !self::eligible($targetPost)) {
+                        continue;
+                    }
+                    $candidateSets[$sourcePost->ID][$id] = true;
+                    $allCandidates[$id] = $targetPost;
                 }
-                $candidateSets[$sourcePost->ID][$targetPost->ID] = true;
-                $allCandidates[$targetPost->ID] = $targetPost;
             }
         }
         $documents = [];
@@ -188,8 +194,7 @@ final class InternalLinkingPreview
         $total = count($documents);
         $avg = $total ? $totalSize / $total : 1.0;
         echo '<div class="wrap"><h1>' . esc_html__('Internal Linking Preview', 'seo-tidy') . '</h1>';
-        echo '<p>' . esc_html__('Experimental read-only preview. Suggestions need manual review. Candidate discovery is limited to 30 search matches per source; results are incomplete and not site-wide.', 'seo-tidy') . '</p>';
-        $state = InternalLinkingIndex::state();
+        echo '<p>' . esc_html__('Experimental read-only preview. Suggestions need manual review. Candidate retrieval uses the completed local index, capped at 30 targets per source. Results remain experimental.', 'seo-tidy') . '</p>';
         echo '<p>' . esc_html(sprintf(
             /* translators: %d: articles indexed */
             __('Indexed articles: %d. Indexing is manual and resumable.', 'seo-tidy'),
@@ -199,10 +204,19 @@ final class InternalLinkingPreview
         echo '<input type="hidden" name="action" value="seo_tidy_link_scan">';
         wp_nonce_field('seo_tidy_link_scan');
         submit_button(__('Index next 25 articles', 'seo-tidy'), 'secondary', 'submit', false);
+        echo ' <label><input type="checkbox" name="restart" value="1"> ' .
+            esc_html__('Rebuild index from beginning', 'seo-tidy') . '</label>';
         echo '</form>';
+        if (!$ready) {
+            echo '<p class="notice notice-info">' .
+                esc_html__('Complete the index scan before candidate results are displayed.', 'seo-tidy') .
+                '</p>';
+        }
         foreach ($sources as $post) {
             $src = self::document($post);
-            echo '<h2>' . esc_html(get_the_title($post)) . '</h2><ul>';
+            echo '<h2>' . esc_html(get_the_title($post)) . '</h2>';
+            SmartTopics::renderReviewPanel($post);
+            echo '<ul>';
             $ranked = [];
             foreach ($documents as $id => $target) {
                 if (!isset($candidateSets[$post->ID][$id])) {
