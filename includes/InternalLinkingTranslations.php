@@ -20,6 +20,9 @@ final class InternalLinkingTranslations
             return $translation;
         }
         static $lv = [
+            'Internal Links' => 'Iekšējās saites',
+            'Find relevant internal links and manage topics directly in each article editor.' => 'Atrodi atbilstošas iekšējās saites un pārvaldi tēmas tieši katra raksta redaktorā.',
+            'The overview shows the indexing status and helps you find the article to work on.' => 'Pārskatā redzams indeksēšanas statuss, un tur var atrast rakstu, ar kuru vēlies strādāt.',
             'Open internal linking overview' => 'Atvērt iekšējo saišu pārskatu',
             'Internal linking overview' => 'Iekšējo saišu pārskats',
             'SEO-TidY internal links' => 'SEO-TidY iekšējās saites',
