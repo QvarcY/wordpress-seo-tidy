@@ -212,6 +212,12 @@ final class Bootstrap
             [
                 'linkingEnabled' => defined('SEO_TIDY_INTERNAL_LINKING_PREVIEW') && SEO_TIDY_INTERNAL_LINKING_PREVIEW === true,
                 'linkingUrl' => admin_url('admin.php?page=seo-tidy-linking-preview'),
+                'linkingLabels' => [
+                    'tab' => __('Internal Links', 'seo-tidy'),
+                    'intro' => __('Find relevant internal links and manage topics directly in each article editor.', 'seo-tidy'),
+                    'description' => __('The overview shows the indexing status and helps you find the article to work on.', 'seo-tidy'),
+                    'open' => __('Open internal linking overview', 'seo-tidy'),
+                ],
                 'heroUrl' => plugins_url(
                     'assets/seo-tidy-hero.webp',
                     SEO_TIDY_PATH . 'seo-tidy.php'
