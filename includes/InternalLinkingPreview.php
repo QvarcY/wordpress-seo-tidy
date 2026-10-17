@@ -15,6 +15,7 @@ final class InternalLinkingPreview
             return;
         }
         add_action('admin_menu', [self::class, 'menu'], 20);
+        add_action('add_meta_boxes', [self::class, 'registerEditorBox']);
     }
 
     public static function menu(): void
@@ -145,6 +146,89 @@ final class InternalLinkingPreview
         return false;
     }
 
+
+    public static function registerEditorBox(): void
+    {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+        foreach (['post', 'page'] as $type) {
+            add_meta_box('seo-tidy-link-recommendations',
+                __('SEO-TidY internal links', 'seo-tidy'),
+                [self::class, 'renderEditorBox'], $type, 'normal', 'default');
+        }
+    }
+
+    public static function suggestionsForPost(\WP_Post $post): array
+    {
+        $state = InternalLinkingIndex::state();
+        if (empty($state['complete']) || !empty($state['stale']) || !self::eligible($post)) {
+            return [];
+        }
+        $src = self::document($post);
+        $queryTerms = array_unique(array_merge($src['title'], $src['topics']));
+        $ids = InternalLinkingIndex::candidateIds($queryTerms, $post->ID, 30);
+        $stats = InternalLinkingIndex::corpusStats();
+        if (empty($stats['count'])) {
+            return [];
+        }
+        $df = InternalLinkingIndex::documentFrequency($queryTerms);
+        $ranked = [];
+        foreach ($ids as $id) {
+            $target = get_post($id);
+            if (!$target instanceof \WP_Post || !self::eligible($target) || $id === $post->ID) {
+                continue;
+            }
+            $dst = self::document($target);
+            $context = array_intersect($dst['title'], array_keys($src['body_terms']));
+            if (!$context || self::linksTo($post->post_content, $id)) {
+                continue;
+            }
+            if (count(array_intersect($src['topics'], $dst['topics'])) >= 2 &&
+                count(array_intersect($src['title'], $dst['title'])) >= 2) {
+                continue;
+            }
+            $score = self::bm25($src, $dst, $df, (int) $stats['count'], (float) $stats['avgdl']);
+            if ($score > 0) {
+                $ranked[] = ['post' => $target, 'score' => $score,
+                    'context' => implode(', ', array_slice(array_unique($context), 0, 5))];
+            }
+        }
+        usort($ranked, static fn($a, $b) => $b['score'] <=> $a['score']);
+        return array_slice($ranked, 0, 5);
+    }
+
+    public static function renderEditorBox(\WP_Post $post): void
+    {
+        echo '<p class="description">' .
+            esc_html__('These suggestions are for this article only. Review the destination and insert links manually where they help readers.', 'seo-tidy') .
+            '</p>';
+        $state = InternalLinkingIndex::state();
+        if (empty($state['complete']) || !empty($state['stale'])) {
+            echo '<p>' . esc_html__('Complete the index scan from SEO-TidY before reviewing links.', 'seo-tidy') .
+                ' <a href="' . esc_url(admin_url('admin.php?page=seo-tidy-linking-preview')) . '">' .
+                esc_html__('Open link overview', 'seo-tidy') . '</a></p>';
+            return;
+        }
+        $suggestions = self::suggestionsForPost($post);
+        if (!$suggestions) {
+            echo '<p>' . esc_html__('No reviewable link suggestions for this article.', 'seo-tidy') . '</p>';
+            return;
+        }
+        echo '<ul>';
+        foreach ($suggestions as $item) {
+            $target = $item['post'];
+            echo '<li style="padding:10px 0;border-bottom:1px solid #dcdcde"><strong>' .
+                esc_html(get_the_title($target)) . '</strong><p class="description">' .
+                esc_html(wp_trim_words(wp_strip_all_tags(strip_shortcodes($target->post_content)), 32, '…')) .
+                '</p><p>' . esc_html__('Matching terms', 'seo-tidy') . ': ' .
+                esc_html($item['context']) . '</p><a class="button button-secondary" target="_blank" rel="noopener noreferrer" href="' .
+                esc_url(get_permalink($target)) . '">' . esc_html__('View destination', 'seo-tidy') .
+                '</a></li>';
+        }
+        echo '</ul>';
+    }
+
     public static function render(): void
     {
         if (!current_user_can('manage_options')) {
@@ -152,152 +236,73 @@ final class InternalLinkingPreview
         }
         $page = isset($_GET['source_page']) && is_scalar($_GET['source_page'])
             ? max(1, absint($_GET['source_page'])) : 1;
-        if (get_option('blog_public') === '0') {
-            echo '<div class="notice notice-warning"><p>' . esc_html__('Search engines are discouraged at site level; indexability cannot be confirmed.', 'seo-tidy') . '</p></div>';
-        }
         $search = isset($_GET['link_search']) && is_string($_GET['link_search'])
             ? sanitize_text_field(wp_unslash($_GET['link_search'])) : '';
-        $query = new \WP_Query(['s' => $search, 'post_type' => ['post', 'page'], 'post_status' => 'publish',
-            'posts_per_page' => 25, 'paged' => $page, 'orderby' => 'ID', 'order' => 'ASC',
-            'no_found_rows' => false, 'ignore_sticky_posts' => true]);
-        $sources = array_filter($query->posts, [self::class, 'eligible']);
+        $query = new \WP_Query(['s' => $search, 'post_type' => ['post', 'page'],
+            'post_status' => 'publish', 'posts_per_page' => 25, 'paged' => $page,
+            'orderby' => 'ID', 'order' => 'ASC', 'no_found_rows' => false,
+            'ignore_sticky_posts' => true]);
         $state = InternalLinkingIndex::state();
         $ready = !empty($state['complete']) && empty($state['stale']);
-        $candidateSets = [];
-        $allCandidates = [];
-        if ($ready) {
-            foreach ($sources as $sourcePost) {
-                $srcDoc = self::document($sourcePost);
-                $queryTerms = array_unique(array_merge($srcDoc['title'], $srcDoc['topics']));
-                $ids = InternalLinkingIndex::candidateIds($queryTerms, $sourcePost->ID, 30);
-                $candidateSets[$sourcePost->ID] = [];
-                foreach ($ids as $id) {
-                    $targetPost = get_post($id);
-                    if (!$targetPost instanceof \WP_Post || !self::eligible($targetPost)) {
-                        continue;
-                    }
-                    $candidateSets[$sourcePost->ID][$id] = true;
-                    $allCandidates[$id] = $targetPost;
-                }
-            }
-        }
-        $documents = [];
-        foreach ($allCandidates as $targetPost) {
-            $documents[$targetPost->ID] = self::document($targetPost);
-        }
-        $stats = InternalLinkingIndex::corpusStats();
-        $total = (int) $stats['count'];
-        $avg = (float) $stats['avgdl'];
-        $allQueryTerms = [];
-        foreach ($sources as $sourcePost) {
-            $src = self::document($sourcePost);
-            $allQueryTerms = array_merge($allQueryTerms, $src['title'], $src['topics']);
-        }
-        $df = InternalLinkingIndex::documentFrequency($allQueryTerms);
-        echo '<div class="wrap seo-tidy-linking"><style>
-        .seo-tidy-linking{max-width:1200px}
-        .seo-tidy-linking .seo-tidy-link-item{background:#fff;border:1px solid #dcdcde;border-radius:7px;margin:8px 0;overflow:hidden}
-        .seo-tidy-linking .seo-tidy-link-item>summary{padding:14px 18px;cursor:pointer;font-weight:600;font-size:14px;display:list-item;list-style-position:inside}
-        .seo-tidy-linking .seo-tidy-link-item[open]>summary{border-bottom:1px solid #dcdcde;background:#f6f7f7}
-        .seo-tidy-linking .seo-tidy-link-body{padding:12px 18px 18px}
-        .seo-tidy-linking .seo-tidy-link-body details{padding:8px 12px;border:1px solid #dcdcde;border-radius:4px}
-        .seo-tidy-linking .seo-tidy-link-body form{max-width:700px}
-        .seo-tidy-linking .seo-tidy-link-body input[type=text]{max-width:100%}
-        .seo-tidy-help{display:inline-block;vertical-align:middle;margin-left:6px;position:relative;font-weight:normal}
-        .seo-tidy-help>summary{display:inline-flex!important;align-items:center;justify-content:center;list-style:none!important;width:19px;height:19px;border:1px solid #2271b1;border-radius:50%;color:#2271b1;background:#fff;font-size:12px;font-weight:700;cursor:pointer;padding:0}
-        .seo-tidy-help>summary::-webkit-details-marker{display:none}
-        .seo-tidy-help>summary:focus-visible{outline:2px solid #2271b1;outline-offset:2px}
-        .seo-tidy-help[open]>.seo-tidy-help-text{display:block;position:absolute;z-index:100;top:25px;left:0;min-width:240px;max-width:min(360px,75vw);padding:12px 14px;background:#fff;border:1px solid #8c8f94;box-shadow:0 3px 12px rgba(0,0,0,.15);border-radius:5px;color:#1d2327;font-size:13px;line-height:1.5;text-align:left;font-weight:400;white-space:normal}
-        </style><h1>' . esc_html__('Internal Linking Preview', 'seo-tidy') . '</h1>';
-        echo '<p>' . esc_html__('Experimental read-only preview. Suggestions need manual review. Candidate retrieval uses the indexed token table, capped at 30 targets per source. Results remain experimental.', 'seo-tidy') . '</p>';
         $processed = max(0, (int) ($state['processed'] ?? 0));
-        $status = $ready ? __('Complete', 'seo-tidy') :
-            (!empty($state['stale']) ? __('Needs rebuilding', 'seo-tidy') : __('In progress or not started', 'seo-tidy'));
-        echo '<div class="notice notice-info inline"><p><strong>' .
-            esc_html__('Index status', 'seo-tidy') . ':</strong> ' . esc_html($status) .
-            ' &middot; ' . esc_html(sprintf(
-                __('Processed: %d articles', 'seo-tidy'), $processed
-            )) . '</p></div>';
+        echo '<div class="wrap" style="max-width:1180px">';
+        echo '<h1>' . esc_html__('Internal linking overview', 'seo-tidy') . '</h1>';
+        echo '<p class="description">' . esc_html__('Find an article here, then manage topics and review suggested links in its WordPress editor.', 'seo-tidy') . '</p>';
+        echo '<div class="postbox" style="padding:16px;margin-top:18px"><h2 style="margin:0 0 8px">' .
+            esc_html__('Index status', 'seo-tidy') . '</h2><p>' .
+            esc_html($ready ? __('Complete', 'seo-tidy') :
+                (!empty($state['stale']) ? __('Needs rebuilding', 'seo-tidy') : __('In progress or not started', 'seo-tidy'))) .
+            ' · ' . esc_html(sprintf(__('Processed: %d articles', 'seo-tidy'), $processed)) . '</p>';
         echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
         echo '<input type="hidden" name="action" value="seo_tidy_link_scan">';
         wp_nonce_field('seo_tidy_link_scan');
         submit_button(__('Index next 25 articles', 'seo-tidy'), 'secondary', 'submit', false);
-        echo ' <label><input type="checkbox" name="restart" value="1"> ' .
+        echo ' <label style="margin-left:12px"><input type="checkbox" name="restart" value="1"> ' .
             esc_html__('Rebuild index from beginning', 'seo-tidy') . '</label>';
-        echo ' <details class="seo-tidy-help"><summary aria-label="' . esc_attr__('Show field explanation', 'seo-tidy') . '">?</summary><span class="seo-tidy-help-text" role="note">' . esc_html__('Rebuilding clears the existing experimental index and starts again. Only use it if content has changed substantially or the index is invalid.', 'seo-tidy') . '</span></details>';
-        echo '</form>';
-        if (!$ready) {
-            echo '<p class="notice notice-info">' .
-                esc_html__('Complete the index scan before candidate results are displayed.', 'seo-tidy') .
-                '</p>';
-        }
-        echo '<form method="get" class="seo-tidy-link-search">';
-        echo '<input type="hidden" name="page" value="seo-tidy-linking-preview">';
-        echo '<label for="seo-tidy-link-search-input">' . esc_html__('Find an article', 'seo-tidy') . '</label> ';
-        echo '<input id="seo-tidy-link-search-input" type="search" name="link_search" value="' . esc_attr($search) . '" placeholder="' . esc_attr__('Search titles and content', 'seo-tidy') . '"> ';
+        echo ' <details style="display:inline-block;vertical-align:middle;margin-left:8px"><summary style="cursor:pointer;color:#2271b1">' .
+            esc_html__('What does rebuilding do?', 'seo-tidy') . '</summary><p>' .
+            esc_html__('Rebuilding clears the existing experimental index and starts again. Only use it if content has changed substantially or the index is invalid.', 'seo-tidy') .
+            '</p></details></form></div>';
+        echo '<form method="get" style="margin:20px 0"><input type="hidden" name="page" value="seo-tidy-linking-preview">';
+        echo '<label for="seo-tidy-article-search" class="screen-reader-text">' . esc_html__('Find an article', 'seo-tidy') . '</label>';
+        echo '<input id="seo-tidy-article-search" class="regular-text" type="search" name="link_search" value="' .
+            esc_attr($search) . '" placeholder="' . esc_attr__('Search titles and content', 'seo-tidy') . '"> ';
         submit_button(__('Search', 'seo-tidy'), 'secondary', 'submit', false);
         echo '</form>';
-        foreach ($sources as $post) {
-            $src = self::document($post);
-            echo '<details class="seo-tidy-link-item"><summary>' . esc_html(get_the_title($post)) . '</summary><div class="seo-tidy-link-body">';
-            SmartTopics::renderReviewPanel($post);
-            echo '<h3>' . esc_html__('Suggested internal links', 'seo-tidy') . '</h3>';
-            echo '<p class="description">' . esc_html__('Suggestions are not inserted automatically. Check the destination and reading context before adding a link to your article.', 'seo-tidy') . '</p>';
-            echo '<ul>';
-            $ranked = [];
-            foreach ($documents as $id => $target) {
-                if (!isset($candidateSets[$post->ID][$id])) {
-                    continue;
-                }
-                if ($id === $post->ID) {
-                    continue;
-                }
-                $shared = array_intersect($src['topics'], $target['topics']);
-                $context = array_intersect($target['title'], array_keys($src['body_terms']));
-                if (!$shared && !$context) {
-                    continue;
-                }
-                // Conservative lexical gate: require explicit target title terms in source text.
-                if (count($context) < 1) {
-                    continue;
-                }
-                $url = get_permalink($target['post']);
-                if (!$url || !wp_parse_url($url, PHP_URL_HOST) ||
-                    wp_parse_url($url, PHP_URL_HOST) !== wp_parse_url(home_url(), PHP_URL_HOST)) {
-                    continue;
-                }
-                // Check directed existing links using WordPress HTML parsing, not raw URL substrings.
-                if (self::linksTo($post->post_content, $id)) {
-                    continue;
-                }
-                $sourceTopics = array_intersect($src['topics'], $target['topics']);
-                if (count($sourceTopics) >= 2 && count(array_intersect($src['title'], $target['title'])) >= 2) {
-                    continue; // Possible competing intent; do not label as confident.
-                }
-                $score = self::bm25($src, $target, $df, $total, $avg);
-                if ($score > 0) {
-                    $ranked[] = ['score' => $score, 'post' => $target['post']];
-                }
-            }
-            usort($ranked, static fn($a, $b) => $b['score'] <=> $a['score']);
-            foreach (array_slice($ranked, 0, 5) as $candidate) {
-                echo '<li><a href="' . esc_url(get_edit_post_link($candidate['post']->ID)) . '">' .
-                    esc_html(get_the_title($candidate['post'])) . '</a> — ' .
-                    esc_html__('Review manually; topical similarity is not proof of complementary intent.', 'seo-tidy') . '</li>';
-            }
-            if (!$ranked) {
-                echo '<li>' . esc_html__('No reviewable candidates in the bounded sample.', 'seo-tidy') . '</li>';
-            }
-            echo '</ul></div></details>';
+        echo '<table class="wp-list-table widefat fixed striped"><thead><tr><th style="width:48%">' .
+            esc_html__('Article', 'seo-tidy') . '</th><th>' .
+            esc_html__('Topics', 'seo-tidy') . '</th><th>' .
+            esc_html__('Index', 'seo-tidy') . '</th><th>' .
+            esc_html__('Action', 'seo-tidy') . '</th></tr></thead><tbody>';
+        if (!$query->posts) {
+            echo '<tr><td colspan="4">' . esc_html__('No articles found.', 'seo-tidy') . '</td></tr>';
         }
+        foreach ($query->posts as $post) {
+            $eligible = self::eligible($post);
+            $entry = InternalLinkingIndex::entry($post->ID);
+            $topicCount = count(SmartTopics::approved($post->ID));
+            echo '<tr><td><strong>' . esc_html(get_the_title($post)) .
+                '</strong><p class="description">' .
+                esc_html(wp_trim_words(wp_strip_all_tags(strip_shortcodes($post->post_content)), 20, '…')) .
+                '</p></td><td>' . esc_html((string) $topicCount) .
+                '</td><td>' . esc_html(!$eligible ? __('Excluded', 'seo-tidy') :
+                    (!$ready ? __('Pending', 'seo-tidy') :
+                    (!empty($entry) ? __('Indexed', 'seo-tidy') : __('Not indexed', 'seo-tidy')))) .
+                '</td><td><a class="button button-secondary" href="' .
+                esc_url(get_edit_post_link($post->ID)) . '">' .
+                esc_html__('Open in editor', 'seo-tidy') . '</a></td></tr>';
+        }
+        echo '</tbody></table><p style="margin-top:18px">';
         if ($page > 1) {
-            echo '<a class="button" href="' . esc_url(add_query_arg('source_page', $page - 1)) . '">' .
+            echo '<a class="button" href="' .
+                esc_url(add_query_arg(['source_page' => $page - 1, 'link_search' => $search])) . '">' .
                 esc_html__('Previous', 'seo-tidy') . '</a> ';
         }
         if ($page < (int) $query->max_num_pages) {
-            echo '<a class="button" href="' . esc_url(add_query_arg('source_page', $page + 1)) . '">' .
+            echo '<a class="button" href="' .
+                esc_url(add_query_arg(['source_page' => $page + 1, 'link_search' => $search])) . '">' .
                 esc_html__('Next', 'seo-tidy') . '</a>';
         }
-        echo '</div>';
+        echo '</p></div>';
     }
 }
