@@ -108,6 +108,13 @@ final class SmartTopics
             return;
         }
         wp_nonce_field('seo_tidy_smart_topics_' . $post->ID, 'seo_tidy_smart_topics_nonce');
+        echo '<style>
+        #seo-tidy-smart-topics .seo-tidy-help{display:inline-block;position:relative;vertical-align:middle;margin-left:6px}
+        #seo-tidy-smart-topics .seo-tidy-help>summary{display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;border-radius:50%;border:1px solid #2271b1;background:#fff;color:#2271b1;list-style:none;cursor:pointer;font-weight:700}
+        #seo-tidy-smart-topics .seo-tidy-help>summary::-webkit-details-marker{display:none}
+        #seo-tidy-smart-topics .seo-tidy-help[open]>.seo-tidy-help-text{display:block;position:absolute;left:0;top:25px;z-index:100;min-width:220px;max-width:340px;border:1px solid #8c8f94;background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.15);padding:12px;border-radius:5px;color:#1d2327;font-size:13px;line-height:1.5;font-weight:400;white-space:normal}
+        </style>';
+
         $approved = self::approved($post->ID);
         echo '<p>' . esc_html__('Approved topics (comma separated):', 'seo-tidy') . self::help(__('Enter a few specific subjects separated by commas. These private labels help find relevant internal links; they do not change your public tags or search results directly.', 'seo-tidy')) . '</p>';
         echo '<textarea name="seo_tidy_smart_topics_approved" rows="3" style="width:100%">' .
@@ -177,17 +184,19 @@ final class SmartTopics
         echo '<input type="hidden" name="action" value="seo_tidy_topics_review">';
         echo '<input type="hidden" name="post_id" value="' . esc_attr((string) $post->ID) . '">';
         wp_nonce_field('seo_tidy_topics_review_' . $post->ID);
-        echo '<p><label>' . esc_html__('Approved topics', 'seo-tidy') . self::help(__('Enter a few specific subjects separated by commas. These private labels help find relevant internal links; they do not change your public tags or search results directly.', 'seo-tidy')) .
+        echo '<p><label>' . esc_html__('Approved topics', 'seo-tidy') .
             '<br><input type="text" name="approved" style="width:100%;max-width:480px" value="' .
-            esc_attr(implode(', ', $approved)) . '"></label></p>';
+            esc_attr(implode(', ', $approved)) . '"></label>' .
+            self::help(__('Enter a few specific subjects separated by commas. These private labels help find relevant internal links; they do not change your public tags or search results directly.', 'seo-tidy')) . '</p>';
         echo '<p>' . esc_html__('Suggested topics', 'seo-tidy') . self::help(__('Suggestions come from the article title and existing categories or tags. Select only topics that genuinely describe the article; unselected suggestions are not saved.', 'seo-tidy')) . '</p>';
         foreach ($proposals as $proposal) {
             echo '<label style="margin-right:16px"><input type="checkbox" name="accept[]" value="' .
                 esc_attr($proposal) . '"> ' . esc_html($proposal) . '</label>';
         }
-        echo '<p><label>' . esc_html__('Rejected topics', 'seo-tidy') . self::help(__('Add irrelevant subjects separated by commas. Rejected labels will not be suggested again for this article; they can be removed later.', 'seo-tidy')) .
+        echo '<p><label>' . esc_html__('Rejected topics', 'seo-tidy') .
             '<br><input type="text" name="rejected" style="width:100%;max-width:480px" value="' .
-            esc_attr(implode(', ', $rejected)) . '"></label></p>';
+            esc_attr(implode(', ', $rejected)) . '"></label>' .
+            self::help(__('Add irrelevant subjects separated by commas. Rejected labels will not be suggested again for this article; they can be removed later.', 'seo-tidy')) . '</p>';
         submit_button(__('Save topics', 'seo-tidy'), 'secondary', 'submit', false);
         echo '</form></details>';
     }
