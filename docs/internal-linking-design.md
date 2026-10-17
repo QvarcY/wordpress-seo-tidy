@@ -80,6 +80,35 @@ These labels are specification examples, **not results from the implementation**
 
 **Interpretation:** `Recommend` means *eligible for a reviewable suggestion*, never automatic insertion. `Uncertain` means show as an optional review warning or suppress, never a confident recommendation. `Reject` means no suggestion. Titles alone are insufficient to validate score weights; the 35/25/20/15/5 weights and 70/50 thresholds remain **unvalidated** until representative article text is available and the implementation is exercised. No precision/recall or false-positive rate is claimed.
 
+## Baseline lexical experiment (2026-10-17)
+
+This small **synthetic** experiment probes the limits of direct word matching. It is not an implementation benchmark, does not evaluate full articles, and is not evidence of recommendation accuracy.
+
+Fourteen short source/target content snippets were constructed from the labeled scenarios above. A deliberately simple Unicode lowercase tokenizer removed punctuation, tokens shorter than three characters and a short EN/LV stopword set. For both title and body, unique-token Jaccard similarity was calculated as `|intersection| / |union|`. The diagnostic partial score is `35 × title_Jaccard + 20 × body_Jaccard` (maximum 55). No heading, taxonomy, context, eligibility or uncertainty factors were included. Published numerical values are rounded, and therefore cannot validate the separate 100-point model.
+
+| Scenario | Title/Body diagnostic score out of 55 | Expected outcome |
+| --- | ---: | --- |
+| E01 — Ghana itinerary → Things to do in Accra | 5.7 | Recommend |
+| E02 — Things to do in Accra → airport transfer | 14.7 | Recommend |
+| E03 — Best hotels in Accra → Where to stay in Accra | 20.6 | Uncertain |
+| E04 — Ghana travel guide → Ghana travel guide 2026 | 38.3 | Uncertain |
+| E05 — Ghana beaches → WordPress security | 0.0 | Reject |
+| E06 — African travel news → Things to do in Accra | 0.0 | Reject |
+| L01 — Rīgas apskates vietas → Rīgas muzeji ģimenēm | 9.5 | Recommend |
+| L02 — Ko redzēt Siguldā → Turaidas pils apmeklējums | 2.5 | Recommend |
+| L03 — Labākās viesnīcas Rīgā → Kur nakšņot Rīgā | 10.4 | Uncertain |
+| L04 — Rīgas ceļvedis → Rīgas ceļvedis 2026 | 40.5 | Uncertain |
+| L05 — Rīgas apskates vietas → WordPress atjaunināšana | 1.8 | Reject |
+| L06 — Ceļojumi Latvijā → Siguldas apskates vietas | 0.0 | Uncertain |
+| X01 — Latvijas pilis → Castles of Latvia | 0.0 | Uncertain |
+| X02 — Already linked Accra itinerary → Accra museums | 16.7 | Reject — existing link override |
+
+**Findings:** lexical overlap systematically underestimates useful narrower-topic links and can elevate near-duplicate content. Latvian inflection and multilingual comparisons lower naive overlap further. A high raw lexical score must never overrule existing-link exclusions or possible same-intent warnings. The original thresholds (50/70 on the complete 100-point model) must remain unapproved.
+
+**Design adjustment:** candidate generation should recognize explicit target topic mentions in the *source body*, including normalized destination/entity phrases and a bounded local index; the similarity stage should require independently explainable evidence. Same-intent warnings must be a separate rule before ranking. Avoid asserting semantic intent recognition or canonical equivalents without evidence. Candidate retrieval must have an alternate way to find title/topic matches despite Latvian endings; define and unit-test a conservative normalization strategy before implementation. Translation-equivalent pages must be treated as uncertain unless explicit multilingual relationships are available.
+
+**Next validation:** replace short snippets with a reviewable fixture of full-text examples, including headings, taxonomy, WordPress metadata, canonical IDs and existing links; implement a standalone reproducible evaluator and inspect per-feature contributions, missing candidates and negative gates. Tune weights only after this more realistic corpus exists. Preserve holdout cases to avoid optimizing exclusively on the calibration set.
+
 ## Verified WordPress integration details
 
 - `SEOAudit::noindexSource()` handles global `blog_public=0` as a site warning and recognizes `_yoast_wpseo_meta-robots-noindex=1` plus `rank_math_robots` containing `noindex`. This is **not a comprehensive page-level robots or canonical resolver**.
