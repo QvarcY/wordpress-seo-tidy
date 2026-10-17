@@ -34,3 +34,13 @@ The preview runs a local BM25 variant against at most 200 candidate posts/pages 
 8. Replace the candidate cap with resumable scalable indexing and benchmark >200 and >=1000 items.
 
 No automatic edits or site-wide bulk writes are implemented. Keep this PR draft; do not deploy on a production website.
+
+## Combined development cycle checkpoint (2026-10-17)
+
+The indexing preview now includes an administrator-only, nonce-protected manual endpoint that advances over published post/page IDs in batches of 25. It stores a bounded frequency snapshot as private post metadata, with a cursor and processed count held in a WordPress option. Changes to content or terms mark the scan stale; the next indexing request restarts rather than silently presenting stale completion as current. This is an **initial scanning service**, not a verified full-site search index.
+
+The preview no longer hardcodes the first 200 published posts as the candidate pool. Instead, it performs a WordPress text search for each displayed source and inspects at most 30 returned candidates. This removes that particular cap but **does not establish complete site-wide discovery**. An article with no overlapping query terms may be missed; score document frequencies are computed over the local candidate sample rather than the full site. The persisted scan snapshots are not yet consumed by retrieval, so the planned inverted index and global frequency statistics remain unfinished.
+
+A Unicode tokenization escaping error was identified in the earlier prototype and corrected. A separate installed PHP CLI was used to check that the intended Unicode pattern matches Latvian words with diacritics. This **does not** constitute running `php -l` on the exact current GitHub file bytes, nor WordPress integration verification. Other PHP files and permission boundaries still require targeted validation.
+
+This code remains experimental and disabled by default. The staged scan must not be represented as finished large-site support. The next cycle requires linking the stored snapshots to bounded candidate retrieval, validating canonical/link identification, completing the admin interface and localization, and executing exact-branch PHP/WordPress checks before release.
