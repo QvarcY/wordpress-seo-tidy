@@ -81,6 +81,14 @@ An independent JavaScript calculation of the documented BM25 formula against the
 
 These observations demonstrate that high BM25 does not imply a safe recommendation: a competing accommodation page can score similarly to a genuinely useful supporting article. Independently scored reverse links can also rank highly, so directed context and explicit safety gates are indispensable.
 
+### Executed Python baseline check (2026-10-17)
+
+The evaluator logic was reproduced in a local Python 3 environment using the same 14 titles, headings, bodies, topics and 12 directed labels read from the committed fixture. The local reconstruction omitted unused category values; categories are not an input to this evaluator. Python syntax compilation and execution succeeded. All 12 rounded BM25 scores matched the independent calculation (including the values listed above). This is a verified execution of a **local reproduction**, not an execution of the exact GitHub file bytes: the container's direct GitHub network access was unavailable. The committed script was inspected and the calculation-transcription matched, but exact-byte execution remains to be confirmed when the repository is available in a development checkout.
+
+Observed issue: the reverse RIGA-MUSEUMS → RIGA-ATTRACTIONS pair scored 8.03 despite being labeled uncertain; ACCRA-HOTELS → ACCRA-STAY scored 5.17 despite possible competing intent. Therefore sorting solely by BM25 would produce misleading confidence even on this miniature corpus. Ranking and recommendation policy must remain separate.
+
+The fixture is too small to calibrate thresholds or support performance and accuracy claims. The next check is a richer, reserved holdout corpus and explicit same-intent gating; do not treat this as Phase A acceptance.
+
 ## Verified code baseline (2026-10-17)
 
 - `includes/SEOAudit.php`: `hasInternalLink()` inspects content HTML via `WP_HTML_Tag_Processor` and only reports whether an eligible internal link exists. It does not resolve recommended pairs.
@@ -236,7 +244,8 @@ Record measured time/memory and sample false positives during Phase C/D; test su
 - [x] Drafted MVP exclusions, uncertainty gates, bounded scanning and UI contract.
 - [x] Specified initial BM25 formula, weighting proposals and Smart Topics editorial state/persistence rules.
 - [x] Added reproducible bilingual synthetic corpus and standalone diagnostic scoring script.
-- [ ] Execute evaluator successfully, inspect score ordering and validate against holdout full-text cases before approving numerical parameters.
+- [x] Executed a Python reproduction of the evaluator on the reconstructed 14-document corpus; all 12 scores matched independent calculations.
+- [ ] Verify the exact committed evaluator in a development checkout and validate against holdout full-text cases before approving numerical parameters.
 - [x] Prepared and manually classified 14 representative EN/LV scenarios (expected labels only).
 - [ ] Calibrate weights and thresholds on representative full-text samples; not yet validated.
 - [x] Inspected implemented Yoast/Rank Math noindex handling and SEO-TidY metadata fields.
