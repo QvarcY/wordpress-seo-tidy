@@ -44,6 +44,16 @@ final class InternalLinkingIndex
         }
         check_admin_referer('seo_tidy_link_scan');
         $state = self::state();
+        if (!empty($_POST['restart'])) {
+            $state = [];
+        }
+        if (!empty($state['complete']) && empty($state['stale'])) {
+            wp_safe_redirect(admin_url('admin.php?page=seo-tidy-linking-preview&scan_status=complete'));
+            exit;
+        }
+        if (!empty($state['stale'])) {
+            $state = [];
+        }
         $last = isset($state['last_id']) ? absint($state['last_id']) : 0;
         // Explicit cursor avoids offset shifts when articles change.
         global $wpdb;
