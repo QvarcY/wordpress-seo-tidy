@@ -89,6 +89,16 @@ Observed issue: the reverse RIGA-MUSEUMS → RIGA-ATTRACTIONS pair scored 8.03 d
 
 The fixture is too small to calibrate thresholds or support performance and accuracy claims. The next check is a richer, reserved holdout corpus and explicit same-intent gating; do not treat this as Phase A acceptance.
 
+## Conservative intent and duplicate triage (fixture iteration 2)
+
+A second, purely diagnostic triage has been added to `tests/fixtures/evaluate-internal-linking.py`. The fixture contains 16 directed source/target cases and an explicit editorial `intent` field per article. These labels are **input metadata**, not inferred from the article text, and no automatic intent classifier has been implemented.
+
+The diagnostic applies hard self-link and existing-directed-link exclusions first, then excludes nonpublic targets. If the source and target share at least two exact approved topics **and** the same explicitly provided intent, it returns `possible_same_intent` (uncertain). Pairs with no exact shared topics return `insufficient_topic_evidence` (uncertain). Other pairs become `candidate_only`, meaning **manual review is still required**, not that a link is recommended.
+
+An independent evaluation of this rule structure on the 16 committed labels shows both advantages and limitations: self-link and existing-link examples are excluded, and accommodation-selection pairs receive uncertainty warnings. However, shared broad location topics can allow context-poor pairs through as `candidate_only`; unrelated pairs are currently marked uncertain instead of categorically rejected. These are intentionally conservative triage statuses, not a claim of 16/16 classification accuracy. The evaluator's exact Python file must still be executed in a checkout.
+
+**Implementation consequence:** do not equate `candidate_only` with `recommend`. The next stage needs a directional contextual-evidence rule (“the source actually discusses the target subject”), stronger distinctiveness filtering for generic location topics, and more challenging held-out examples with full texts. No numeric same-intent threshold or decision model is validated for release.
+
 ## Verified code baseline (2026-10-17)
 
 - `includes/SEOAudit.php`: `hasInternalLink()` inspects content HTML via `WP_HTML_Tag_Processor` and only reports whether an eligible internal link exists. It does not resolve recommended pairs.
@@ -252,6 +262,8 @@ Record measured time/memory and sample false positives during Phase C/D; test su
 - [ ] Finalize effective robots/canonical compatibility rules for the new feature.
 - [x] Identified existing audit panel and Latvian translation catalog checks.
 - [ ] Record representative performance budgets after first measurements.
+- [x] Added conservative intent/existing-link triage and inspected outputs across 16 synthetic pair labels.
+- [ ] Establish directional contextual evidence and reject-vs-uncertain policy on held-out examples.
 - [ ] Review and approve Phase A before beginning implementation.
 
 No runtime code changed and no implementation/test claims are made in this document.
