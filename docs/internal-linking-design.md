@@ -1,4 +1,4 @@
-# Internal linking recommendations — Issue #29, Phase A design v0.2
+# Internal linking recommendations — Issue #29, Phase A design v0.3
 
 Status: **design proposal, not implemented**. Target: incremental MVP, reviewed before coding. This document is intentionally normative where marked "MVP"; thresholds are initial hypotheses, not accuracy claims.
 
@@ -17,6 +17,55 @@ The initial feature uses existing WordPress storage and PHP. It does not require
 ### Migration of the preliminary scoring proposal
 
 The provisional 35/25/20/15/5 weighted overlap formula and its 50/70 thresholds are retained below **only as historical experiment context**; they are not the implementation specification. The evaluation work now focuses on BM25 with Smart Topics and separately documented safety gates. BM25 scores are query- and corpus-dependent, so they must not be presented as a universal 0–100 probability or compared across sites without calibration.
+
+## Smart Topics: storage and editorial workflow
+
+### Data representation
+
+For the first release use private, single-value WordPress post metadata, not a new table and not public WordPress tags. Each eligible post/page has one versioned record stored under `_seo_tidy_smart_topics_v1`; the record contains a schema version, a bounded list of approved topics, a bounded list of pending suggestions, an origin for each item (`manual`, `accepted`, `generated`), and the source-content fingerprint used during the last analysis. Use WordPress metadata APIs; register the private field with an explicit capability check, or keep writes behind a dedicated administrator-only endpoint. Never expose pending labels in public page HTML, taxonomies or REST output.
+
+A topic has a normalized stable key and a human-readable label. Normalization uses Unicode-aware lowercase, whitespace collapse and punctuation handling; retain Latvian diacritics in display labels. Do not treat different inflected forms or translations as automatically equivalent. Identical keys merge case/spacing duplicates; administrator-approved aliases may provide explicit equivalence later. Limit labels to a reasonable length and reject empty, unsafe or excessively generic terms. Proposed limits for the first release: up to 12 approved topics and 12 pending suggestions per post; verify with usability testing.
+
+### Suggestions and approval
+
+- Extract candidate terms from article title, headings, high-salience phrases and existing tags/categories. Show a short evidence reason such as “mentioned in the title” or “existing category”, not an invented confidence percentage.
+- Existing WordPress tags and categories are **inputs**, not labels automatically written back to the public taxonomy. Do not create public tag archives.
+- New proposals are `pending` until accepted. An administrator can accept, reject, add, edit or remove them; save through capability-checked, nonce-protected WordPress requests with sanitization and output escaping.
+- Manual edits always win. Automatic rescans may propose new items but cannot silently restore rejected labels, delete approved labels or change manually edited labels.
+- Persist rejection history per topic key so a subsequent scan does not repeatedly offer rejected proposals; provide an explicit control to reset it. Keep record size bounded.
+- If a post changes, mark its generated evidence stale; retain approved labels and show “Suggestions need refresh” until a new scan completes.
+- First installation on an established site uses resumable batches of <=25 posts/pages; incomplete scans must be visible. No analysis is performed automatically during ordinary article page views.
+- A site admin can disable Smart Topics suggestions without breaking the existing SEO audit. Disabling does not erase manually approved labels.
+
+### Intended WordPress UI
+
+Provide one compact review panel on the editor screen, plus batch review in SEO Audit → Internal Linking. Display approved topics separately from unreviewed proposals; each suggestion shows the source of evidence. Keep full Latvian and English localization. Bulk approval must not approve labels without a visible summary of the affected posts. Topic metadata is for editorial classification; it must not be confused with public hashtags or keyword rankings.
+
+## BM25: reproducible first-release scoring specification
+
+Use **Okapi BM25** for local candidate ranking. Index each eligible published document using a deterministic Unicode tokenizer and separate title, headings and visible body fields. The first implementation can calculate a single weighted document representation, but must record the weighting rules. Initial field multipliers for evaluation: title ×3, headings ×2, body ×1, capped to prevent repeated words from dominating; these are experimental and must be measured. Approved Smart Topics help retrieve candidates and explain context; they do not directly inflate BM25 scores without an explicit separately documented feature.
+
+For a source query, select a bounded set of informative terms from its title, headings and approved topics. Score each candidate target document using:
+
+`BM25(D,Q) = Σ[t ∈ Q] IDF(t) × ( f(t,D) × (k1 + 1) / ( f(t,D) + k1 × (1 - b + b × |D| / avgdl) ) )`
+
+`IDF(t) = ln(1 + (N - df(t) + 0.5)/(df(t) + 0.5))`
+
+Initial values for evaluation: `k1=1.2`, `b=0.75`. Here `N` is eligible document count, `df(t)` counts eligible documents containing term `t`, `f(t,D)` is weighted token frequency in candidate `D`, and `|D|` and `avgdl` are weighted lengths using the same scheme. Deduplicate query tokens. Handle empty collections and `avgdl=0` explicitly. This establishes **ranking**, not an absolute percentage of relevance.
+
+Use a deterministic top-N candidate retrieval strategy: topic-key overlap, explicit target-topic mentions in the source body and inverted term matches. Do not scan all pairs or assume title keywords alone identify all valid relationships. Candidate retrieval may use local indexes or bounded PHP caches, but must avoid quadratic work on large sites. One language-specific short stopword list per EN/LV may be used; unknown or mixed language receives transparent uncertain classification. Latvian morphology requires evaluated normalization/aliases rather than aggressive, unverified suffix stripping. Phrase matches and aliases must be traceable to evidence.
+
+### Decision rules after BM25 ranking
+
+1. Hard exclusions first: same post, existing directed link, unsupported/unpublished/noindex/password-protected content, ambiguous canonical or wrong host.
+2. Verify topical evidence: at least one distinctive shared topic, documented target mention in source context, or independently meaningful term evidence. Generic category overlap alone is insufficient.
+3. Check potential same-intent overlap independently: near-identical titles combined with similar headings/body or explicit duplicate relationships produce a review warning, not a confident link.
+4. Low-evidence, cross-language and thin-content pairs remain uncertain; suppress unsupported automated suggestions.
+5. Sort remaining candidates by BM25 **within the source** and present up to five suggestions with an explanation; do not show a global 0–100 “accuracy” score. No insertion happens automatically.
+
+### Evaluation requirements
+
+Before approving thresholds or release, prepare full-text fixtures with headings, categories, approved topics, rejected topics, existing directed links, publication status and language. Include a minimum of 12 LV/EN scenarios plus separate holdout cases. Measure candidate recall (whether useful pairs reach the top-N set), precision of displayed suggestions, false-positive categories and latency/memory for 200 and 1000 items. The earlier short-snippet lexical trial is not a BM25 validation. Record actual results before claiming performance or accuracy.
 
 ## Verified code baseline (2026-10-17)
 
@@ -171,7 +220,8 @@ Record measured time/memory and sample false positives during Phase C/D; test su
 - [x] Source code inventory of key audit/REST/bootstrap/UI entrypoints.
 - [x] Documented local-first Smart Topics + BM25 as the implementation direction, with the older scoring weights retained as experimental reference.
 - [x] Drafted MVP exclusions, uncertainty gates, bounded scanning and UI contract.
-- [ ] Specify reproducible BM25 parameters and Smart Topics review/persistence behavior in test fixtures.
+- [x] Specified initial BM25 formula, weighting proposals and Smart Topics editorial state/persistence rules.
+- [ ] Build full-text fixtures and measure ranking quality before approving numerical parameters.
 - [x] Prepared and manually classified 14 representative EN/LV scenarios (expected labels only).
 - [ ] Calibrate weights and thresholds on representative full-text samples; not yet validated.
 - [x] Inspected implemented Yoast/Rank Math noindex handling and SEO-TidY metadata fields.
