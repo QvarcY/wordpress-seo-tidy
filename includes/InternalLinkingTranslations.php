@@ -20,6 +20,13 @@ final class InternalLinkingTranslations
             return $translation;
         }
         static $lv = [
+            'Complete' => 'Pabeigts',
+            'Needs rebuilding' => 'Nepieciešama pārbūve',
+            'In progress or not started' => 'Procesā vai vēl nav sākts',
+            'Index status' => 'Indeksa statuss',
+            'Processed: %d articles' => 'Apstrādāti raksti: %d',
+            'Suggested internal links' => 'Ieteiktās iekšējās saites',
+            'Suggestions are not inserted automatically. Check the destination and reading context before adding a link to your article.' => 'Saites netiek ievietotas automātiski. Pirms pievienošanas pārbaudi galamērķi un to, vai saite iederas raksta kontekstā.',
             'Enter a few specific subjects separated by commas. These private labels help find relevant internal links; they do not change your public tags or search results directly.' => 'Ievadi dažas konkrētas tēmas, atdalot tās ar komatiem. Šie privātie marķējumi palīdz atrast atbilstošas iekšējās saites, bet nemaina publiskās birkas vai meklēšanas rezultātus tiešā veidā.',
             'Suggestions come from the article title and existing categories or tags. Select only topics that genuinely describe the article; unselected suggestions are not saved.' => 'Ieteikumi iegūti no raksta virsraksta, kategorijām un birkām. Atzīmē tikai tēmas, kas patiešām raksturo saturu; neatzīmētie ieteikumi netiek saglabāti.',
             'Add irrelevant subjects separated by commas. Rejected labels will not be suggested again for this article; they can be removed later.' => 'Ievadi neatbilstošās tēmas, atdalot ar komatiem. Noraidītie marķējumi šim rakstam vairs netiks piedāvāti, bet vēlāk tos var izņemt.',
