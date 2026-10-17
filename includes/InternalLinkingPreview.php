@@ -16,6 +16,58 @@ final class InternalLinkingPreview
         }
         add_action('admin_menu', [self::class, 'menu'], 20);
         add_action('add_meta_boxes', [self::class, 'registerEditorBox']);
+        add_action('rest_api_init', [self::class, 'registerRoutes']);
+    }
+
+    public static function registerRoutes(): void
+    {
+        register_rest_route('seo-tidy/v1', '/internal-linking', [
+            'methods' => 'GET',
+            'callback' => [self::class, 'overview'],
+            'permission_callback' => static fn(): bool => current_user_can('manage_options'),
+            'args' => [
+                'page' => ['default' => 1, 'type' => 'integer', 'minimum' => 1],
+                'search' => ['default' => '', 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field'],
+            ],
+        ]);
+    }
+
+    public static function overview(\WP_REST_Request $request): \WP_REST_Response
+    {
+        $page = max(1, (int) $request->get_param('page'));
+        $query = new \WP_Query([
+            's' => (string) $request->get_param('search'),
+            'post_type' => ['post', 'page'], 'post_status' => 'publish',
+            'posts_per_page' => 25, 'paged' => $page,
+            'orderby' => 'ID', 'order' => 'ASC', 'ignore_sticky_posts' => true,
+        ]);
+        $state = InternalLinkingIndex::state();
+        $ready = !empty($state['complete']) && empty($state['stale']);
+        $items = [];
+        foreach ($query->posts as $post) {
+            $status = !self::eligible($post) ? 'excluded' : (!$ready ? 'pending' :
+                (InternalLinkingIndex::entry($post->ID) ? 'indexed' : 'unindexed'));
+            $items[] = [
+                'id' => $post->ID,
+                'title' => html_entity_decode(get_the_title($post), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                'excerpt' => html_entity_decode(wp_trim_words(
+                    wp_strip_all_tags(strip_shortcodes($post->post_content)), 20, '…'
+                ), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                'topics' => count(SmartTopics::approved($post->ID)),
+                'status' => $status,
+                'editUrl' => get_edit_post_link($post->ID, 'raw'),
+            ];
+        }
+        $published = (int) wp_count_posts('post')->publish + (int) wp_count_posts('page')->publish;
+        return new \WP_REST_Response([
+            'items' => $items, 'total' => (int) $query->found_posts,
+            'page' => $page, 'pages' => max(1, (int) $query->max_num_pages),
+            'published' => $published,
+            'processed' => !empty($state['stale']) ? 0 : max(0, (int) ($state['processed'] ?? 0)),
+            'ready' => $ready, 'stale' => !empty($state['stale']),
+            'scanAction' => admin_url('admin-post.php'),
+            'scanNonce' => wp_create_nonce('seo_tidy_link_scan'),
+        ]);
     }
 
     public static function menu(): void

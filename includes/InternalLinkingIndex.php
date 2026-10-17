@@ -138,6 +138,9 @@ final class InternalLinkingIndex
             wp_die(esc_html__('Permission denied.', 'seo-tidy'));
         }
         check_admin_referer('seo_tidy_link_scan');
+        $returnUrl = isset($_POST['return_to']) && $_POST['return_to'] === 'dashboard'
+            ? admin_url('admin.php?page=seo-tidy&section=linking')
+            : admin_url('admin.php?page=seo-tidy-linking-preview');
         $state = self::state();
         if (!self::ensureTable()) {
             wp_die(esc_html__('Internal linking index table could not be created.', 'seo-tidy'));
@@ -147,7 +150,7 @@ final class InternalLinkingIndex
             self::clearSnapshots();
         }
         if (!empty($state['complete']) && empty($state['stale']) && empty($_POST['restart'])) {
-            wp_safe_redirect(admin_url('admin.php?page=seo-tidy-linking-preview&scan_status=complete'));
+            wp_safe_redirect(add_query_arg('scan_status', 'complete', $returnUrl));
             exit;
         }
         if (!empty($state['stale'])) {
@@ -217,7 +220,7 @@ final class InternalLinkingIndex
             'schema' => 3,
         ];
         update_option(self::STATE, $state, false);
-        wp_safe_redirect(admin_url('admin.php?page=seo-tidy-linking-preview&scan_status=1'));
+        wp_safe_redirect(add_query_arg('scan_status', '1', $returnUrl));
         exit;
     }
 
