@@ -172,10 +172,10 @@ final class InternalLinkingIndex
             if (!$post) {
                 continue;
             }
-            if ($post->post_password !== '' ||
-                get_post_meta($id, '_yoast_wpseo_meta-robots-noindex', true) === '1' ||
-                in_array('noindex', (array) get_post_meta($id, 'rank_math_robots', true), true)) {
-                $wpdb->delete(self::table(), ['post_id' => $id], ['%d']);
+            if (!InternalLinkingPreview::eligible($post)) {
+                if ($wpdb->delete(self::table(), ['post_id' => $id], ['%d']) === false) {
+                    wp_die(esc_html__('Could not update the link index. The scan has stopped.', 'seo-tidy'));
+                }
                 delete_post_meta($id, self::META);
                 continue;
             }
@@ -225,8 +225,10 @@ final class InternalLinkingIndex
     {
         global $wpdb;
         // Remove only our private, regenerable index snapshots.
-        $wpdb->query('DELETE FROM ' . self::table());
-        $wpdb->delete($wpdb->postmeta, ['meta_key' => self::META], ['%s']);
+        if ($wpdb->query('DELETE FROM ' . self::table()) === false ||
+            $wpdb->delete($wpdb->postmeta, ['meta_key' => self::META], ['%s']) === false) {
+            wp_die(esc_html__('Could not clear the link index. The scan has stopped.', 'seo-tidy'));
+        }
     }
 
     public static function entry(int $postId): array
