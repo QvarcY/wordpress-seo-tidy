@@ -210,6 +210,8 @@ final class Bootstrap
             'seo-tidy-admin',
             'seoTidyBranding',
             [
+                'linkingEnabled' => defined('SEO_TIDY_INTERNAL_LINKING_PREVIEW') && SEO_TIDY_INTERNAL_LINKING_PREVIEW === true,
+                'linkingUrl' => admin_url('admin.php?page=seo-tidy-linking-preview'),
                 'heroUrl' => plugins_url(
                     'assets/seo-tidy-hero.webp',
                     SEO_TIDY_PATH . 'seo-tidy.php'
@@ -230,11 +232,6 @@ final class Bootstrap
             wp_die(esc_html__('Access denied.', 'seo-tidy'));
         }
 
-        if (defined('SEO_TIDY_INTERNAL_LINKING_PREVIEW') && SEO_TIDY_INTERNAL_LINKING_PREVIEW === true) {
-            echo '<div class="wrap"><p><a class="button button-secondary" href="' .
-                esc_url(admin_url('admin.php?page=seo-tidy-linking-preview')) . '">' .
-                esc_html__('Open internal linking overview', 'seo-tidy') . '</a></p></div>';
-        }
         echo '<div id="seo-tidy-app" class="wrap">';
         echo '<h1>' . esc_html__('SEO-TidY', 'seo-tidy') . '</h1>';
         echo '<p>' . esc_html__(
