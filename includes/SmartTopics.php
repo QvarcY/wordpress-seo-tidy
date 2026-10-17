@@ -121,6 +121,7 @@ final class SmartTopics
     public static function save(int $postId, \WP_Post $post): void
     {
         if (!isset($_POST['seo_tidy_smart_topics_nonce']) ||
+            !is_string($_POST['seo_tidy_smart_topics_nonce']) ||
             !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['seo_tidy_smart_topics_nonce'])),
                 'seo_tidy_smart_topics_' . $postId) ||
             !current_user_can('manage_options') || !current_user_can('edit_post', $postId) ||
