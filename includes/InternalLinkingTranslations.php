@@ -20,6 +20,11 @@ final class InternalLinkingTranslations
             return $translation;
         }
         static $lv = [
+            'Enter a few specific subjects separated by commas. These private labels help find relevant internal links; they do not change your public tags or search results directly.' => 'Ievadi dažas konkrētas tēmas, atdalot tās ar komatiem. Šie privātie marķējumi palīdz atrast atbilstošas iekšējās saites, bet nemaina publiskās birkas vai meklēšanas rezultātus tiešā veidā.',
+            'Suggestions come from the article title and existing categories or tags. Select only topics that genuinely describe the article; unselected suggestions are not saved.' => 'Ieteikumi iegūti no raksta virsraksta, kategorijām un birkām. Atzīmē tikai tēmas, kas patiešām raksturo saturu; neatzīmētie ieteikumi netiek saglabāti.',
+            'Add irrelevant subjects separated by commas. Rejected labels will not be suggested again for this article; they can be removed later.' => 'Ievadi neatbilstošās tēmas, atdalot ar komatiem. Noraidītie marķējumi šim rakstam vairs netiks piedāvāti, bet vēlāk tos var izņemt.',
+            'Rebuilding clears the existing experimental index and starts again. Only use it if content has changed substantially or the index is invalid.' => 'Pārbūvēšana notīra pašreizējo eksperimentālo indeksu un sāk darbu no jauna. Izmanto to tikai pēc būtiskām satura izmaiņām vai nederīga indeksa gadījumā.',
+            'Experimental read-only preview. Suggestions need manual review. Candidate retrieval uses the indexed token table, capped at 30 targets per source. Results remain experimental.' => 'Eksperimentāls saišu ieteikumu pārskats. Ieteikumi jāpārskata manuāli; atlase izmanto lokālo vārdu indeksu, ne vairāk kā 30 kandidātus katram rakstam.',
             'Internal Linking Preview' => 'Iekšējo saišu pārskats',
             'SEO-TidY Smart Topics' => 'SEO-TidY tematiskie marķējumi',
             'Permission denied.' => 'Piekļuve liegta.',
