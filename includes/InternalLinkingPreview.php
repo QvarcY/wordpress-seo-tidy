@@ -26,7 +26,9 @@ final class InternalLinkingPreview
 
     private static function tokens(string $text): array
     {
-        $text = mb_strtolower(wp_strip_all_tags($text), 'UTF-8');
+        $text = function_exists('mb_strtolower')
+            ? mb_strtolower(wp_strip_all_tags($text), 'UTF-8')
+            : strtolower(wp_strip_all_tags($text));
         preg_match_all('/[\\p{L}\\p{N}]{3,}/u', $text, $matches);
         $stop = array_fill_keys(explode(' ', 'the and for with from this that are can how your what where und von der die das vai kas kur par pie arī un ar no kā ko kāds tas šis šajā'), true);
         return array_values(array_filter($matches[0], static function ($t) use ($stop) {
@@ -38,13 +40,18 @@ final class InternalLinkingPreview
     {
         $body = wp_strip_all_tags(strip_shortcodes($post->post_content));
         $topics = [];
-        foreach (wp_get_post_terms($post->ID, ['category', 'post_tag'], ['fields' => 'names']) as $term) {
+        $existing = wp_get_post_terms($post->ID, ['category', 'post_tag'], ['fields' => 'names']);
+        if (is_wp_error($existing)) {
+            $existing = [];
+        }
+        foreach ($existing as $term) {
             foreach (self::tokens((string) $term) as $token) {
                 $topics[$token] = true;
             }
         }
         $title = self::tokens($post->post_title);
-        $bodyTerms = self::tokens(mb_substr($body, 0, 12000, 'UTF-8'));
+        $excerpt = function_exists('mb_substr') ? mb_substr($body, 0, 12000, 'UTF-8') : substr($body, 0, 12000);
+        $bodyTerms = self::tokens($excerpt);
         $terms = array_count_values($bodyTerms);
         foreach (array_count_values($title) as $word => $count) {
             $terms[$word] = ($terms[$word] ?? 0) + 3 * $count;
