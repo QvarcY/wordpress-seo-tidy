@@ -203,8 +203,11 @@ final class InternalLinkingPreview
         .seo-tidy-linking .seo-tidy-link-body details{padding:8px 12px;border:1px solid #dcdcde;border-radius:4px}
         .seo-tidy-linking .seo-tidy-link-body form{max-width:700px}
         .seo-tidy-linking .seo-tidy-link-body input[type=text]{max-width:100%}
-        .seo-tidy-linking .seo-tidy-help{display:inline-block;margin-left:5px;text-decoration:none;border:1px solid #8c8f94;border-radius:50%;font-size:11px;font-weight:600;line-height:17px;width:17px;text-align:center}
-        .seo-tidy-linking .seo-tidy-help:focus{outline:2px solid #2271b1}
+        .seo-tidy-help{display:inline-block;vertical-align:middle;margin-left:6px;position:relative;font-weight:normal}
+        .seo-tidy-help>summary{display:inline-flex!important;align-items:center;justify-content:center;list-style:none!important;width:19px;height:19px;border:1px solid #2271b1;border-radius:50%;color:#2271b1;background:#fff;font-size:12px;font-weight:700;cursor:pointer;padding:0}
+        .seo-tidy-help>summary::-webkit-details-marker{display:none}
+        .seo-tidy-help>summary:focus-visible{outline:2px solid #2271b1;outline-offset:2px}
+        .seo-tidy-help[open]>.seo-tidy-help-text{display:block;position:absolute;z-index:100;top:25px;left:0;min-width:240px;max-width:min(360px,75vw);padding:12px 14px;background:#fff;border:1px solid #8c8f94;box-shadow:0 3px 12px rgba(0,0,0,.15);border-radius:5px;color:#1d2327;font-size:13px;line-height:1.5;text-align:left;font-weight:400;white-space:normal}
         </style><h1>' . esc_html__('Internal Linking Preview', 'seo-tidy') . '</h1>';
         echo '<p>' . esc_html__('Experimental read-only preview. Suggestions need manual review. Candidate retrieval uses the indexed token table, capped at 30 targets per source. Results remain experimental.', 'seo-tidy') . '</p>';
         $processed = max(0, (int) ($state['processed'] ?? 0));
@@ -221,7 +224,7 @@ final class InternalLinkingPreview
         submit_button(__('Index next 25 articles', 'seo-tidy'), 'secondary', 'submit', false);
         echo ' <label><input type="checkbox" name="restart" value="1"> ' .
             esc_html__('Rebuild index from beginning', 'seo-tidy') . '</label>';
-        echo ' <span class="seo-tidy-help" tabindex="0" title="' . esc_attr__('Rebuilding clears the existing experimental index and starts again. Only use it if content has changed substantially or the index is invalid.', 'seo-tidy') . '" aria-label="' . esc_attr__('Rebuilding clears the existing experimental index and starts again. Only use it if content has changed substantially or the index is invalid.', 'seo-tidy') . '">?</span>';
+        echo ' <details class="seo-tidy-help"><summary aria-label="' . esc_attr__('Show field explanation', 'seo-tidy') . '">?</summary><span class="seo-tidy-help-text" role="note">' . esc_html__('Rebuilding clears the existing experimental index and starts again. Only use it if content has changed substantially or the index is invalid.', 'seo-tidy') . '</span></details>';
         echo '</form>';
         if (!$ready) {
             echo '<p class="notice notice-info">' .
