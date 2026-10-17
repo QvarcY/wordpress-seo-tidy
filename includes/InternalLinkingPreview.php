@@ -49,6 +49,11 @@ final class InternalLinkingPreview
                 $topics[$token] = true;
             }
         }
+        foreach (SmartTopics::approved($post->ID) as $approved) {
+            foreach (self::tokens($approved) as $token) {
+                $topics[$token] = true;
+            }
+        }
         $title = self::tokens($post->post_title);
         $excerpt = function_exists('mb_substr') ? mb_substr($body, 0, 12000, 'UTF-8') : substr($body, 0, 12000);
         $bodyTerms = self::tokens($excerpt);
@@ -100,12 +105,45 @@ final class InternalLinkingPreview
         return $score;
     }
 
+    private static function linksTo(string $html, int $targetId): bool
+    {
+        if (!class_exists('\WP_HTML_Tag_Processor')) {
+            // Fail closed when reliable directed-link inspection is unavailable.
+            return true;
+        }
+        $processor = new \WP_HTML_Tag_Processor($html);
+        while ($processor->next_tag(['tag_name' => 'A'])) {
+            $href = $processor->get_attribute('href');
+            if (!is_string($href) || $href === '') {
+                continue;
+            }
+            $parsed = wp_parse_url($href);
+            if (!is_array($parsed)) {
+                continue;
+            }
+            if (isset($parsed['host']) &&
+                strtolower($parsed['host']) !== strtolower((string) wp_parse_url(home_url(), PHP_URL_HOST))) {
+                continue;
+            }
+            $resolved = isset($parsed['host']) ? $href : home_url('/' . ltrim($href, '/'));
+            $resolvedId = url_to_postid(strtok($resolved, '#?'));
+            if ($resolvedId === $targetId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static function render(): void
     {
         if (!current_user_can('manage_options')) {
             wp_die(esc_html__('Permission denied.', 'seo-tidy'));
         }
-        $page = isset($_GET['source_page']) ? max(1, absint($_GET['source_page'])) : 1;
+        $page = isset($_GET['source_page']) && is_scalar($_GET['source_page'])
+            ? max(1, absint($_GET['source_page'])) : 1;
+        if (get_option('blog_public') === '0') {
+            echo '<div class="notice notice-warning"><p>' . esc_html__('Search engines are discouraged at site level; indexability cannot be confirmed.', 'seo-tidy') . '</p></div>';
+        }
         $query = new \WP_Query(['post_type' => ['post', 'page'], 'post_status' => 'publish',
             'posts_per_page' => 25, 'paged' => $page, 'orderby' => 'ID', 'order' => 'ASC',
             'no_found_rows' => false, 'ignore_sticky_posts' => true]);
@@ -154,8 +192,13 @@ final class InternalLinkingPreview
                     wp_parse_url($url, PHP_URL_HOST) !== wp_parse_url(home_url(), PHP_URL_HOST)) {
                     continue;
                 }
-                if (strpos($post->post_content, $url) !== false) {
+                // Check directed existing links using WordPress HTML parsing, not raw URL substrings.
+                if (self::linksTo($post->post_content, $id)) {
                     continue;
+                }
+                $sourceTopics = array_intersect($src['topics'], $target['topics']);
+                if (count($sourceTopics) >= 2 && count(array_intersect($src['title'], $target['title'])) >= 2) {
+                    continue; // Possible competing intent; do not label as confident.
                 }
                 $score = self::bm25($src, $target, $df, $total, $avg);
                 if ($score > 0) {
