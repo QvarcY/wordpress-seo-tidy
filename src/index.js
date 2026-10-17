@@ -6,7 +6,7 @@ import { __ } from '@wordpress/i18n';
 const sections = [
     { id: 'dashboard', label: __('Dashboard', 'seo-tidy') },
     { id: 'metadata', label: __('Metadata', 'seo-tidy') },
-    { id: 'linking', label: __('Internal Links', 'seo-tidy') },
+    { id: 'linking', label: window.seoTidyBranding?.linkingLabels?.tab || __('Internal Links', 'seo-tidy') },
     { id: 'analytics', label: __('Analytics', 'seo-tidy') },
     { id: 'badge', label: __('Stats Badge', 'seo-tidy') },
     { id: 'community', label: __('Wall of Fame', 'seo-tidy') },
