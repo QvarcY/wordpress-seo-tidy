@@ -1,6 +1,22 @@
-# Internal linking recommendations — Issue #29, Phase A design v0.1
+# Internal linking recommendations — Issue #29, Phase A design v0.2
 
 Status: **design proposal, not implemented**. Target: incremental MVP, reviewed before coding. This document is intentionally normative where marked "MVP"; thresholds are initial hypotheses, not accuracy claims.
+
+## Chosen architecture: Smart Topics + BM25 (local-first)
+
+The initial feature uses existing WordPress storage and PHP. It does not require Python, PostgreSQL, SQLite extensions, model downloads, commercial APIs, external search services or third-party content transmission. Search-trend or keyword-popularity integrations are not part of issue #29.
+
+**Smart Topics** is a site-local metadata layer. It proposes topical labels from article titles, headings, content and existing categories/tags; the site administrator can review, add, remove, accept or reject these proposals. Approved labels persist independently from public WordPress tags and must not silently generate public tag-archive pages. On existing sites, process published content in resumable batches. Manual changes take precedence over subsequent scans, and automatic proposals must not overwrite administrator-approved labels. An article's topic is independent of external keyword popularity.
+
+**BM25** ranks a bounded set of potentially related articles by the significance of their terms within the site's own content. The index should use normalized title, heading and body terms, with appropriate field boosts and collection-level document frequency. Define smoothing, length normalization, supported tokenization, stopwords and LV inflection handling before finalizing numerical parameters. Candidate discovery combines Smart Topics with lexical evidence; no shared topic by itself guarantees a recommendation. Detect and explain insufficient evidence and possible overlapping intent separately.
+
+**Separation of roles:** topic labels narrow candidate discovery; BM25 orders relevant candidates; existing-link/indexability/canonical exclusions and same-intent warning rules determine whether a suggestion can be displayed confidently. No automatic edits to published articles. No marketing claims about semantic understanding or proven cannibalization detection.
+
+**Future options:** advanced multilingual embedding analysis may be considered independently after measured quality/performance testing, but is not required for this feature, not promised in this release and must not weaken the PHP-only baseline.
+
+### Migration of the preliminary scoring proposal
+
+The provisional 35/25/20/15/5 weighted overlap formula and its 50/70 thresholds are retained below **only as historical experiment context**; they are not the implementation specification. The evaluation work now focuses on BM25 with Smart Topics and separately documented safety gates. BM25 scores are query- and corpus-dependent, so they must not be presented as a universal 0–100 probability or compared across sites without calibration.
 
 ## Verified code baseline (2026-10-17)
 
@@ -19,7 +35,7 @@ MVP eligibility: local `post` and `page` with `publish` status, public/indexable
 
 Source and target must differ. Already-linked source→target pairs excluded regardless of anchor repetition; reverse link target→source does **not** disqualify source→target (different directed edge). Fragments are not separate targets. Resolve root-relative and absolute URLs, same-site host/port and WordPress permalink variants, stripping fragments/tracking params only for identity; do not treat arbitrary relative or off-domain URLs as safe local links. Use core APIs to resolve post IDs. Where identity is ambiguous, skip.
 
-## MVP proposal: deterministic candidate → evidence → decision pipeline
+## Historical scoring proposal: evaluation reference only
 
 1. Snapshot a bounded batch of eligible posts with post ID, canonical URL, title, H1/H2, excerpt, cleaned visible text, category/tag terms, language hint and outgoing resolved post IDs. Never store raw private content.
 2. Tokenization: lowercase with Unicode support; preserve LV diacritics; Unicode letters/numbers; discard punctuation and trivial tokens; remove small versioned EN/LV stopword lists. Never translate or strip accents to force matches. Detect language only from explicit metadata where supported; otherwise mark unknown. For mixed/unknown language, penalize confidence, not silently guess. No stemming in MVP.
@@ -153,7 +169,9 @@ Record measured time/memory and sample false positives during Phase C/D; test su
 ## Checkpoint / decision record
 
 - [x] Source code inventory of key audit/REST/bootstrap/UI entrypoints.
-- [x] Draft MVP scope, exclusions, candidate/scoring model, uncertainty, batching and UI contract.
+- [x] Documented local-first Smart Topics + BM25 as the implementation direction, with the older scoring weights retained as experimental reference.
+- [x] Drafted MVP exclusions, uncertainty gates, bounded scanning and UI contract.
+- [ ] Specify reproducible BM25 parameters and Smart Topics review/persistence behavior in test fixtures.
 - [x] Prepared and manually classified 14 representative EN/LV scenarios (expected labels only).
 - [ ] Calibrate weights and thresholds on representative full-text samples; not yet validated.
 - [x] Inspected implemented Yoast/Rank Math noindex handling and SEO-TidY metadata fields.
