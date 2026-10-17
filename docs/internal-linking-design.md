@@ -67,6 +67,14 @@ Use a deterministic top-N candidate retrieval strategy: topic-key overlap, expli
 
 Before approving thresholds or release, prepare full-text fixtures with headings, categories, approved topics, rejected topics, existing directed links, publication status and language. Include a minimum of 12 LV/EN scenarios plus separate holdout cases. Measure candidate recall (whether useful pairs reach the top-N set), precision of displayed suggestions, false-positive categories and latency/memory for 200 and 1000 items. The earlier short-snippet lexical trial is not a BM25 validation. Record actual results before claiming performance or accuracy.
 
+## Reproducible synthetic BM25 evaluation fixtures
+
+The repository now includes `tests/fixtures/internal-linking-fixtures.json`: fourteen short but structured fictional articles (English and Latvian), with title, heading, body, topics, categories, status, indexability and outgoing-link fields, plus twelve explicitly labeled directed pairs. The independent standard-library Python 3 evaluator is `tests/fixtures/evaluate-internal-linking.py`. It reports BM25 ranking signals and topic overlaps for these labels, without any connection to WordPress, external services or production data.
+
+Run from the repository root with `python tests/fixtures/evaluate-internal-linking.py`. This utility is a **diagnostic comparison**, not the selected PHP implementation or a test of WordPress compatibility. The parameters and term weights are those currently proposed in the BM25 design. Script execution and reported scores have **not been verified in a local Python runtime in this documentation update**; an actual successful run and inspection of results are required before calibration is considered complete.
+
+The sample corpus is intentionally small and synthetic. Therefore it cannot substantiate user-facing precision, recall, multilingual quality or production performance claims. Next validation must expand the body text and include holdout examples, explicit metadata and exclusion cases, then record real outputs, observed false positives and candidate retrieval failures.
+
 ## Verified code baseline (2026-10-17)
 
 - `includes/SEOAudit.php`: `hasInternalLink()` inspects content HTML via `WP_HTML_Tag_Processor` and only reports whether an eligible internal link exists. It does not resolve recommended pairs.
@@ -221,7 +229,8 @@ Record measured time/memory and sample false positives during Phase C/D; test su
 - [x] Documented local-first Smart Topics + BM25 as the implementation direction, with the older scoring weights retained as experimental reference.
 - [x] Drafted MVP exclusions, uncertainty gates, bounded scanning and UI contract.
 - [x] Specified initial BM25 formula, weighting proposals and Smart Topics editorial state/persistence rules.
-- [ ] Build full-text fixtures and measure ranking quality before approving numerical parameters.
+- [x] Added reproducible bilingual synthetic corpus and standalone diagnostic scoring script.
+- [ ] Execute evaluator successfully, inspect score ordering and validate against holdout full-text cases before approving numerical parameters.
 - [x] Prepared and manually classified 14 representative EN/LV scenarios (expected labels only).
 - [ ] Calibrate weights and thresholds on representative full-text samples; not yet validated.
 - [x] Inspected implemented Yoast/Rank Math noindex handling and SEO-TidY metadata fields.
