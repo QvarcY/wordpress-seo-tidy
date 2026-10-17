@@ -19,7 +19,8 @@
       ],
       "outgoing": [],
       "status": "publish",
-      "indexable": true
+      "indexable": true,
+      "intent": "trip_plan"
     },
     {
       "id": "ACCRA-ATTRACTIONS",
@@ -39,7 +40,8 @@
       ],
       "outgoing": [],
       "status": "publish",
-      "indexable": true
+      "indexable": true,
+      "intent": "activity_guide"
     },
     {
       "id": "ACCRA-TRANSPORT",
@@ -58,7 +60,8 @@
       ],
       "outgoing": [],
       "status": "publish",
-      "indexable": true
+      "indexable": true,
+      "intent": "transport_guide"
     },
     {
       "id": "ACCRA-HOTELS",
@@ -77,7 +80,8 @@
       ],
       "outgoing": [],
       "status": "publish",
-      "indexable": true
+      "indexable": true,
+      "intent": "accommodation_selection"
     },
     {
       "id": "ACCRA-STAY",
@@ -96,7 +100,8 @@
       ],
       "outgoing": [],
       "status": "publish",
-      "indexable": true
+      "indexable": true,
+      "intent": "accommodation_selection"
     },
     {
       "id": "GHANA-BEACH",
@@ -115,7 +120,8 @@
       ],
       "outgoing": [],
       "status": "publish",
-      "indexable": true
+      "indexable": true,
+      "intent": "beach_guide"
     },
     {
       "id": "WP-SECURITY",
@@ -134,7 +140,8 @@
       ],
       "outgoing": [],
       "status": "publish",
-      "indexable": true
+      "indexable": true,
+      "intent": "technical_checklist"
     },
     {
       "id": "RIGA-ATTRACTIONS",
@@ -154,7 +161,8 @@
       ],
       "outgoing": [],
       "status": "publish",
-      "indexable": true
+      "indexable": true,
+      "intent": "activity_guide"
     },
     {
       "id": "RIGA-MUSEUMS",
@@ -174,7 +182,8 @@
       ],
       "outgoing": [],
       "status": "publish",
-      "indexable": true
+      "indexable": true,
+      "intent": "family_museums"
     },
     {
       "id": "SIGULDA-TRIP",
@@ -192,9 +201,12 @@
         "latvija",
         "ceļošana"
       ],
-      "outgoing": [],
+      "outgoing": [
+        "TURAIDA"
+      ],
       "status": "publish",
-      "indexable": true
+      "indexable": true,
+      "intent": "activity_guide"
     },
     {
       "id": "TURAIDA",
@@ -214,7 +226,8 @@
       ],
       "outgoing": [],
       "status": "publish",
-      "indexable": true
+      "indexable": true,
+      "intent": "landmark_visit"
     },
     {
       "id": "RIGA-HOTELS",
@@ -233,7 +246,8 @@
       ],
       "outgoing": [],
       "status": "publish",
-      "indexable": true
+      "indexable": true,
+      "intent": "accommodation_selection"
     },
     {
       "id": "RIGA-STAY",
@@ -252,7 +266,8 @@
       ],
       "outgoing": [],
       "status": "publish",
-      "indexable": true
+      "indexable": true,
+      "intent": "accommodation_selection"
     },
     {
       "id": "WP-UPDATES",
@@ -271,7 +286,8 @@
       ],
       "outgoing": [],
       "status": "publish",
-      "indexable": true
+      "indexable": true,
+      "intent": "technical_tutorial"
     }
   ],
   "pairs": [
@@ -298,11 +314,6 @@
     {
       "source": "RIGA-ATTRACTIONS",
       "target": "RIGA-MUSEUMS",
-      "expected": "recommend"
-    },
-    {
-      "source": "SIGULDA-TRIP",
-      "target": "TURAIDA",
       "expected": "recommend"
     },
     {
@@ -334,6 +345,36 @@
       "source": "RIGA-MUSEUMS",
       "target": "RIGA-ATTRACTIONS",
       "expected": "uncertain"
+    },
+    {
+      "source": "ACCRA-ATTRACTIONS",
+      "target": "ACCRA-ATTRACTIONS",
+      "expected": "reject",
+      "reason": "self_link"
+    },
+    {
+      "source": "ACCRA-HOTELS",
+      "target": "ACCRA-STAY",
+      "expected": "uncertain",
+      "reason": "possible_same_intent"
+    },
+    {
+      "source": "RIGA-HOTELS",
+      "target": "RIGA-STAY",
+      "expected": "uncertain",
+      "reason": "possible_same_intent"
+    },
+    {
+      "source": "SIGULDA-TRIP",
+      "target": "TURAIDA",
+      "expected": "reject",
+      "reason": "already_linked"
+    },
+    {
+      "source": "GHANA-ITINERARY",
+      "target": "WP-SECURITY",
+      "expected": "reject",
+      "reason": "unrelated"
     }
   ]
 }
