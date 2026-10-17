@@ -16,6 +16,7 @@ final class Bootstrap
         require_once __DIR__ . '/SEOAudit.php';
         require_once __DIR__ . '/InternalLinkingPreview.php';
         require_once __DIR__ . '/InternalLinkingIndex.php';
+        require_once __DIR__ . '/InternalLinkingTranslations.php';
         require_once __DIR__ . '/SmartTopics.php';
         require_once __DIR__ . '/AnswerReadiness.php';
         require_once __DIR__ . '/Migration.php';
@@ -30,6 +31,7 @@ final class Bootstrap
         SEOAudit::init();
         InternalLinkingPreview::init();
         InternalLinkingIndex::init();
+        InternalLinkingTranslations::init();
         SmartTopics::init();
         AnswerReadiness::init();
         Migration::init();
