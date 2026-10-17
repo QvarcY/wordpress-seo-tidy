@@ -89,6 +89,7 @@ final class InternalLinkingIndex
         $state = self::state();
         if (!empty($_POST['restart'])) {
             $state = [];
+            self::clearSnapshots();
         }
         if (!empty($state['complete']) && empty($state['stale']) && empty($_POST['restart'])) {
             wp_safe_redirect(admin_url('admin.php?page=seo-tidy-linking-preview&scan_status=complete'));
@@ -96,6 +97,7 @@ final class InternalLinkingIndex
         }
         if (!empty($state['stale'])) {
             $state = [];
+            self::clearSnapshots();
         }
         $last = isset($state['last_id']) ? absint($state['last_id']) : 0;
         // Explicit cursor avoids offset shifts when articles change.
@@ -111,7 +113,9 @@ final class InternalLinkingIndex
             if (!$post) {
                 continue;
             }
-            if ($post->post_password !== '') {
+            if ($post->post_password !== '' ||
+                get_post_meta($id, '_yoast_wpseo_meta-robots-noindex', true) === '1' ||
+                in_array('noindex', (array) get_post_meta($id, 'rank_math_robots', true), true)) {
                 delete_post_meta($id, self::META);
                 continue;
             }
@@ -138,6 +142,13 @@ final class InternalLinkingIndex
         update_option(self::STATE, $state, false);
         wp_safe_redirect(admin_url('admin.php?page=seo-tidy-linking-preview&scan_status=1'));
         exit;
+    }
+
+    private static function clearSnapshots(): void
+    {
+        global $wpdb;
+        // Remove only our private, regenerable index snapshots.
+        $wpdb->delete($wpdb->postmeta, ['meta_key' => self::META], ['%s']);
     }
 
     public static function entry(int $postId): array
