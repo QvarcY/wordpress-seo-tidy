@@ -182,7 +182,7 @@ final class InternalLinkingIndex
                 $params = [];
                 foreach ($chunk as $term => $frequency) {
                     $values[] = '(%d,%s,%d)';
-                    array_push($params, $id, substr($term, 0, 191), max(1, (int) $frequency));
+                    array_push($params, $id, (function_exists('mb_substr') ? mb_substr($term, 0, 191, 'UTF-8') : $term), max(1, (int) $frequency));
                 }
                 $sql = 'INSERT INTO ' . self::table() .
                     ' (post_id,term,frequency) VALUES ' . implode(',', $values);
