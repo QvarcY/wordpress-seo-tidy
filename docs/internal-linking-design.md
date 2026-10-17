@@ -15,7 +15,7 @@ Status: **design proposal, not implemented**. Target: incremental MVP, reviewed 
 
 MVP gives **manual-review suggestions**, never edits post content. All analysis stays on the site's WordPress server: no paid external services or third-party content transfer. No statement about actual Google ranking, search-volume, keyword position or proven cannibalization; these are unavailable from local content. Explain each suggestion in plain English and Latvian.
 
-MVP eligibility: local `post` and `page` with `publish` status, public/indexable, resolvable canonical permalink, permitted site host; exclude password-protected posts, attachments, revisions, drafts, private, trash, noindex (including SEO-TidY's own flags and known WordPress settings), invalid or stale targets. Other custom post types are out of scope until explicitly audited. Site-level discouraging search engines must produce a warning, not automatically imply a per-item noindex status. Honor canonical overrides if a supported canonical source can be reliably established; otherwise exclude uncertain items or label unsupported canonical providers — do not silently assert canonical consistency.
+MVP eligibility: local `post` and `page` with `publish` status, public/indexable, resolvable canonical permalink, permitted site host; exclude password-protected posts, attachments, revisions, drafts, private, trash, noindex (from verified supported providers or effective page-level robots rules), invalid or stale targets. Other custom post types are out of scope until explicitly audited. Site-level discouraging search engines must produce a warning, not automatically imply a per-item noindex status. Honor canonical overrides if a supported canonical source can be reliably established; otherwise exclude uncertain items or label unsupported canonical providers — do not silently assert canonical consistency.
 
 Source and target must differ. Already-linked source→target pairs excluded regardless of anchor repetition; reverse link target→source does **not** disqualify source→target (different directed edge). Fragments are not separate targets. Resolve root-relative and absolute URLs, same-site host/port and WordPress permalink variants, stripping fragments/tracking params only for identity; do not treat arbitrary relative or off-domain URLs as safe local links. Use core APIs to resolve post IDs. Where identity is ambiguous, skip.
 
@@ -56,6 +56,46 @@ Source and target must differ. Already-linked source→target pairs excluded reg
 | Published source | Noindex/draft/password-protected target | Exclude |
 | Thin posts sharing a generic tag | Each other | Suppress or insufficient evidence |
 
+
+## Review dataset: 14 manually classified scenarios
+
+These labels are specification examples, **not results from the implementation**. They test key rules rather than establish statistical precision. Assumptions: published/indexable content and no existing directed link unless stated.
+
+| ID | Language | Source → target | Expected class | Explanation |
+| --- | --- | --- | --- | --- |
+| E01 | EN | Ghana itinerary → Things to do in Accra | Recommend | City detail expands a mentioned stop |
+| E02 | EN | Things to do in Accra → Accra airport transfer guide | Recommend | Practical supporting guide for visitors |
+| E03 | EN | Best hotels in Accra → Where to stay in Accra | Uncertain | Strong likelihood of overlapping user intent |
+| E04 | EN | Ghana travel guide → Ghana travel guide 2026 | Uncertain | Possibly revised duplicate, requires content review |
+| E05 | EN | Best beaches in Ghana → WordPress security checklist | Reject | No meaningful topical connection |
+| E06 | EN | African travel news → Things to do in Accra | Reject | A broad tag alone is not sufficient evidence |
+| L01 | LV | Rīgas apskates vietas → Rīgas muzeji ģimenēm | Recommend | Complementary narrower family activity |
+| L02 | LV | Ko redzēt Siguldā → Turaidas pils apmeklējums | Recommend | Detailed article covers a listed destination |
+| L03 | LV | Labākās viesnīcas Rīgā → Kur nakšņot Rīgā | Uncertain | Similar accommodation search intent |
+| L04 | LV | Rīgas ceļvedis → Rīgas ceļvedis 2026 | Uncertain | May be update/duplicate, not a confident link |
+| L05 | LV | Rīgas apskates vietas → Kā atjaunināt WordPress | Reject | Shared generic words cannot establish relevance |
+| L06 | LV | Ceļojumi Latvijā → Siguldas apskates vietas | Uncertain | Generic topic without specific contextual reference |
+| X01 | LV/EN | Latvijas pilis → Castles of Latvia | Uncertain | Translation/near-duplicate risk, absent explicit language metadata |
+| X02 | EN | Accra itinerary already links to Accra museums → Accra museums | Reject | Existing directed link excludes repeated suggestion |
+
+**Interpretation:** `Recommend` means *eligible for a reviewable suggestion*, never automatic insertion. `Uncertain` means show as an optional review warning or suppress, never a confident recommendation. `Reject` means no suggestion. Titles alone are insufficient to validate score weights; the 35/25/20/15/5 weights and 70/50 thresholds remain **unvalidated** until representative article text is available and the implementation is exercised. No precision/recall or false-positive rate is claimed.
+
+## Verified WordPress integration details
+
+- `SEOAudit::noindexSource()` handles global `blog_public=0` as a site warning and recognizes `_yoast_wpseo_meta-robots-noindex=1` plus `rank_math_robots` containing `noindex`. This is **not a comprehensive page-level robots or canonical resolver**.
+- `Metadata.php` registers only `_seo_tidy_title` and `_seo_tidy_description`; no SEO-TidY-owned noindex/canonical fields were found there. Consequently, do not refer to an existing SEO-TidY noindex setting as implemented.
+- Canonical overrides and effective `wp_robots` output require a deliberate compatibility policy before implementation. For MVP, ambiguous overridden canonicals should be excluded with a clear reason; additional SEO provider compatibility requires explicit verification.
+- Admin menu is built in `src/index.js` with an existing `audit` section and `SEOAuditOverview` component. Recommended first integration: a distinct **Internal Linking** panel within SEO Audit rather than a new top-level menu. Keep current audit 20-item paging and its 200-item incoming-link limitation unchanged.
+- The admin script uses WordPress `__()` with domain `seo-tidy`, and `scripts/check-i18n.cjs` validates Latvian JSON catalogs. All new user-facing strings need translated entries and must pass the existing localization checks.
+
+## MVP implementation decisions
+
+- Use the existing administrator capability `manage_options` for the new read-only REST endpoint; do not expose content to anonymous users.
+- Introduce a separate service that can be disabled without changing the existing audit output.
+- Use candidate retrieval with capped work per source and show explicit incomplete/paused scanning status. Do not advertise site-wide results until scan completion.
+- Retain all classification reasons as plain text suitable for localized display.
+- Do not release until corpus-based weight calibration, actual provider behavior and WordPress integration tests are complete.
+
 ## Proposed implementation architecture
 
 Prefer separate, testable responsibilities rather than expanding `SEOAudit.php` into a monolith:
@@ -85,9 +125,11 @@ Record measured time/memory and sample false positives during Phase C/D; test su
 
 - [x] Source code inventory of key audit/REST/bootstrap/UI entrypoints.
 - [x] Draft MVP scope, exclusions, candidate/scoring model, uncertainty, batching and UI contract.
-- [ ] Hand-labeled >=12 EN/LV pairs and calibrated thresholds.
-- [ ] Decide reliable supported noindex/canonical providers after inspecting `Metadata.php` and existing tests.
-- [ ] Check actual admin composition and translation extraction mechanism before coding.
+- [x] Prepared and manually classified 14 representative EN/LV scenarios (expected labels only).
+- [ ] Calibrate weights and thresholds on representative full-text samples; not yet validated.
+- [x] Inspected implemented Yoast/Rank Math noindex handling and SEO-TidY metadata fields.
+- [ ] Finalize effective robots/canonical compatibility rules for the new feature.
+- [x] Identified existing audit panel and Latvian translation catalog checks.
 - [ ] Record representative performance budgets after first measurements.
 - [ ] Review and approve Phase A before beginning implementation.
 
