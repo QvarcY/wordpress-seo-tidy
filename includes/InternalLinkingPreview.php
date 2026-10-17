@@ -155,7 +155,9 @@ final class InternalLinkingPreview
         if (get_option('blog_public') === '0') {
             echo '<div class="notice notice-warning"><p>' . esc_html__('Search engines are discouraged at site level; indexability cannot be confirmed.', 'seo-tidy') . '</p></div>';
         }
-        $query = new \WP_Query(['post_type' => ['post', 'page'], 'post_status' => 'publish',
+        $search = isset($_GET['link_search']) && is_string($_GET['link_search'])
+            ? sanitize_text_field(wp_unslash($_GET['link_search'])) : '';
+        $query = new \WP_Query(['s' => $search, 'post_type' => ['post', 'page'], 'post_status' => 'publish',
             'posts_per_page' => 25, 'paged' => $page, 'orderby' => 'ID', 'order' => 'ASC',
             'no_found_rows' => false, 'ignore_sticky_posts' => true]);
         $sources = array_filter($query->posts, [self::class, 'eligible']);
@@ -226,6 +228,12 @@ final class InternalLinkingPreview
                 esc_html__('Complete the index scan before candidate results are displayed.', 'seo-tidy') .
                 '</p>';
         }
+        echo '<form method="get" class="seo-tidy-link-search">';
+        echo '<input type="hidden" name="page" value="seo-tidy-linking-preview">';
+        echo '<label for="seo-tidy-link-search-input">' . esc_html__('Find an article', 'seo-tidy') . '</label> ';
+        echo '<input id="seo-tidy-link-search-input" type="search" name="link_search" value="' . esc_attr($search) . '" placeholder="' . esc_attr__('Search titles and content', 'seo-tidy') . '"> ';
+        submit_button(__('Search', 'seo-tidy'), 'secondary', 'submit', false);
+        echo '</form>';
         foreach ($sources as $post) {
             $src = self::document($post);
             echo '<details class="seo-tidy-link-item"><summary>' . esc_html(get_the_title($post)) . '</summary><div class="seo-tidy-link-body">';
