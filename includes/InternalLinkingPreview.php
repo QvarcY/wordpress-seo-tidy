@@ -14,7 +14,7 @@ final class InternalLinkingPreview
         if (!defined('SEO_TIDY_INTERNAL_LINKING_PREVIEW') || SEO_TIDY_INTERNAL_LINKING_PREVIEW !== true) {
             return;
         }
-        add_action('admin_menu', [self::class, 'menu']);
+        add_action('admin_menu', [self::class, 'menu'], 20);
     }
 
     public static function menu(): void
