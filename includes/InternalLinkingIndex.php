@@ -19,12 +19,55 @@ final class InternalLinkingIndex
         add_action('save_post', [self::class, 'invalidate'], 20, 1);
         add_action('before_delete_post', [self::class, 'invalidate'], 20, 1);
         add_action('set_object_terms', [self::class, 'invalidate'], 20, 1);
+        add_action('transition_post_status', [self::class, 'statusChanged'], 20, 3);
     }
 
     public static function state(): array
     {
         $state = get_option(self::STATE, []);
         return is_array($state) ? $state : [];
+    }
+
+    public static function statusChanged(string $new, string $old, \WP_Post $post): void
+    {
+        if ($new !== $old) {
+            self::invalidate($post->ID);
+        }
+    }
+
+    public static function candidateIds(array $terms, int $sourceId, int $limit = 30): array
+    {
+        $state = self::state();
+        if (empty($state['complete']) || !empty($state['stale'])) {
+            return [];
+        }
+        $terms = array_slice(array_values(array_unique(array_filter($terms, 'is_string'))), 0, 8);
+        if (!$terms) {
+            return [];
+        }
+        global $wpdb;
+        $where = [];
+        $params = [];
+        foreach ($terms as $term) {
+            if (strlen($term) < 3) {
+                continue;
+            }
+            // Serialized token keys are quoted, preventing incidental substring matches.
+            $where[] = 'm.meta_value LIKE %s';
+            $params[] = '%' . $wpdb->esc_like('"' . $term . '";') . '%';
+        }
+        if (!$where) {
+            return [];
+        }
+        $params[] = $sourceId;
+        $params[] = max(1, min(30, $limit));
+        $sql = "SELECT DISTINCT p.ID FROM {$wpdb->posts} p
+                JOIN {$wpdb->postmeta} m ON m.post_id = p.ID
+                WHERE m.meta_key = '_seo_tidy_link_index_v1'
+                  AND p.post_type IN ('post','page') AND p.post_status = 'publish'
+                  AND (" . implode(' OR ', $where) . ")
+                  AND p.ID <> %d ORDER BY p.ID ASC LIMIT %d";
+        return array_map('intval', $wpdb->get_col($wpdb->prepare($sql, ...$params)));
     }
 
     public static function invalidate(int $postId): void
@@ -47,7 +90,7 @@ final class InternalLinkingIndex
         if (!empty($_POST['restart'])) {
             $state = [];
         }
-        if (!empty($state['complete']) && empty($state['stale'])) {
+        if (!empty($state['complete']) && empty($state['stale']) && empty($_POST['restart'])) {
             wp_safe_redirect(admin_url('admin.php?page=seo-tidy-linking-preview&scan_status=complete'));
             exit;
         }
@@ -73,6 +116,11 @@ final class InternalLinkingIndex
                 continue;
             }
             $tokens = InternalLinkingPreview::indexTerms($post);
+            foreach (SmartTopics::approved($id) as $topic) {
+                foreach (InternalLinkingPreview::termTokens($topic) as $term) {
+                    $tokens[$term] = ($tokens[$term] ?? 0) + 3;
+                }
+            }
             // Bounded, non-sensitive token counts only; never raw private content.
             update_post_meta($id, self::META, [
                 'version' => 1,
