@@ -205,11 +205,14 @@ final class InternalLinkingPreview
         .seo-tidy-linking .seo-tidy-help:focus{outline:2px solid #2271b1}
         </style><h1>' . esc_html__('Internal Linking Preview', 'seo-tidy') . '</h1>';
         echo '<p>' . esc_html__('Experimental read-only preview. Suggestions need manual review. Candidate retrieval uses the indexed token table, capped at 30 targets per source. Results remain experimental.', 'seo-tidy') . '</p>';
-        echo '<p>' . esc_html(sprintf(
-            /* translators: %d: articles indexed */
-            __('Indexed articles: %d. Indexing is manual and resumable.', 'seo-tidy'),
-            (int) ($state['processed'] ?? 0)
-        )) . '</p>';
+        $processed = max(0, (int) ($state['processed'] ?? 0));
+        $status = $ready ? __('Complete', 'seo-tidy') :
+            (!empty($state['stale']) ? __('Needs rebuilding', 'seo-tidy') : __('In progress or not started', 'seo-tidy'));
+        echo '<div class="notice notice-info inline"><p><strong>' .
+            esc_html__('Index status', 'seo-tidy') . ':</strong> ' . esc_html($status) .
+            ' &middot; ' . esc_html(sprintf(
+                __('Processed: %d articles', 'seo-tidy'), $processed
+            )) . '</p></div>';
         echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
         echo '<input type="hidden" name="action" value="seo_tidy_link_scan">';
         wp_nonce_field('seo_tidy_link_scan');
@@ -227,6 +230,8 @@ final class InternalLinkingPreview
             $src = self::document($post);
             echo '<details class="seo-tidy-link-item"><summary>' . esc_html(get_the_title($post)) . '</summary><div class="seo-tidy-link-body">';
             SmartTopics::renderReviewPanel($post);
+            echo '<h3>' . esc_html__('Suggested internal links', 'seo-tidy') . '</h3>';
+            echo '<p class="description">' . esc_html__('Suggestions are not inserted automatically. Check the destination and reading context before adding a link to your article.', 'seo-tidy') . '</p>';
             echo '<ul>';
             $ranked = [];
             foreach ($documents as $id => $target) {
