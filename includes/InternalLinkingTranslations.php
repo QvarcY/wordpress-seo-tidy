@@ -20,6 +20,7 @@ final class InternalLinkingTranslations
             return $translation;
         }
         static $lv = [
+            'Could not update the link index. The scan has stopped.' => 'Neizdevās atjaunināt saišu indeksu. Indeksēšana apturēta.',
             'Find an article' => 'Atrast rakstu',
             'Search titles and content' => 'Meklēt virsrakstos un saturā',
             'Search' => 'Meklēt',
