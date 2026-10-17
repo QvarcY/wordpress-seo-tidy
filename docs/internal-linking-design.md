@@ -75,6 +75,12 @@ Run from the repository root with `python tests/fixtures/evaluate-internal-linki
 
 The sample corpus is intentionally small and synthetic. Therefore it cannot substantiate user-facing precision, recall, multilingual quality or production performance claims. Next validation must expand the body text and include holdout examples, explicit metadata and exclusion cases, then record real outputs, observed false positives and candidate retrieval failures.
 
+### Independent calculation cross-check (same fixture parameters)
+
+An independent JavaScript calculation of the documented BM25 formula against the fourteen-document fixture produced the following rounded scores: SIGULDA-TRIP → TURAIDA 6.33 (recommend), RIGA-ATTRACTIONS → RIGA-MUSEUMS 5.09 (recommend), RIGA-HOTELS → RIGA-STAY 5.41 (uncertain), GHANA-ITINERARY → ACCRA-ATTRACTIONS 1.67 (recommend), GHANA-BEACH → WP-SECURITY 0.00 (reject). This cross-check is not execution of the committed Python script. The locally available Python environment could not retrieve the GitHub files for direct execution, so Python runtime verification remains open.
+
+These observations demonstrate that high BM25 does not imply a safe recommendation: a competing accommodation page can score similarly to a genuinely useful supporting article. Independently scored reverse links can also rank highly, so directed context and explicit safety gates are indispensable.
+
 ## Verified code baseline (2026-10-17)
 
 - `includes/SEOAudit.php`: `hasInternalLink()` inspects content HTML via `WP_HTML_Tag_Processor` and only reports whether an eligible internal link exists. It does not resolve recommended pairs.
