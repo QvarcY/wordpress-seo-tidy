@@ -13,7 +13,7 @@ Status: **design proposal, not implemented**. Target: incremental MVP, reviewed 
 
 ## Scope, guarantees and exclusions
 
-MVP gives **manual-review suggestions**, never edits post content. All analysis stays on the site's WordPress server: no paid API, off-site AI or external content upload. No statement about actual Google ranking, search-volume, keyword position or proven cannibalization; these are unavailable from local content. Explain each suggestion in plain English and Latvian.
+MVP gives **manual-review suggestions**, never edits post content. All analysis stays on the site's WordPress server: no paid external services or third-party content transfer. No statement about actual Google ranking, search-volume, keyword position or proven cannibalization; these are unavailable from local content. Explain each suggestion in plain English and Latvian.
 
 MVP eligibility: local `post` and `page` with `publish` status, public/indexable, resolvable canonical permalink, permitted site host; exclude password-protected posts, attachments, revisions, drafts, private, trash, noindex (including SEO-TidY's own flags and known WordPress settings), invalid or stale targets. Other custom post types are out of scope until explicitly audited. Site-level discouraging search engines must produce a warning, not automatically imply a per-item noindex status. Honor canonical overrides if a supported canonical source can be reliably established; otherwise exclude uncertain items or label unsupported canonical providers — do not silently assert canonical consistency.
 
@@ -30,12 +30,12 @@ Source and target must differ. Already-linked source→target pairs excluded reg
    - content-term similarity (bounded normalized keyword frequencies): up to 20
    - matching meaningful categories/tags: up to 15
    - explicit complementary-context evidence from source text: up to 5
-   Avoid scoring popularity/ranking, AI semantic understanding, or inferring that shared taxonomy alone proves relevance.
+   Do not infer popularity, search rankings or semantic relationships from shared taxonomy alone.
 5. Negative/uncertainty gate **before showing as high confidence**:
    - Very similar titles + substantial heading/content overlap → flag `possible_same_intent`; no confident linking suggestion.
    - Thin text, few distinctive terms, cross-language mismatch or unresolved URL/canonical → `insufficient_evidence` or excluded; never fake precision.
    - Shared generic travel/business terms only → suppress.
-   - Flag is a *review prompt*, not a definitive duplicate or cannibalization finding.
+   - Flag is a *review indicator*, not a definitive duplicate or cannibalization finding.
 6. Initial display bands **subject to calibration**: 70–100 = reviewable high topical relevance, 50–69 = reviewable moderate, <50 = not suggested. High relevance never overrides negative gate. A clear sentence must list actual positive evidence and uncertainty for each item. Scores are internal heuristics, not SEO success probabilities.
 7. Suggest anchors only when the source visibly contains a naturally usable short phrase referring to target; otherwise leave anchor blank with "Choose anchor manually". Do not fabricate exact source quote and never insert automatically.
 
@@ -56,7 +56,7 @@ Source and target must differ. Already-linked source→target pairs excluded reg
 | Published source | Noindex/draft/password-protected target | Exclude |
 | Thin posts sharing a generic tag | Each other | Suppress or insufficient evidence |
 
-## Architecture for Codex (only after Phase A review)
+## Proposed implementation architecture
 
 Prefer separate, testable responsibilities rather than expanding `SEOAudit.php` into a monolith:
 - **Eligibility/URL resolver:** public status, supported type, noindex, canonical and existing directed links.
@@ -79,7 +79,7 @@ MVP admin: under SEO Audit or a dedicated "Internal Links" section show suggesti
 
 Unit: token normalization, LV diacritics/EN stopwords, thresholds/negative gate, thin and mixed-language cases, exact directed pair de-duplication. WordPress integration: permalink variants, fragment/external/relative URLs, published/noindex/private/password/deleted, canonical overrides and role boundaries. UI: loading/partial/empty/error, accessible EN/LV copy. Performance: <=200 and >200, then >=1000 published items with bounded batches, edits invalidating stale entries, restart/resume. Regression: existing `review_internal_links` and `review_incoming_links` behavior unchanged.
 
-Record measured time/memory and sample false positives during Phase C/D; test suite should be targeted during implementation and complete at release gate. Avoid GitHub Actions runs solely for iterative exploration.
+Record measured time/memory and sample false positives during Phase C/D; test suite should be targeted during implementation and complete at release gate. Run targeted checks during development and the full relevant suite before release.
 
 ## Checkpoint / decision record
 
@@ -89,7 +89,7 @@ Record measured time/memory and sample false positives during Phase C/D; test su
 - [ ] Decide reliable supported noindex/canonical providers after inspecting `Metadata.php` and existing tests.
 - [ ] Check actual admin composition and translation extraction mechanism before coding.
 - [ ] Record representative performance budgets after first measurements.
-- [ ] Review and approve Phase A; *then* give Codex one small, file-scoped implementation task.
+- [ ] Review and approve Phase A before beginning implementation.
 
 No runtime code changed and no implementation/test claims are made in this document.
 
