@@ -36,9 +36,25 @@ def bm25(src, dst, k1=1.2, b=0.75):
         score += idf * (freq * (k1 + 1)) / denom
     return score
 
-print("Pair       BM25  Label       Overlap(topic)")
+def decision(src, dst):
+    """Conservative safety triage; not semantic intent classification."""
+    if src["id"] == dst["id"]:
+        return "reject", "self_link"
+    if dst["id"] in src["outgoing"]:
+        return "reject", "already_linked"
+    if dst["status"] != "publish" or not dst["indexable"]:
+        return "reject", "ineligible_target"
+    shared = set(src["topics"]) & set(dst["topics"])
+    if len(shared) >= 2 and src["intent"] == dst["intent"]:
+        return "uncertain", "possible_same_intent"
+    if not shared:
+        return "uncertain", "insufficient_topic_evidence"
+    return "review", "candidate_only"
+
+print("Source -> target                       BM25   Expected   Triage")
 for p in data["pairs"]:
     src, dst = docs[p["source"]],docs[p["target"]]
-    overlap = len(set(terms(" ".join(src["topics"]))) & set(terms(" ".join(dst["topics"]))))
-    print(f'{p["source"][:10]:10} -> {p["target"][:10]:10} {bm25(src,dst):6.2f}  {p["expected"]:9}  {overlap}')
+    triage, reason = decision(src, dst)
+    print(f'{p["source"][:17]:17} -> {p["target"][:17]:17} {bm25(src,dst):6.2f}  {p["expected"]:9}  {triage}: {reason}')
+print("Triage is a conservative diagnostic; 'review' is not an automatic link recommendation.")
 print("Scores are corpus-relative ranking signals, not accuracy percentages.")
