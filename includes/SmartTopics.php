@@ -93,6 +93,12 @@ final class SmartTopics
         return array_values($out);
     }
 
+    private static function help(string $description): string
+    {
+        return ' <span class="seo-tidy-help" tabindex="0" title="' . esc_attr($description) .
+            '" aria-label="' . esc_attr($description) . '">?</span>';
+    }
+
     public static function renderBox(\WP_Post $post): void
     {
         if (!current_user_can('manage_options')) {
@@ -100,16 +106,16 @@ final class SmartTopics
         }
         wp_nonce_field('seo_tidy_smart_topics_' . $post->ID, 'seo_tidy_smart_topics_nonce');
         $approved = self::approved($post->ID);
-        echo '<p>' . esc_html__('Approved topics (comma separated):', 'seo-tidy') . '</p>';
+        echo '<p>' . esc_html__('Approved topics (comma separated):', 'seo-tidy') . self::help(__('Enter a few specific subjects separated by commas. These private labels help find relevant internal links; they do not change your public tags or search results directly.', 'seo-tidy')) . '</p>';
         echo '<textarea name="seo_tidy_smart_topics_approved" rows="3" style="width:100%">' .
             esc_textarea(implode(', ', $approved)) . '</textarea>';
         $suggestions = self::suggestions($post);
-        echo '<p>' . esc_html__('Suggested topics — select to approve:', 'seo-tidy') . '</p>';
+        echo '<p>' . esc_html__('Suggested topics — select to approve:', 'seo-tidy') . self::help(__('Suggestions come from the article title and existing categories or tags. Select only topics that genuinely describe the article; unselected suggestions are not saved.', 'seo-tidy')) . '</p>';
         foreach ($suggestions as $label) {
             echo '<label style="display:block"><input type="checkbox" name="seo_tidy_smart_topics_accept[]" value="' .
                 esc_attr($label) . '"> ' . esc_html($label) . '</label>';
         }
-        echo '<p>' . esc_html__('Rejected topics (comma separated; will not be suggested again):', 'seo-tidy') . '</p>';
+        echo '<p>' . esc_html__('Rejected topics (comma separated; will not be suggested again):', 'seo-tidy') . self::help(__('Add irrelevant subjects separated by commas. Rejected labels will not be suggested again for this article; they can be removed later.', 'seo-tidy')) . '</p>';
         $data = get_post_meta($post->ID, self::META, true);
         $rejected = is_array($data) && isset($data['rejected']) && is_array($data['rejected'])
             ? $data['rejected'] : [];
@@ -168,15 +174,15 @@ final class SmartTopics
         echo '<input type="hidden" name="action" value="seo_tidy_topics_review">';
         echo '<input type="hidden" name="post_id" value="' . esc_attr((string) $post->ID) . '">';
         wp_nonce_field('seo_tidy_topics_review_' . $post->ID);
-        echo '<p><label>' . esc_html__('Approved topics', 'seo-tidy') .
+        echo '<p><label>' . esc_html__('Approved topics', 'seo-tidy') . self::help(__('Enter a few specific subjects separated by commas. These private labels help find relevant internal links; they do not change your public tags or search results directly.', 'seo-tidy')) .
             '<br><input type="text" name="approved" style="width:100%;max-width:480px" value="' .
             esc_attr(implode(', ', $approved)) . '"></label></p>';
-        echo '<p>' . esc_html__('Suggested topics', 'seo-tidy') . '</p>';
+        echo '<p>' . esc_html__('Suggested topics', 'seo-tidy') . self::help(__('Suggestions come from the article title and existing categories or tags. Select only topics that genuinely describe the article; unselected suggestions are not saved.', 'seo-tidy')) . '</p>';
         foreach ($proposals as $proposal) {
             echo '<label style="margin-right:16px"><input type="checkbox" name="accept[]" value="' .
                 esc_attr($proposal) . '"> ' . esc_html($proposal) . '</label>';
         }
-        echo '<p><label>' . esc_html__('Rejected topics', 'seo-tidy') .
+        echo '<p><label>' . esc_html__('Rejected topics', 'seo-tidy') . self::help(__('Add irrelevant subjects separated by commas. Rejected labels will not be suggested again for this article; they can be removed later.', 'seo-tidy')) .
             '<br><input type="text" name="rejected" style="width:100%;max-width:480px" value="' .
             esc_attr(implode(', ', $rejected)) . '"></label></p>';
         submit_button(__('Save topics', 'seo-tidy'), 'secondary', 'submit', false);
