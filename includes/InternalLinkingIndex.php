@@ -35,6 +35,62 @@ final class InternalLinkingIndex
         }
     }
 
+    private static function table(): string
+    {
+        global $wpdb;
+        return $wpdb->prefix . 'seo_tidy_link_terms';
+    }
+
+    private static function ensureTable(): bool
+    {
+        global $wpdb;
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+        $table = self::table();
+        $collation = $wpdb->get_charset_collate();
+        dbDelta("CREATE TABLE {$table} (
+            post_id bigint(20) unsigned NOT NULL,
+            term varchar(191) NOT NULL,
+            frequency int(10) unsigned NOT NULL DEFAULT 0,
+            PRIMARY KEY  (post_id,term),
+            KEY term (term)
+        ) {$collation};");
+        return $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table)) === $table;
+    }
+
+    public static function corpusStats(): array
+    {
+        $state = self::state();
+        if (empty($state['complete']) || !empty($state['stale'])) {
+            return ['count' => 0, 'avgdl' => 1.0];
+        }
+        global $wpdb;
+        $table = self::table();
+        // One row per term/post; sum of frequencies is the document length.
+        $row = $wpdb->get_row("SELECT COUNT(*) AS n, AVG(x.length) AS avgdl FROM
+            (SELECT post_id, SUM(frequency) AS length FROM {$table} GROUP BY post_id) x", ARRAY_A);
+        return ['count' => (int) ($row['n'] ?? 0), 'avgdl' => max(1.0, (float) ($row['avgdl'] ?? 1.0))];
+    }
+
+    public static function documentFrequency(array $terms): array
+    {
+        $terms = array_slice(array_values(array_unique(array_filter($terms, 'is_string'))), 0, 64);
+        if (!$terms) {
+            return [];
+        }
+        global $wpdb;
+        $table = self::table();
+        $placeholders = implode(',', array_fill(0, count($terms), '%s'));
+        $rows = $wpdb->get_results($wpdb->prepare(
+            "SELECT term, COUNT(*) AS df FROM {$table} WHERE term IN ({$placeholders}) GROUP BY term",
+            ...$terms
+        ), ARRAY_A);
+        $result = [];
+        foreach ($rows as $row) {
+            $result[$row['term']] = (int) $row['df'];
+        }
+        return $result;
+    }
+
     public static function candidateIds(array $terms, int $sourceId, int $limit = 30): array
     {
         $state = self::state();
@@ -46,33 +102,22 @@ final class InternalLinkingIndex
             return [];
         }
         global $wpdb;
-        $where = [];
-        $params = [];
-        foreach ($terms as $term) {
-            if (strlen($term) < 3) {
-                continue;
-            }
-            // Serialized token keys are quoted, preventing incidental substring matches.
-            $where[] = 'm.meta_value LIKE %s';
-            $params[] = '%' . $wpdb->esc_like('"' . $term . '";') . '%';
-        }
-        if (!$where) {
-            return [];
-        }
-        $params[] = $sourceId;
-        $params[] = max(1, min(30, $limit));
-        $sql = "SELECT DISTINCT p.ID FROM {$wpdb->posts} p
-                JOIN {$wpdb->postmeta} m ON m.post_id = p.ID
-                WHERE m.meta_key = '_seo_tidy_link_index_v1'
-                  AND p.post_type IN ('post','page') AND p.post_status = 'publish'
-                  AND (" . implode(' OR ', $where) . ")
-                  AND p.ID <> %d ORDER BY p.ID ASC LIMIT %d";
+        $table = self::table();
+        $placeholders = implode(',', array_fill(0, count($terms), '%s'));
+        $params = array_merge($terms, [$sourceId, max(1, min(30, $limit))]);
+        $sql = "SELECT t.post_id FROM {$table} t
+                INNER JOIN {$wpdb->posts} p ON p.ID=t.post_id
+                WHERE t.term IN ({$placeholders}) AND t.post_id <> %d
+                  AND p.post_type IN ('post','page') AND p.post_status='publish'
+                GROUP BY t.post_id ORDER BY COUNT(*) DESC, t.post_id ASC LIMIT %d";
         return array_map('intval', $wpdb->get_col($wpdb->prepare($sql, ...$params)));
     }
 
     public static function invalidate(int $postId): void
     {
         if (get_post_type($postId) && in_array(get_post_type($postId), ['post', 'page'], true)) {
+            global $wpdb;
+            $wpdb->delete(self::table(), ['post_id' => $postId], ['%d']);
             delete_post_meta($postId, self::META);
             $state = self::state();
             $state['stale'] = true;
@@ -87,6 +132,9 @@ final class InternalLinkingIndex
         }
         check_admin_referer('seo_tidy_link_scan');
         $state = self::state();
+        if (!self::ensureTable()) {
+            wp_die(esc_html__('Internal linking index table could not be created.', 'seo-tidy'));
+        }
         if (!empty($_POST['restart'])) {
             $state = [];
             self::clearSnapshots();
@@ -116,6 +164,7 @@ final class InternalLinkingIndex
             if ($post->post_password !== '' ||
                 get_post_meta($id, '_yoast_wpseo_meta-robots-noindex', true) === '1' ||
                 in_array('noindex', (array) get_post_meta($id, 'rank_math_robots', true), true)) {
+                $wpdb->delete(self::table(), ['post_id' => $id], ['%d']);
                 delete_post_meta($id, self::META);
                 continue;
             }
@@ -125,12 +174,22 @@ final class InternalLinkingIndex
                     $tokens[$term] = ($tokens[$term] ?? 0) + 3;
                 }
             }
-            // Bounded, non-sensitive token counts only; never raw private content.
-            update_post_meta($id, self::META, [
-                'version' => 1,
-                'tokens' => array_slice($tokens, 0, 300, true),
-                'updated' => (int) get_post_modified_time('U', true, $post),
-            ]);
+            $wpdb->delete(self::table(), ['post_id' => $id], ['%d']);
+            // Deterministic cap; title/topic boosting is handled by the scorer.
+            arsort($tokens, SORT_NUMERIC);
+            foreach (array_chunk(array_slice($tokens, 0, 300, true), 50, true) as $chunk) {
+                $values = [];
+                $params = [];
+                foreach ($chunk as $term => $frequency) {
+                    $values[] = '(%d,%s,%d)';
+                    array_push($params, $id, substr($term, 0, 191), max(1, (int) $frequency));
+                }
+                $sql = 'INSERT INTO ' . self::table() .
+                    ' (post_id,term,frequency) VALUES ' . implode(',', $values);
+                $wpdb->query($wpdb->prepare($sql, ...$params));
+            }
+            update_post_meta($id, self::META, ['version' => 2, 'updated' =>
+                (int) get_post_modified_time('U', true, $post)]);
         }
         $processed = isset($state['processed']) ? absint($state['processed']) : 0;
         $state = [
@@ -148,6 +207,7 @@ final class InternalLinkingIndex
     {
         global $wpdb;
         // Remove only our private, regenerable index snapshots.
+        $wpdb->query('DELETE FROM ' . self::table());
         $wpdb->delete($wpdb->postmeta, ['meta_key' => self::META], ['%s']);
     }
 
