@@ -36,6 +36,12 @@ final class InternalLinkingPreview
         }));
     }
 
+    public static function indexTerms(\WP_Post $post): array
+    {
+        $body = wp_strip_all_tags(strip_shortcodes($post->post_content));
+        return array_count_values(self::tokens($post->post_title . ' ' . $body));
+    }
+
     private static function document(\WP_Post $post): array
     {
         $body = wp_strip_all_tags(strip_shortcodes($post->post_content));
@@ -148,15 +154,28 @@ final class InternalLinkingPreview
             'posts_per_page' => 25, 'paged' => $page, 'orderby' => 'ID', 'order' => 'ASC',
             'no_found_rows' => false, 'ignore_sticky_posts' => true]);
         $sources = array_filter($query->posts, [self::class, 'eligible']);
-        // Explicitly bounded local comparison window. Not a complete-site scan.
-        $pool = get_posts(['post_type' => ['post', 'page'], 'post_status' => 'publish',
-            'posts_per_page' => 200, 'orderby' => 'ID', 'order' => 'ASC',
-            'suppress_filters' => false]);
-        $documents = [];
-        foreach ($pool as $post) {
-            if (self::eligible($post)) {
-                $documents[$post->ID] = self::document($post);
+        // Per-source retrieval; at most 30 candidates, no first-200 cap.
+        $candidateSets = [];
+        $allCandidates = [];
+        foreach ($sources as $sourcePost) {
+            $phrase = implode(' ', array_slice(self::tokens($sourcePost->post_title), 0, 4));
+            $found = get_posts([
+                'post_type' => ['post', 'page'], 'post_status' => 'publish',
+                's' => $phrase, 'posts_per_page' => 30, 'suppress_filters' => false,
+                'ignore_sticky_posts' => true
+            ]);
+            $candidateSets[$sourcePost->ID] = [];
+            foreach ($found as $targetPost) {
+                if (!self::eligible($targetPost)) {
+                    continue;
+                }
+                $candidateSets[$sourcePost->ID][$targetPost->ID] = true;
+                $allCandidates[$targetPost->ID] = $targetPost;
             }
+        }
+        $documents = [];
+        foreach ($allCandidates as $targetPost) {
+            $documents[$targetPost->ID] = self::document($targetPost);
         }
         $df = [];
         $totalSize = 0;
@@ -169,12 +188,26 @@ final class InternalLinkingPreview
         $total = count($documents);
         $avg = $total ? $totalSize / $total : 1.0;
         echo '<div class="wrap"><h1>' . esc_html__('Internal Linking Preview', 'seo-tidy') . '</h1>';
-        echo '<p>' . esc_html__('Experimental read-only preview. Suggestions need manual review. Only the first 200 eligible candidates are considered; results are incomplete on larger sites.', 'seo-tidy') . '</p>';
+        echo '<p>' . esc_html__('Experimental read-only preview. Suggestions need manual review. Candidate discovery is limited to 30 search matches per source; results are incomplete and not site-wide.', 'seo-tidy') . '</p>';
+        $state = InternalLinkingIndex::state();
+        echo '<p>' . esc_html(sprintf(
+            /* translators: %d: articles indexed */
+            __('Indexed articles: %d. Indexing is manual and resumable.', 'seo-tidy'),
+            (int) ($state['processed'] ?? 0)
+        )) . '</p>';
+        echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
+        echo '<input type="hidden" name="action" value="seo_tidy_link_scan">';
+        wp_nonce_field('seo_tidy_link_scan');
+        submit_button(__('Index next 25 articles', 'seo-tidy'), 'secondary', 'submit', false);
+        echo '</form>';
         foreach ($sources as $post) {
             $src = self::document($post);
             echo '<h2>' . esc_html(get_the_title($post)) . '</h2><ul>';
             $ranked = [];
             foreach ($documents as $id => $target) {
+                if (!isset($candidateSets[$post->ID][$id])) {
+                    continue;
+                }
                 if ($id === $post->ID) {
                     continue;
                 }
