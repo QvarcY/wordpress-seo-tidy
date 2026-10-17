@@ -1,5 +1,5 @@
 {
-  "description": "Synthetic, editorially labeled evaluation examples; not real search traffic or accuracy benchmarks.",
+  "description": "Synthetic editorial fixtures for local ranking and conservative review policy; not production accuracy evidence.",
   "documents": [
     {
       "id": "GHANA-ITINERARY",
@@ -294,7 +294,8 @@
     {
       "source": "GHANA-ITINERARY",
       "target": "ACCRA-ATTRACTIONS",
-      "expected": "recommend"
+      "expected": "recommend",
+      "context_note": "Accra"
     },
     {
       "source": "ACCRA-ATTRACTIONS",
@@ -314,7 +315,8 @@
     {
       "source": "RIGA-ATTRACTIONS",
       "target": "RIGA-MUSEUMS",
-      "expected": "recommend"
+      "expected": "recommend",
+      "context_note": "Rīgas muzeji"
     },
     {
       "source": "RIGA-HOTELS",
@@ -329,7 +331,8 @@
     {
       "source": "GHANA-ITINERARY",
       "target": "ACCRA-HOTELS",
-      "expected": "uncertain"
+      "expected": "uncertain",
+      "context_note": "no explicit hotel discussion"
     },
     {
       "source": "SIGULDA-TRIP",
@@ -344,7 +347,8 @@
     {
       "source": "RIGA-MUSEUMS",
       "target": "RIGA-ATTRACTIONS",
-      "expected": "uncertain"
+      "expected": "uncertain",
+      "context_note": "reverse broad guide"
     },
     {
       "source": "ACCRA-ATTRACTIONS",
@@ -368,7 +372,8 @@
       "source": "SIGULDA-TRIP",
       "target": "TURAIDA",
       "expected": "reject",
-      "reason": "already_linked"
+      "reason": "already_linked",
+      "context_note": "existing link"
     },
     {
       "source": "GHANA-ITINERARY",
