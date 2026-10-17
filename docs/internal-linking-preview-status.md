@@ -44,3 +44,17 @@ The preview no longer hardcodes the first 200 published posts as the candidate p
 A Unicode tokenization escaping error was identified in the earlier prototype and corrected. A separate installed PHP CLI was used to check that the intended Unicode pattern matches Latvian words with diacritics. This **does not** constitute running `php -l` on the exact current GitHub file bytes, nor WordPress integration verification. Other PHP files and permission boundaries still require targeted validation.
 
 This code remains experimental and disabled by default. The staged scan must not be represented as finished large-site support. The next cycle requires linking the stored snapshots to bounded candidate retrieval, validating canonical/link identification, completing the admin interface and localization, and executing exact-branch PHP/WordPress checks before release.
+
+## Integrated index + topic review cycle (2026-10-17)
+
+The experimental administrator page now reads candidates from the **completed** private index using bounded token lookups rather than running a fresh WordPress full-text search. No suggestions are displayed while the index is absent or stale. The scanner now includes approved private topics in the indexed token set. It can be explicitly restarted from the beginning, and source editing or taxonomy changes invalidate the snapshot. Each source is limited to 30 returned target IDs; article previews remain read-only and require manual review.
+
+Smart Topics can now also be reviewed inline from that same administrator page. Changes are sent through a separate administrator-only, nonce-protected `admin-post.php` handler, with edit-post capability enforcement, normalized lengths, deduplication and a maximum of twelve labels. Accepting suggestions and maintaining a rejection list do not create public taxonomy terms. These edits invalidate the scan, which must then be rerun. Editor-side meta box functionality remains available.
+
+A small, scoped Latvian fallback for the newly added PHP administrator texts is registered alongside the English originals; it is active only in Latvian locale, and only if the experimental feature is enabled. **This is not a verified translation-catalog or accessibility audit.** Full integration into the existing JS translation pipeline should be considered separately if the final interface moves to the main React admin screen.
+
+### Scalability and correctness limitations
+
+The index currently persists at most 300 term frequencies per document as serialized WordPress post metadata. For a completed scan, candidate retrieval queries the serialized metadata using bounded `LIKE` predicates. This verifies that the persisted index is genuinely consumed but does **not** create a proper inverted search index, and may be expensive for large databases. A 1000-post time/memory/database-query benchmark is still required before performance or scalability claims. BM25 document frequencies are still computed only over the retrieved candidate sample, not all indexed documents. The same-intent and canonical/robots checks remain heuristic and incomplete.
+
+**Validation status:** exact current GitHub PHP bytes were not fetched into a runtime for `php -l` or WordPress integration tests, because direct raw-GitHub access from the container is unavailable. The new PHP code has been reviewed but not verified by the PHP interpreter. Do not install on a public/production site, and keep PR #31 in draft until a real local checkout is checked.
