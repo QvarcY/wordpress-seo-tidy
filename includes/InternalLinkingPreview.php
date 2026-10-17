@@ -29,7 +29,7 @@ final class InternalLinkingPreview
         $text = function_exists('mb_strtolower')
             ? mb_strtolower(wp_strip_all_tags($text), 'UTF-8')
             : strtolower(wp_strip_all_tags($text));
-        preg_match_all('/[\\p{L}\\p{N}]{3,}/u', $text, $matches);
+        preg_match_all('/[\p{L}\p{N}]{3,}/u', $text, $matches);
         $stop = array_fill_keys(explode(' ', 'the and for with from this that are can how your what where und von der die das vai kas kur par pie arī un ar no kā ko kāds tas šis šajā'), true);
         return array_values(array_filter($matches[0], static function ($t) use ($stop) {
             return !isset($stop[$t]);
