@@ -6,6 +6,7 @@ import { __ } from '@wordpress/i18n';
 const sections = [
     { id: 'dashboard', label: __('Dashboard', 'seo-tidy') },
     { id: 'metadata', label: __('Metadata', 'seo-tidy') },
+    ...(window.seoTidyBranding?.linkingEnabled ? [{ id: 'linking', label: __('Internal Links', 'seo-tidy') }] : []),
     { id: 'analytics', label: __('Analytics', 'seo-tidy') },
     { id: 'badge', label: __('Stats Badge', 'seo-tidy') },
     { id: 'community', label: __('Wall of Fame', 'seo-tidy') },
@@ -2431,6 +2432,21 @@ function GeneralSettings() {
     );
 }
 
+function InternalLinkingEntry() {
+    const url = window.seoTidyBranding?.linkingUrl;
+    return (
+        <div className="tidy-linking-entry">
+            <p>{__('Find relevant internal links and manage topics directly in each article editor.', 'seo-tidy')}</p>
+            <p>{__('The overview shows the indexing status and helps you find the article to work on.', 'seo-tidy')}</p>
+            {url && (
+                <Button variant="primary" href={url}>
+                    {__('Open internal linking overview', 'seo-tidy')}
+                </Button>
+            )}
+        </div>
+    );
+}
+
 function App() {
     const [active, setActive] = useState('dashboard');
     const [metadataFilter, setMetadataFilter] = useState('all');
@@ -2483,7 +2499,9 @@ function App() {
                 <CardBody>
                     <h2>{current.label}</h2>
 
-                    {active === 'settings' ? (
+                    {active === 'linking' ? (
+                        <InternalLinkingEntry />
+                    ) : active === 'settings' ? (
                         <GeneralSettings />
                     ) : active === 'community' ? (
                         <WallOfFame />
