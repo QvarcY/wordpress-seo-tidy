@@ -99,6 +99,10 @@ An independent evaluation of this rule structure on the 16 committed labels show
 
 **Implementation consequence:** do not equate `candidate_only` with `recommend`. The next stage needs a directional contextual-evidence rule (“the source actually discusses the target subject”), stronger distinctiveness filtering for generic location topics, and more challenging held-out examples with full texts. No numeric same-intent threshold or decision model is validated for release.
 
+## Implementation handoff
+
+A focused implementation contract, acceptance checklist and release blockers are maintained in [internal-linking-implementation.md](internal-linking-implementation.md). The proposed feature remains read-only and disabled by default until verified. The synthetic fixture includes directional evidence notes; they are editorial expectations, not proven model outputs.
+
 ## Verified code baseline (2026-10-17)
 
 - `includes/SEOAudit.php`: `hasInternalLink()` inspects content HTML via `WP_HTML_Tag_Processor` and only reports whether an eligible internal link exists. It does not resolve recommended pairs.
@@ -264,7 +268,8 @@ Record measured time/memory and sample false positives during Phase C/D; test su
 - [ ] Record representative performance budgets after first measurements.
 - [x] Added conservative intent/existing-link triage and inspected outputs across 16 synthetic pair labels.
 - [ ] Establish directional contextual evidence and reject-vs-uncertain policy on held-out examples.
-- [ ] Review and approve Phase A before beginning implementation.
+- [x] Produced a limited implementation handoff with risk boundaries and acceptance tests.
+- [ ] Verify the exact evaluator and held-out data before claiming scoring quality; full feature is not yet release-ready.
 
 No runtime code changed and no implementation/test claims are made in this document.
 
