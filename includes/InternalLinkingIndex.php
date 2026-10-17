@@ -160,8 +160,12 @@ final class InternalLinkingIndex
         $ids = $wpdb->get_col($wpdb->prepare(
             "SELECT ID FROM {$wpdb->posts} WHERE ID > %d AND post_type IN ('post','page')
              AND post_status = 'publish' ORDER BY ID ASC LIMIT %d",
-            $last, self::SIZE
+            $last, self::SIZE + 1
         ));
+        $hasMore = count($ids) > self::SIZE;
+        if ($hasMore) {
+            $ids = array_slice($ids, 0, self::SIZE);
+        }
         foreach ($ids as $id) {
             $id = absint($id);
             $post = get_post($id);
@@ -208,7 +212,7 @@ final class InternalLinkingIndex
         $state = [
             'last_id' => $ids ? (int) end($ids) : $last,
             'processed' => $processed + count($ids),
-            'complete' => count($ids) < self::SIZE,
+            'complete' => !$hasMore,
             'stale' => false,
             'schema' => 3,
         ];
