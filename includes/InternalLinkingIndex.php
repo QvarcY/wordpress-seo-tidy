@@ -25,7 +25,14 @@ final class InternalLinkingIndex
     public static function state(): array
     {
         $state = get_option(self::STATE, []);
-        return is_array($state) ? $state : [];
+        if (!is_array($state)) {
+            return [];
+        }
+        if (!empty($state['complete']) && (int) ($state['schema'] ?? 0) !== 3) {
+            $state['stale'] = true;
+            $state['complete'] = false;
+        }
+        return $state;
     }
 
     public static function statusChanged(string $new, string $old, \WP_Post $post): void
@@ -174,7 +181,9 @@ final class InternalLinkingIndex
                     $tokens[$term] = ($tokens[$term] ?? 0) + 3;
                 }
             }
-            $wpdb->delete(self::table(), ['post_id' => $id], ['%d']);
+            if ($wpdb->delete(self::table(), ['post_id' => $id], ['%d']) === false) {
+                wp_die(esc_html__('Could not update the link index. The scan has stopped.', 'seo-tidy'));
+            }
             // Deterministic cap; title/topic boosting is handled by the scorer.
             arsort($tokens, SORT_NUMERIC);
             foreach (array_chunk(array_slice($tokens, 0, 300, true), 50, true) as $chunk) {
@@ -186,7 +195,11 @@ final class InternalLinkingIndex
                 }
                 $sql = 'INSERT INTO ' . self::table() .
                     ' (post_id,term,frequency) VALUES ' . implode(',', $values);
-                $wpdb->query($wpdb->prepare($sql, ...$params));
+                if ($wpdb->query($wpdb->prepare($sql, ...$params)) === false) {
+                    $state['stale'] = true;
+                    update_option(self::STATE, $state, false);
+                    wp_die(esc_html__('Could not update the link index. The scan has stopped.', 'seo-tidy'));
+                }
             }
             update_post_meta($id, self::META, ['version' => 2, 'updated' =>
                 (int) get_post_modified_time('U', true, $post)]);
@@ -197,6 +210,7 @@ final class InternalLinkingIndex
             'processed' => $processed + count($ids),
             'complete' => count($ids) < self::SIZE,
             'stale' => false,
+            'schema' => 3,
         ];
         update_option(self::STATE, $state, false);
         wp_safe_redirect(admin_url('admin.php?page=seo-tidy-linking-preview&scan_status=1'));
