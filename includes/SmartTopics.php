@@ -95,8 +95,11 @@ final class SmartTopics
 
     private static function help(string $description): string
     {
-        return ' <span class="seo-tidy-help" tabindex="0" title="' . esc_attr($description) .
-            '" aria-label="' . esc_attr($description) . '">?</span>';
+        return ' <details class="seo-tidy-help"><summary aria-label="' .
+            esc_attr__('Show field explanation', 'seo-tidy') .
+            '" title="' . esc_attr__('Show field explanation', 'seo-tidy') .
+            '">?</summary><span class="seo-tidy-help-text" role="note">' .
+            esc_html($description) . '</span></details>';
     }
 
     public static function renderBox(\WP_Post $post): void
