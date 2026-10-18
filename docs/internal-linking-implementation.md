@@ -34,3 +34,14 @@ Read-only manual/resumable batches <=25 source posts, <=30 candidates per source
 Run the exact committed Python diagnostic and the future PHP behavior against the same fixtures; record mismatches. Add richer holdout articles and instrument elapsed time and peak memory. Verify effective WordPress/Yoast/Rank Math robots and canonical behavior with real integration tests. This document is a scope definition, not verification that these checks passed.
 
 Related: https://github.com/QvarcY/wordpress-seo-tidy/issues/29
+
+## Phase C implementation checkpoint (2026-10-18)
+
+[Phase C evidence](internal-linking-phase-c.md) records the current implementation
+and validation, superseding the future-PHP-test wording above. The evaluator now
+asserts against production PHP rather than a Python shadow implementation. Scoring
+and indexing share capped body/title/approved-topic frequencies, with a common
+64-term query bound; the 30-candidate and five-result bounds remain. The original
+heading-specific weighting and rendered-content extraction are still design
+ideas, not implemented/verified behavior. Real WordPress/MySQL integration and
+scale benchmarks remain release blockers.

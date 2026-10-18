@@ -9,7 +9,8 @@ final class InternalLinkingIndex
     private const STATE = 'seo_tidy_link_index_state_v1';
     private const META = '_seo_tidy_link_index_v1';
     private const SIZE = 25;
-    private const SCHEMA = 4;
+    // Snapshot/scoring revision; the existing database table and meta keys are unchanged.
+    private const SCHEMA = 5;
 
     public static function init(): void
     {
@@ -21,6 +22,12 @@ final class InternalLinkingIndex
         add_action('before_delete_post', [self::class, 'invalidate'], 20, 1);
         add_action('set_object_terms', [self::class, 'invalidate'], 20, 1);
         add_action('transition_post_status', [self::class, 'statusChanged'], 20, 3);
+        foreach (['added_post_meta', 'updated_post_meta', 'deleted_post_meta'] as $hook) {
+            add_action($hook, [self::class, 'metadataChanged'], 20, 4);
+        }
+        foreach (['home', 'blog_public', 'permalink_structure'] as $option) {
+            add_action('update_option_' . $option, [self::class, 'settingsChanged'], 20, 2);
+        }
     }
 
     public static function state(): array
@@ -29,7 +36,7 @@ final class InternalLinkingIndex
         if (!is_array($state)) {
             return [];
         }
-        if (!empty($state['complete']) && (int) ($state['schema'] ?? 0) !== self::SCHEMA) {
+        if ($state && (int) ($state['schema'] ?? 0) !== self::SCHEMA) {
             $state['stale'] = true;
             $state['complete'] = false;
         }
@@ -41,6 +48,35 @@ final class InternalLinkingIndex
         if ($new !== $old) {
             self::invalidate($post->ID);
         }
+    }
+
+    public static function metadataChanged($metaId, int $postId, string $key, $value): void
+    {
+        if (in_array($key, ['_yoast_wpseo_meta-robots-noindex', 'rank_math_robots',
+            '_yoast_wpseo_canonical', 'rank_math_canonical_url', '_seo_tidy_smart_topics_v1'], true)) {
+            self::invalidate($postId);
+        }
+    }
+
+    public static function settingsChanged($old, $value): void
+    {
+        if ($old !== $value) {
+            self::markStale();
+        }
+    }
+
+    private static function markStale(): void
+    {
+        $state = self::state();
+        $state['stale'] = true;
+        update_option(self::STATE, $state, false);
+    }
+
+    /** Keep retrieval, document frequencies and scoring on the same bounded query. */
+    public static function queryTerms(array $terms): array
+    {
+        return array_slice(array_values(array_unique(array_filter($terms,
+            static fn($term): bool => is_string($term) && $term !== ''))), 0, 64);
     }
 
     private static function table(): string
@@ -91,12 +127,20 @@ final class InternalLinkingIndex
         // One row per term/post; sum of frequencies is the document length.
         $row = $wpdb->get_row("SELECT COUNT(*) AS n, AVG(x.length) AS avgdl FROM
             (SELECT post_id, SUM(frequency) AS length FROM {$table} GROUP BY post_id) x", ARRAY_A);
+        if (!is_array($row) || !empty($wpdb->last_error)) {
+            self::markStale();
+            return ['count' => 0, 'avgdl' => 1.0];
+        }
         return ['count' => (int) ($row['n'] ?? 0), 'avgdl' => max(1.0, (float) ($row['avgdl'] ?? 1.0))];
     }
 
     public static function documentFrequency(array $terms): array
     {
-        $terms = array_slice(array_values(array_unique(array_filter($terms, 'is_string'))), 0, 64);
+        $state = self::state();
+        if (empty($state['complete']) || !empty($state['stale'])) {
+            return [];
+        }
+        $terms = self::queryTerms($terms);
         if (!$terms) {
             return [];
         }
@@ -107,6 +151,10 @@ final class InternalLinkingIndex
             "SELECT term, COUNT(*) AS df FROM {$table} WHERE term IN ({$placeholders}) GROUP BY term",
             ...$terms
         ), ARRAY_A);
+        if (!is_array($rows) || !empty($wpdb->last_error)) {
+            self::markStale();
+            return [];
+        }
         $result = [];
         foreach ($rows as $row) {
             $result[$row['term']] = (int) $row['df'];
@@ -120,7 +168,7 @@ final class InternalLinkingIndex
         if (empty($state['complete']) || !empty($state['stale'])) {
             return [];
         }
-        $terms = array_slice(array_values(array_unique(array_filter($terms, 'is_string'))), 0, 8);
+        $terms = self::queryTerms($terms);
         if (!$terms) {
             return [];
         }
@@ -133,18 +181,20 @@ final class InternalLinkingIndex
                 WHERE t.term IN ({$placeholders}) AND t.post_id <> %d
                   AND p.post_type IN ('post','page') AND p.post_status='publish'
                 GROUP BY t.post_id ORDER BY COUNT(*) DESC, t.post_id ASC LIMIT %d";
-        return array_map('intval', $wpdb->get_col($wpdb->prepare($sql, ...$params)));
+        $ids = $wpdb->get_col($wpdb->prepare($sql, ...$params));
+        if (!is_array($ids) || !empty($wpdb->last_error)) {
+            self::markStale();
+            return [];
+        }
+        return array_map('intval', $ids);
     }
 
     public static function invalidate(int $postId): void
     {
-        if (get_post_type($postId) && in_array(get_post_type($postId), ['post', 'page'], true)) {
-            global $wpdb;
+        if (in_array(get_post_type($postId), ['post', 'page'], true) || self::entry($postId)) {
             // The whole index becomes invalid; a rebuild clears all postings.
             delete_post_meta($postId, self::META);
-            $state = self::state();
-            $state['stale'] = true;
-            update_option(self::STATE, $state, false);
+            self::markStale();
         }
     }
 
@@ -159,6 +209,7 @@ final class InternalLinkingIndex
             : admin_url('admin.php?page=seo-tidy-linking-preview');
         $state = self::state();
         if (!self::ensureTable()) {
+            self::markStale();
             wp_die(esc_html__('Internal linking index table could not be created.', 'seo-tidy'));
         }
         if (!empty($_POST['restart'])) {
@@ -181,6 +232,10 @@ final class InternalLinkingIndex
              AND post_status = 'publish' ORDER BY ID ASC LIMIT %d",
             $last, self::SIZE + 1
         ));
+        if (!is_array($ids) || !empty($wpdb->last_error)) {
+            self::markStale();
+            wp_die(esc_html__('Could not update the link index. The scan has stopped.', 'seo-tidy'));
+        }
         $hasMore = count($ids) > self::SIZE;
         if ($hasMore) {
             $ids = array_slice($ids, 0, self::SIZE);
@@ -193,31 +248,19 @@ final class InternalLinkingIndex
             }
             if (!InternalLinkingPreview::eligible($post)) {
                 if ($wpdb->delete(self::table(), ['post_id' => $id], ['%d']) === false) {
+                    self::markStale();
                     wp_die(esc_html__('Could not update the link index. The scan has stopped.', 'seo-tidy'));
                 }
                 delete_post_meta($id, self::META);
                 continue;
             }
             $tokens = InternalLinkingPreview::indexTerms($post);
-            foreach (SmartTopics::approved($id) as $topic) {
-                foreach (InternalLinkingPreview::termTokens($topic) as $term) {
-                    $tokens[$term] = ($tokens[$term] ?? 0) + 3;
-                }
-            }
-            // Merge long terms that become identical at the storage limit
-            $storedTokens = [];
-            foreach ($tokens as $term => $frequency) {
-                $term = function_exists('mb_substr')
-                    ? mb_substr((string) $term, 0, 191, 'UTF-8') : substr((string) $term, 0, 191);
-                $storedTokens[$term] = ($storedTokens[$term] ?? 0) + max(1, (int) $frequency);
-            }
-            $tokens = $storedTokens;
             if ($wpdb->delete(self::table(), ['post_id' => $id], ['%d']) === false) {
+                self::markStale();
                 wp_die(esc_html__('Could not update the link index. The scan has stopped.', 'seo-tidy'));
             }
-            // Deterministic cap; title/topic boosting is handled by the scorer.
-            arsort($tokens, SORT_NUMERIC);
-            foreach (array_chunk(array_slice($tokens, 0, 300, true), 50, true) as $chunk) {
+            // Preserve the same bounded title/topic-weighted vector used by the scorer.
+            foreach (array_chunk($tokens, 50, true) as $chunk) {
                 $values = [];
                 $params = [];
                 foreach ($chunk as $term => $frequency) {
@@ -227,8 +270,7 @@ final class InternalLinkingIndex
                 $sql = 'INSERT INTO ' . self::table() .
                     ' (post_id,term,frequency) VALUES ' . implode(',', $values);
                 if ($wpdb->query($wpdb->prepare($sql, ...$params)) === false) {
-                    $state['stale'] = true;
-                    update_option(self::STATE, $state, false);
+                    self::markStale();
                     wp_die(esc_html__('Could not update the link index. The scan has stopped.', 'seo-tidy'));
                 }
             }
@@ -251,6 +293,8 @@ final class InternalLinkingIndex
     private static function clearSnapshots(): void
     {
         global $wpdb;
+        // A failed clear must never leave a previously complete scan usable.
+        self::markStale();
         // Remove only our private, regenerable index snapshots.
         if ($wpdb->query('DELETE FROM ' . self::table()) === false ||
             $wpdb->delete($wpdb->postmeta, ['meta_key' => self::META], ['%s']) === false) {

@@ -79,9 +79,26 @@ final class InternalLinkingPreview
 
     private static function tokens(string $text): array
     {
+        $text = html_entity_decode(wp_strip_all_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        if (class_exists('\\Normalizer')) {
+            $text = \Normalizer::normalize($text, \Normalizer::FORM_C) ?: $text;
+        } else {
+            // Preserve Latvian composed/decomposed equivalence without requiring intl.
+            $text = strtr($text, ["a\u{0304}" => 'ā', "e\u{0304}" => 'ē',
+                "i\u{0304}" => 'ī', "u\u{0304}" => 'ū', "c\u{030C}" => 'č',
+                "s\u{030C}" => 'š', "z\u{030C}" => 'ž', "g\u{0327}" => 'ģ',
+                "k\u{0327}" => 'ķ', "l\u{0327}" => 'ļ', "n\u{0327}" => 'ņ',
+                "A\u{0304}" => 'Ā', "E\u{0304}" => 'Ē', "I\u{0304}" => 'Ī',
+                "U\u{0304}" => 'Ū', "C\u{030C}" => 'Č', "S\u{030C}" => 'Š',
+                "Z\u{030C}" => 'Ž', "G\u{0327}" => 'Ģ', "K\u{0327}" => 'Ķ',
+                "L\u{0327}" => 'Ļ', "N\u{0327}" => 'Ņ']);
+        }
         $text = function_exists('mb_strtolower')
-            ? mb_strtolower(wp_strip_all_tags($text), 'UTF-8')
-            : strtolower(wp_strip_all_tags($text));
+            ? mb_strtolower($text, 'UTF-8')
+            : strtolower(strtr($text, array_combine(
+                preg_split('//u', 'ĀČĒĢĪĶĻŅŠŪŽ', -1, PREG_SPLIT_NO_EMPTY),
+                preg_split('//u', 'āčēģīķļņšūž', -1, PREG_SPLIT_NO_EMPTY)
+            )));
         preg_match_all('/[\p{L}\p{N}]{3,}/u', $text, $matches);
         $stop = array_fill_keys(explode(' ', 'the and for with from this that are can how your what where und von der die das vai kas kur par pie arī un ar no kā ko kāds tas šis šajā'), true);
         return array_values(array_filter($matches[0], static function ($t) use ($stop) {
@@ -97,7 +114,23 @@ final class InternalLinkingPreview
     public static function indexTerms(\WP_Post $post): array
     {
         $body = wp_strip_all_tags(strip_shortcodes($post->post_content));
-        return array_count_values(self::tokens($post->post_title . ' ' . $body));
+        $terms = array_count_values(self::tokens($body));
+        foreach (array_count_values(self::tokens($post->post_title)) as $term => $count) {
+            $terms[$term] = ($terms[$term] ?? 0) + 3 * $count;
+        }
+        foreach (SmartTopics::approved($post->ID) as $topic) {
+            foreach (self::tokens($topic) as $term) {
+                $terms[$term] = ($terms[$term] ?? 0) + 3;
+            }
+        }
+        $stored = [];
+        foreach ($terms as $term => $count) {
+            $term = function_exists('mb_substr') ? mb_substr((string) $term, 0, 191, 'UTF-8')
+                : implode('', array_slice(preg_split('//u', (string) $term, -1, PREG_SPLIT_NO_EMPTY), 0, 191));
+            $stored[$term] = ($stored[$term] ?? 0) + $count;
+        }
+        arsort($stored, SORT_NUMERIC);
+        return array_slice($stored, 0, 300, true);
     }
 
     private static function document(\WP_Post $post): array
@@ -113,40 +146,54 @@ final class InternalLinkingPreview
                 $topics[$token] = true;
             }
         }
+        $approvedTerms = [];
         foreach (SmartTopics::approved($post->ID) as $approved) {
             foreach (self::tokens($approved) as $token) {
                 $topics[$token] = true;
+                $approvedTerms[$token] = true;
             }
         }
         $title = self::tokens($post->post_title);
         $excerpt = function_exists('mb_substr') ? mb_substr($body, 0, 12000, 'UTF-8') : substr($body, 0, 12000);
         $bodyTerms = self::tokens($excerpt);
-        $terms = array_count_values($bodyTerms);
-        foreach (array_count_values($title) as $word => $count) {
-            $terms[$word] = ($terms[$word] ?? 0) + 3 * $count;
-        }
+        $terms = self::indexTerms($post);
         return ['post' => $post, 'terms' => $terms, 'title' => $title,
             'body_terms' => array_fill_keys($bodyTerms, true),
+            'approved' => array_keys($approvedTerms),
             'topics' => array_keys($topics), 'size' => max(1, array_sum($terms))];
     }
 
     public static function eligible(\WP_Post $post): bool
     {
-        if ($post->post_status !== 'publish' || $post->post_password !== '' ||
+        if ((string) get_option('blog_public', '1') === '0' ||
+            $post->post_status !== 'publish' || $post->post_password !== '' ||
             !in_array($post->post_type, ['post', 'page'], true)) {
             return false;
         }
-        if (get_post_meta($post->ID, '_yoast_wpseo_meta-robots-noindex', true) === '1') {
+        $yoast = get_post_meta($post->ID, '_yoast_wpseo_meta-robots-noindex', true);
+        if (!is_scalar($yoast) || (string) $yoast === '1') {
             return false;
         }
         $robots = get_post_meta($post->ID, 'rank_math_robots', true);
-        if (is_array($robots) && in_array('noindex', $robots, true)) {
+        if (($robots !== '' && !is_array($robots)) ||
+            (is_array($robots) && in_array('noindex', $robots, true))) {
             return false;
         }
-        // Canonical override detection is incomplete: exclude known overrides conservatively.
+        $permalink = get_permalink($post);
+        $parts = is_string($permalink) ? wp_parse_url($permalink) : false;
+        $local = is_array($parts) && !empty($parts['host']) && !empty($parts['scheme'])
+            ? self::localUrl($permalink, home_url('/')) : null;
+        if ($local === null) {
+            return false;
+        }
+        // Only supported, explicitly self-canonical overrides are eligible.
         foreach (['_yoast_wpseo_canonical', 'rank_math_canonical_url'] as $key) {
-            $canonical = trim((string) get_post_meta($post->ID, $key, true));
-            if ($canonical !== '' && untrailingslashit($canonical) !== untrailingslashit(get_permalink($post))) {
+            $value = get_post_meta($post->ID, $key, true);
+            if (!is_scalar($value)) {
+                return false;
+            }
+            $canonical = trim((string) $value);
+            if ($canonical !== '' && self::urlIdentity(self::localUrl($canonical, $local)) !== self::urlIdentity($local)) {
                 return false;
             }
         }
@@ -155,11 +202,12 @@ final class InternalLinkingPreview
 
     private static function bm25(array $src, array $dst, array $df, int $total, float $average): float
     {
-        $query = array_unique(array_merge($src['title'], $src['topics']));
+        $query = InternalLinkingIndex::queryTerms(array_merge($src['title'], $src['topics']));
         $score = 0.0;
         foreach ($query as $word) {
             $frequency = $dst['terms'][$word] ?? 0;
-            if (!$frequency) {
+            if (!$frequency || $total < 1 || $average <= 0 || !isset($df[$word]) ||
+                $df[$word] < 1 || $df[$word] > $total) {
                 continue;
             }
             $idf = log(1 + ($total - ($df[$word] ?? 0) + .5) / (($df[$word] ?? 0) + .5));
@@ -169,7 +217,82 @@ final class InternalLinkingPreview
         return $score;
     }
 
-    private static function linksTo(string $html, int $targetId): bool
+    /** Resolve browser-style references without losing WordPress's query identity. */
+    private static function localUrl(string $href, string $base): ?string
+    {
+        $href = trim($href);
+        if (preg_match('/[\x00-\x20\x7f]/', $href)) {
+            return null;
+        }
+        $site = wp_parse_url(home_url('/'));
+        $baseParts = wp_parse_url($base);
+        if (!is_array($site) || !is_array($baseParts) || empty($site['host']) || empty($baseParts['host'])) {
+            return null;
+        }
+        if (str_starts_with($href, '//')) {
+            $href = ($baseParts['scheme'] ?? 'https') . ':' . $href;
+        }
+        $parts = wp_parse_url($href);
+        if (!is_array($parts) || isset($parts['user']) || isset($parts['pass'])) {
+            return null;
+        }
+        $scheme = strtolower((string) ($parts['scheme'] ?? $baseParts['scheme'] ?? 'https'));
+        if (!in_array($scheme, ['http', 'https'], true) ||
+            (isset($parts['scheme']) && empty($parts['host']))) {
+            return null;
+        }
+        $host = strtolower((string) ($parts['host'] ?? $baseParts['host']));
+        if ($host !== strtolower((string) $site['host'])) {
+            return null;
+        }
+        $port = $parts['port'] ?? (isset($parts['host']) ? null : ($baseParts['port'] ?? null));
+        $sitePort = (int) ($site['port'] ?? (($site['scheme'] ?? 'https') === 'https' ? 443 : 80));
+        $effectivePort = (int) ($port ?? ($scheme === 'https' ? 443 : 80));
+        // Standard HTTP/HTTPS variants may redirect to the same site; custom ports must match.
+        if ($effectivePort !== $sitePort &&
+            !(in_array($effectivePort, [80, 443], true) && in_array($sitePort, [80, 443], true))) {
+            return null;
+        }
+        $path = (string) ($parts['path'] ?? '');
+        if (!isset($parts['host']) && !str_starts_with($path, '/')) {
+            $basePath = (string) ($baseParts['path'] ?? '/');
+            $path = $path === '' ? $basePath : substr($basePath, 0, (int) strrpos($basePath, '/') + 1) . $path;
+        }
+        $segments = [];
+        foreach (explode('/', $path) as $position => $segment) {
+            if ($position === 0 && $segment === '') {
+                continue;
+            }
+            // Browsers also resolve percent-encoded dots, but never encoded slashes.
+            $dotSegment = str_ireplace('%2e', '.', $segment);
+            if ($dotSegment === '..') {
+                array_pop($segments);
+            } elseif ($dotSegment !== '.') {
+                $segments[] = $segment;
+            }
+        }
+        $path = '/' . implode('/', $segments);
+        if (isset($dotSegment) && in_array($dotSegment, ['.', '..'], true) && !str_ends_with($path, '/')) {
+            $path .= '/';
+        }
+        $query = $parts['query'] ?? (!isset($parts['path']) && !isset($parts['host'])
+            ? ($baseParts['query'] ?? null) : null);
+        return $scheme . '://' . $host . ($port !== null ? ':' . $port : '') . $path .
+            ($query !== null ? '?' . $query : '');
+    }
+
+    private static function urlIdentity(?string $url): ?string
+    {
+        if ($url === null) {
+            return null;
+        }
+        $parts = wp_parse_url($url);
+        return strtolower((string) $parts['scheme']) . '://' . strtolower((string) $parts['host']) .
+            ':' . (int) ($parts['port'] ?? ($parts['scheme'] === 'https' ? 443 : 80)) .
+            rtrim((string) $parts['path'], '/') . (isset($parts['query']) ? '?' . $parts['query'] : '');
+    }
+
+    private static function linksTo(string $html, int $targetId, int $sourceId = 0): bool
     {
         if (!class_exists('\WP_HTML_Tag_Processor')) {
             // Fail closed when reliable directed-link inspection is unavailable.
@@ -181,17 +304,15 @@ final class InternalLinkingPreview
             if (!is_string($href) || $href === '') {
                 continue;
             }
-            $parsed = wp_parse_url($href);
-            if (!is_array($parsed)) {
+            $base = $sourceId ? get_permalink($sourceId) : home_url('/');
+            $resolved = self::localUrl($href, (string) $base);
+            if ($resolved === null) {
                 continue;
             }
-            if (isset($parsed['host']) &&
-                strtolower($parsed['host']) !== strtolower((string) wp_parse_url(home_url(), PHP_URL_HOST))) {
-                continue;
-            }
-            $resolved = isset($parsed['host']) ? $href : home_url('/' . ltrim($href, '/'));
-            $resolvedId = url_to_postid(strtok($resolved, '#?'));
-            if ($resolvedId === $targetId) {
+            $targetUrl = get_permalink($targetId);
+            if ((int) url_to_postid($resolved) === $targetId ||
+                (is_string($targetUrl) && self::urlIdentity($resolved) ===
+                    self::urlIdentity(self::localUrl($targetUrl, home_url('/'))))) {
                 return true;
             }
         }
@@ -218,26 +339,34 @@ final class InternalLinkingPreview
             return [];
         }
         $src = self::document($post);
-        $queryTerms = array_unique(array_merge($src['title'], $src['topics']));
+        $queryTerms = InternalLinkingIndex::queryTerms(array_merge($src['title'], $src['topics']));
         $ids = InternalLinkingIndex::candidateIds($queryTerms, $post->ID, 30);
         $stats = InternalLinkingIndex::corpusStats();
         if (empty($stats['count'])) {
             return [];
         }
         $df = InternalLinkingIndex::documentFrequency($queryTerms);
+        $state = InternalLinkingIndex::state();
+        if (empty($state['complete']) || !empty($state['stale'])) {
+            return [];
+        }
         $ranked = [];
-        foreach ($ids as $id) {
+        foreach (array_unique(array_map('intval', $ids)) as $id) {
             $target = get_post($id);
             if (!$target instanceof \WP_Post || !self::eligible($target) || $id === $post->ID) {
                 continue;
             }
             $dst = self::document($target);
-            $context = array_intersect($dst['title'], array_keys($src['body_terms']));
-            if (!$context || self::linksTo($post->post_content, $id)) {
+            $context = array_values(array_unique(array_intersect($dst['title'], array_keys($src['body_terms']))));
+            // A shared location or broad category alone does not establish a useful destination.
+            $specificTopics = array_diff($dst['approved'], $src['approved']);
+            $corroboration = array_intersect($specificTopics, array_keys($src['body_terms']));
+            $evidence = array_unique(array_merge($context, $corroboration));
+            if (!$context || count($evidence) < 2 ||
+                self::linksTo($post->post_content, $id, $post->ID)) {
                 continue;
             }
-            if (count(array_intersect($src['topics'], $dst['topics'])) >= 2 &&
-                count(array_intersect($src['title'], $dst['title'])) >= 2) {
+            if (self::possiblyCompeting($src, $dst)) {
                 continue;
             }
             $score = self::bm25($src, $dst, $df, (int) $stats['count'], (float) $stats['avgdl']);
@@ -246,8 +375,29 @@ final class InternalLinkingPreview
                     'context' => implode(', ', array_slice(array_unique($context), 0, 5))];
             }
         }
-        usort($ranked, static fn($a, $b) => $b['score'] <=> $a['score']);
+        usort($ranked, static fn($a, $b) => ($b['score'] <=> $a['score']) ?: ($a['post']->ID <=> $b['post']->ID));
         return array_slice($ranked, 0, 5);
+    }
+
+    private static function possiblyCompeting(array $src, array $dst): bool
+    {
+        $sourceTitle = array_unique($src['title']);
+        $targetTitle = array_unique($dst['title']);
+        $sharedTitle = array_intersect($sourceTitle, $targetTitle);
+        // Substantial title overlap is ambiguous even without editorial topic labels.
+        if ($sourceTitle && !array_diff($sourceTitle, $targetTitle) && !array_diff($targetTitle, $sourceTitle)) {
+            return true;
+        }
+        if (count($sharedTitle) >= 2) {
+            return true;
+        }
+        // Editorial labels may expose synonymous guides even when their titles differ.
+        if (count($src['approved']) >= 2 && !array_diff($src['approved'], $dst['approved']) &&
+            !array_diff($dst['approved'], $src['approved'])) {
+            return true;
+        }
+        $sourceBody = self::tokens(strip_shortcodes($src['post']->post_content));
+        return $sourceBody && $sourceBody === self::tokens(strip_shortcodes($dst['post']->post_content));
     }
 
     public static function renderEditorBox(\WP_Post $post): void

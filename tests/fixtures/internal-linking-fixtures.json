@@ -288,6 +288,210 @@
       "status": "publish",
       "indexable": true,
       "intent": "technical_tutorial"
+    },
+    {
+      "id": "EN-PUNCT-ROUTE",
+      "language": "en",
+      "title": "Accra — heritage walk!",
+      "heading": "Markets, museums & history",
+      "body": "An Accra heritage walk includes Accra markets: food, crafts and museums. Plan a Ghana route around local history.",
+      "topics": [
+        "accra",
+        "heritage walk"
+      ],
+      "categories": [
+        "ghana",
+        "travel"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "heritage_walk"
+    },
+    {
+      "id": "EN-MARKETS",
+      "language": "en",
+      "title": "Accra markets: food & crafts",
+      "heading": "Food stalls",
+      "body": "Accra markets offer food and crafts. Heritage visitors can explore stalls before a Ghana journey.",
+      "topics": [
+        "accra markets",
+        "food",
+        "crafts"
+      ],
+      "categories": [
+        "ghana",
+        "travel"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "market_visit"
+    },
+    {
+      "id": "LV-PUNCT-ROUTE",
+      "language": "lv",
+      "title": "RĪGAS nedēļas nogale!",
+      "heading": "Muzeji — parks; vēsture",
+      "body": "Rīgas nedēļas nogalē apskatām ĀDAŽU vēstures muzeju; izstādes, vēstures ekspozīcijas un parku. Muzeja apmeklējums papildina pilsētas maršrutu.",
+      "topics": [
+        "rīgas nedēļas nogale",
+        "maršruts"
+      ],
+      "categories": [
+        "latvija",
+        "ceļošana"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "weekend_route"
+    },
+    {
+      "id": "LV-ADAZI-MUSEUM",
+      "language": "lv",
+      "title": "Ādažu vēstures muzejs",
+      "heading": "Vēstures ekspozīcija",
+      "body": "Ādažu vēstures muzejs piedāvā vēstures ekspozīciju. Rīgas nedēļas nogales maršrutā iespējams ieplānot apmeklējumu.",
+      "topics": [
+        "ādažu vēstures muzejs",
+        "izstādes"
+      ],
+      "categories": [
+        "latvija",
+        "ceļošana"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "museum_visit"
+    },
+    {
+      "id": "MIXED-MUSEUM-ROUTE",
+      "language": "lv-en",
+      "title": "Riga weekend museums",
+      "heading": "Rīgas muzeji — family visits",
+      "body": "A Riga weekend includes RĪGAS muzeji, ģimenēm draudzīgas izstādes — museum visits with children. WordPress nav šī maršruta tēma.",
+      "topics": [
+        "riga weekend",
+        "family visits",
+        "muzeji"
+      ],
+      "categories": [
+        "travel",
+        "ceļošana"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "mixed_weekend_route"
+    },
+    {
+      "id": "LV-RESTAURANTS",
+      "language": "lv",
+      "title": "Rīgas restorāni vakariņām",
+      "heading": "Restorāni",
+      "body": "Rīgas restorāni vakariņām piedāvā dažādas ēdienkartes. Nedēļas nogalē rezervē galdiņu.",
+      "topics": [
+        "rīga",
+        "restorāni",
+        "vakariņas"
+      ],
+      "categories": [
+        "latvija",
+        "ceļošana"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "dining"
+    },
+    {
+      "id": "EN-MARKETS-COMPETING",
+      "language": "en",
+      "title": "Accra markets food crafts",
+      "heading": "Market guide",
+      "body": "Choose Accra markets for local food and handmade crafts. Compare different market districts.",
+      "topics": [
+        "food",
+        "accra markets",
+        "crafts"
+      ],
+      "categories": [
+        "ghana",
+        "travel"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "market_visit"
+    },
+    {
+      "id": "LV-MUSEUM-COMPETING",
+      "language": "lv",
+      "title": "Vēstures muzejs Ādažos",
+      "heading": "Izstādes",
+      "body": "Ādažu vēstures muzejs un izstādes ir apskatīti atsevišķā ceļvedī ar padomiem apmeklējumam.",
+      "topics": [
+        "izstādes",
+        "ādažu vēstures muzejs"
+      ],
+      "categories": [
+        "latvija",
+        "ceļošana"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "museum_visit"
+    },
+    {
+      "id": "EN-NEAR-DUP-SOURCE",
+      "language": "en",
+      "title": "Ghana itinerary planner",
+      "body": "This Ghana itinerary route covers Accra markets and museums before a coastal walk. Compare each day before arranging the journey.",
+      "topics": [],
+      "categories": [],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "trip_plan"
+    },
+    {
+      "id": "EN-NEAR-DUP-TARGET",
+      "language": "en",
+      "title": "Ghana itinerary route",
+      "body": "This Ghana itinerary route covers Accra markets and museums before a coastal walk. Compare each day before arranging the route.",
+      "topics": [],
+      "categories": [],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "trip_plan"
+    },
+    {
+      "id": "LV-NEAR-DUP-SOURCE",
+      "language": "lv",
+      "title": "Rīgas muzeju ceļvedis",
+      "body": "Rīgas muzeju saraksts palīdz ieplānot izstādes un apskates vietas nedēļas nogalei. Maršrutā iekļautas vēstures un mākslas ekspozīcijas.",
+      "topics": [],
+      "categories": [],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "museum_guide"
+    },
+    {
+      "id": "LV-NEAR-DUP-TARGET",
+      "language": "lv",
+      "title": "Rīgas muzeju saraksts",
+      "body": "Rīgas muzeju saraksts palīdz ieplānot izstādes un apskates vietas nedēļas nogalei. Maršrutā iekļautas vēstures un mākslas izstādes.",
+      "topics": [],
+      "categories": [],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "museum_guide"
     }
   ],
   "pairs": [
@@ -380,6 +584,66 @@
       "target": "WP-SECURITY",
       "expected": "reject",
       "reason": "unrelated"
+    },
+    {
+      "source": "EN-PUNCT-ROUTE",
+      "target": "EN-MARKETS",
+      "expected": "recommend",
+      "reason": "punctuation_with_explicit_context"
+    },
+    {
+      "source": "LV-PUNCT-ROUTE",
+      "target": "LV-ADAZI-MUSEUM",
+      "expected": "recommend",
+      "reason": "latvian_diacritics_and_punctuation"
+    },
+    {
+      "source": "MIXED-MUSEUM-ROUTE",
+      "target": "RIGA-MUSEUMS",
+      "expected": "recommend",
+      "reason": "mixed_language_explicit_context"
+    },
+    {
+      "source": "LV-PUNCT-ROUTE",
+      "target": "LV-RESTAURANTS",
+      "expected": "uncertain",
+      "reason": "place_only_without_dining_context"
+    },
+    {
+      "source": "EN-MARKETS",
+      "target": "EN-MARKETS-COMPETING",
+      "expected": "uncertain",
+      "reason": "possible_same_intent"
+    },
+    {
+      "source": "LV-ADAZI-MUSEUM",
+      "target": "LV-MUSEUM-COMPETING",
+      "expected": "uncertain",
+      "reason": "possible_same_intent"
+    },
+    {
+      "source": "LV-PUNCT-ROUTE",
+      "target": "WP-SECURITY",
+      "expected": "reject",
+      "reason": "unrelated"
+    },
+    {
+      "source": "MIXED-MUSEUM-ROUTE",
+      "target": "WP-UPDATES",
+      "expected": "uncertain",
+      "reason": "incidental_wordpress_mention_without_update_context"
+    },
+    {
+      "source": "EN-NEAR-DUP-SOURCE",
+      "target": "EN-NEAR-DUP-TARGET",
+      "expected": "uncertain",
+      "reason": "near_duplicate_without_topics"
+    },
+    {
+      "source": "LV-NEAR-DUP-SOURCE",
+      "target": "LV-NEAR-DUP-TARGET",
+      "expected": "uncertain",
+      "reason": "near_duplicate_without_topics"
     }
   ]
 }

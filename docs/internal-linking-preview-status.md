@@ -2,6 +2,17 @@
 
 This branch contains an **experimental, opt-in implementation**, not a release-ready internal linking engine.
 
+## Phase C local quality and safety cycle (2026-10-18)
+
+See [Phase C evidence](internal-linking-phase-c.md) for reproduced defects, targeted
+fixes, exact executed checks and remaining integration/release blockers. URL
+deduplication, shared eligibility, conservative evidence/competition exclusions and
+consistent capped BM25 inputs now have assertion-based PHP coverage. Snapshot
+revision 5 requires a manual rebuild of the regenerable index; table structure,
+Smart Topics v1 data and the administration UI are unchanged. Historical production
+checks below were not repeated in this local cycle and do not establish Phase C
+algorithm correctness or release readiness.
+
 ## Enable only on a disposable development site
 
 Define `SEO_TIDY_INTERNAL_LINKING_PREVIEW` as `true` in `wp-config.php`. The default is disabled. The SEO-TidY administrator menu then exposes **Internal Linking Preview**. On post/page editing screens, administrators see **SEO-TidY Smart Topics**, where they can save up to 12 approved labels, accept proposals derived from existing category/tag names or the title, and maintain up to 12 rejected labels.
