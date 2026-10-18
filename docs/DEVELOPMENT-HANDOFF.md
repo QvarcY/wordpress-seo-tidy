@@ -14,12 +14,18 @@
 ## Last confirmed development revision
 
 - Repository: `QvarcY/wordpress-seo-tidy`; target `main`; development branch `feature/issue-29-smart-topics-prototype`.
-- Draft PR #31 remote head (verified 2026-10-18): `e2150a3f4a0e06f4b53100b221775f2f454433db`.
+- Draft PR #31 head after public-documentation cleanup (2026-10-18): `c4f01d6550e6e3c1758d1ae8e0a4e60d7a4a7ce3`. The earlier `[skip ci]` push checkpoint was `e2150a3f4a0e06f4b53100b221775f2f454433db`; the substantive concurrency fix remains `6b54576`.
 - Substantive Codex concurrency fix: `6b54576b1012d8b60f8c7dc05cf05cd52b716abc` (parent of the empty `[skip ci]` head commit).
 - Files include `includes/InternalLinkingIndex.php`, the [Phase C report](https://github.com/QvarcY/wordpress-seo-tidy/blob/feature/issue-29-smart-topics-prototype/docs/internal-linking-phase-c.md), [concurrency evidence JSON](https://github.com/QvarcY/wordpress-seo-tidy/blob/feature/issue-29-smart-topics-prototype/docs/evidence/internal-linking-phase-c-concurrency.json), and [concurrency harness](https://github.com/QvarcY/wordpress-seo-tidy/blob/feature/issue-29-smart-topics-prototype/tests/integration/run-internal-linking-concurrency.py).
 - Targeted local concurrency run: **87 / 87 assertions reported passed** on an isolated 25-published-post dataset (WordPress 6.8, PHP 8.2.6, MariaDB 11.4.12); Smart Topics metadata remained intact. Final wider benchmark and regression suites were not rerun.
 - The local development working tree was last reported clean following the push. **No private workstation paths are needed in this public handoff.** Contributors should clone the repository to a directory of their choice; verify the current working tree, branch and remote before running commands.
 - At verification time, the `[skip ci]` head push created no GitHub Actions workflow runs. **No merge, release tag, deployment or production indexing** was performed.
+
+## Documentation and deployment-path privacy
+
+Public handoff notes and user guides must not contain workstation usernames, exact local directories, hosting account home directories, private backup locations, credentials or other environment-specific details. Use repository-relative paths, Git commit identifiers, and documented environment variables instead.
+
+**Compatibility caveat:** the Wall of Fame PHP API currently retains a legacy hosting-specific absolute default path for its private configuration, even though the public README no longer spells out that path. Before changing the PHP fallback, configure `SEO_TIDY_WOF_CONFIG` on any existing production host and verify successful service startup. Do not change or redeploy this service solely as part of a documentation cleanup.
 
 ## Outstanding review and acceptance gates
 
