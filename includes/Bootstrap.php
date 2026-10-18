@@ -14,6 +14,10 @@ final class Bootstrap
         require_once __DIR__ . '/Schema.php';
         require_once __DIR__ . '/Dashboard.php';
         require_once __DIR__ . '/SEOAudit.php';
+        require_once __DIR__ . '/InternalLinkingPreview.php';
+        require_once __DIR__ . '/InternalLinkingIndex.php';
+        require_once __DIR__ . '/InternalLinkingTranslations.php';
+        require_once __DIR__ . '/SmartTopics.php';
         require_once __DIR__ . '/AnswerReadiness.php';
         require_once __DIR__ . '/Migration.php';
         require_once __DIR__ . '/GitHubUpdater.php';
@@ -25,6 +29,10 @@ final class Bootstrap
         Schema::init();
         Dashboard::init();
         SEOAudit::init();
+        InternalLinkingPreview::init();
+        InternalLinkingIndex::init();
+        InternalLinkingTranslations::init();
+        SmartTopics::init();
         AnswerReadiness::init();
         Migration::init();
         GitHubUpdater::init();
@@ -202,6 +210,14 @@ final class Bootstrap
             'seo-tidy-admin',
             'seoTidyBranding',
             [
+                'linkingEnabled' => defined('SEO_TIDY_INTERNAL_LINKING_PREVIEW') && SEO_TIDY_INTERNAL_LINKING_PREVIEW === true,
+                'linkingUrl' => admin_url('admin.php?page=seo-tidy-linking-preview'),
+                'linkingLabels' => [
+                    'tab' => __('Internal Links', 'seo-tidy'),
+                    'intro' => __('Find relevant internal links and manage topics directly in each article editor.', 'seo-tidy'),
+                    'description' => __('The overview shows the indexing status and helps you find the article to work on.', 'seo-tidy'),
+                    'open' => __('Open internal linking overview', 'seo-tidy'),
+                ],
                 'heroUrl' => plugins_url(
                     'assets/seo-tidy-hero.webp',
                     SEO_TIDY_PATH . 'seo-tidy.php'

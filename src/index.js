@@ -6,6 +6,7 @@ import { __ } from '@wordpress/i18n';
 const sections = [
     { id: 'dashboard', label: __('Dashboard', 'seo-tidy') },
     { id: 'metadata', label: __('Metadata', 'seo-tidy') },
+    { id: 'linking', label: window.seoTidyBranding?.linkingLabels?.tab || __('Internal Links', 'seo-tidy') },
     { id: 'analytics', label: __('Analytics', 'seo-tidy') },
     { id: 'badge', label: __('Stats Badge', 'seo-tidy') },
     { id: 'community', label: __('Wall of Fame', 'seo-tidy') },
@@ -2241,14 +2242,7 @@ function MigrationOverview() {
 
 function SupportLinks() {
     return (
-        <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '16px',
-            marginTop: '24px',
-            paddingTop: '12px',
-            borderTop: '1px solid #ddd',
-        }}>
+        <footer className="tidy-support-links">
             <a href="https://github.com/QvarcY"
                 target="_blank" rel="noopener noreferrer">
                 GitHub - QvarcY
@@ -2259,18 +2253,7 @@ function SupportLinks() {
             </a>
             <a href="https://buymeacoffee.com/craftin"
                 target="_blank" rel="noopener noreferrer"
-                style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '7px 12px',
-                    border: '1px solid #e4be46',
-                    borderRadius: '8px',
-                    background: '#fff3c4',
-                    color: '#493711',
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                }}>
+                className="tidy-support-coffee">
                 <svg
                     width="19"
                     height="19"
@@ -2289,7 +2272,7 @@ function SupportLinks() {
                 </svg>
                 Buy Me a Coffee
             </a>
-        </div>
+        </footer>
     );
 }
 
@@ -2431,8 +2414,129 @@ function GeneralSettings() {
     );
 }
 
+function InternalLinkingEntry() {
+    const [data, setData] = useState(null);
+    const [page, setPage] = useState(1);
+    const [searchInput, setSearchInput] = useState('');
+    const [search, setSearch] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
+    const [refresh, setRefresh] = useState(0);
+    const [restart, setRestart] = useState(false);
+    const [scanning, setScanning] = useState(false);
+    const enabled = window.seoTidyBranding?.linkingEnabled;
+
+    useEffect(() => {
+        if (!enabled) return;
+        let active = true;
+        setLoading(true);
+        setError(false);
+        apiFetch({ path: `/seo-tidy/v1/internal-linking?page=${page}&search=${encodeURIComponent(search)}` })
+            .then((result) => { if (active) setData(result); })
+            .catch(() => { if (active) setError(true); })
+            .finally(() => { if (active) setLoading(false); });
+        return () => { active = false; };
+    }, [enabled, page, search, refresh]);
+
+    if (!enabled) {
+        return <Notice status="info" isDismissible={false}>
+            {__('Internal linking is not enabled for this site.', 'seo-tidy')}
+        </Notice>;
+    }
+    const statuses = {
+        pending: __('Pending', 'seo-tidy'),
+        excluded: __('Excluded', 'seo-tidy'),
+        indexed: __('Indexed', 'seo-tidy'),
+        unindexed: __('Not indexed', 'seo-tidy'),
+    };
+    const progress = data?.published ? Math.min(100, Math.round(data.processed / data.published * 100)) : 0;
+
+    return (
+        <div className="tidy-linking">
+            <p>{__('Find an article here, then manage topics and review suggested links in its WordPress editor.', 'seo-tidy')}</p>
+            {error && <Notice status="error" isDismissible={false}>
+                {__('Could not load the internal linking overview.', 'seo-tidy')}
+                {' '}<Button variant="secondary" onClick={() => setRefresh(refresh + 1)}>
+                    {__('Try again', 'seo-tidy')}
+                </Button>
+            </Notice>}
+            {!data && loading && <Spinner />}
+            {data && <>
+                <section className="tidy-linking-status" aria-label={__('Index status', 'seo-tidy')}>
+                    <div className="tidy-linking-status-heading">
+                        <h3>{__('Index status', 'seo-tidy')}</h3>
+                        <span className={`tidy-linking-badge ${data.ready ? 'is-ready' : 'is-pending'}`}>
+                            {data.ready ? __('Complete', 'seo-tidy') : data.stale ? __('Needs rebuilding', 'seo-tidy') : __('In progress or not started', 'seo-tidy')}
+                        </span>
+                    </div>
+                    <div className="tidy-linking-metrics">
+                        <div><strong>{data.published}</strong><span>{__('Published articles and pages', 'seo-tidy')}</span></div>
+                        <div><strong>{data.processed}</strong><span>{__('Processed articles', 'seo-tidy')}</span></div>
+                        <div><strong>{progress}%</strong><span>{__('Indexing progress', 'seo-tidy')}</span></div>
+                    </div>
+                    <progress max="100" value={progress} aria-label={__('Indexing progress', 'seo-tidy')} />
+                    <p>{__('Indexing runs in batches of 25. Start or continue it when you are ready.', 'seo-tidy')}</p>
+                    <form action={data.scanAction} method="post" className="tidy-linking-scan" onSubmit={() => setScanning(true)}>
+                        <input type="hidden" name="action" value="seo_tidy_link_scan" />
+                        <input type="hidden" name="_wpnonce" value={data.scanNonce} />
+                        <input type="hidden" name="return_to" value="dashboard" />
+                        {(restart || data.stale) && <input type="hidden" name="restart" value="1" />}
+                        <Button type="submit" variant="primary" disabled={scanning || loading || (data.ready && !restart)}>
+                            {scanning ? __('Indexing...', 'seo-tidy') : restart || data.stale ? __('Rebuild index from beginning', 'seo-tidy') : __('Index next 25 articles', 'seo-tidy')}
+                        </Button>
+                        {data.ready && <label>
+                            <input type="checkbox" checked={restart} onChange={(event) => setRestart(event.target.checked)} />
+                            {__('Rebuild index from beginning', 'seo-tidy')}
+                        </label>}
+                        <details><summary>{__('What does rebuilding do?', 'seo-tidy')}</summary>
+                            <p>{__('Rebuilding clears the existing experimental index and starts again. Only use it if content has changed substantially or the index is invalid.', 'seo-tidy')}</p>
+                        </details>
+                    </form>
+                </section>
+                <form className="tidy-linking-search" onSubmit={(event) => {
+                    event.preventDefault(); setPage(1); setSearch(searchInput.trim());
+                }}>
+                    <label htmlFor="tidy-linking-search">{__('Find an article', 'seo-tidy')}</label>
+                    <div><input id="tidy-linking-search" type="search" value={searchInput}
+                        placeholder={__('Search titles and content', 'seo-tidy')}
+                        onChange={(event) => setSearchInput(event.target.value)} />
+                        <Button type="submit" variant="secondary" disabled={loading}>{__('Search', 'seo-tidy')}</Button>
+                    </div>
+                </form>
+                <div className="tidy-linking-results" aria-live="polite">
+                    <strong>{data.total}</strong> {__('Articles found', 'seo-tidy')} {loading && <Spinner />}
+                </div>
+                <div className="tidy-linking-table-wrap" aria-busy={loading}>
+                    <table className="tidy-linking-table">
+                        <thead><tr>
+                            <th scope="col">{__('Article', 'seo-tidy')}</th>
+                            <th scope="col">{__('Topics', 'seo-tidy')}</th>
+                            <th scope="col">{__('Index', 'seo-tidy')}</th>
+                            <th scope="col">{__('Action', 'seo-tidy')}</th>
+                        </tr></thead>
+                        <tbody>{data.items.length ? data.items.map((item) => <tr key={item.id}>
+                            <td><a className="tidy-linking-title" href={item.editUrl}>{item.title || __('Untitled', 'seo-tidy')}</a>
+                                <p>{item.excerpt}</p></td>
+                            <td>{item.topics}</td>
+                            <td><span className={`tidy-linking-badge ${item.status === 'indexed' ? 'is-ready' : 'is-pending'}`}>{statuses[item.status]}</span></td>
+                            <td><Button variant="secondary" href={item.editUrl}>{__('Open in editor', 'seo-tidy')}</Button></td>
+                        </tr>) : <tr><td colSpan="4">{__('No articles found.', 'seo-tidy')}</td></tr>}</tbody>
+                    </table>
+                </div>
+                <div className="tidy-linking-pagination">
+                    <Button variant="secondary" disabled={loading || page === 1} onClick={() => setPage(page - 1)}>{__('Previous', 'seo-tidy')}</Button>
+                    <span>{page} / {data.pages}</span>
+                    <Button variant="secondary" disabled={loading || page >= data.pages} onClick={() => setPage(page + 1)}>{__('Next', 'seo-tidy')}</Button>
+                </div>
+            </>}
+        </div>
+    );
+}
+
 function App() {
-    const [active, setActive] = useState('dashboard');
+    const [active, setActive] = useState(() =>
+        new URLSearchParams(window.location.search).get('section') === 'linking' ? 'linking' : 'dashboard'
+    );
     const [metadataFilter, setMetadataFilter] = useState('all');
 
     const openMetadata = (filter) => {
@@ -2483,7 +2587,9 @@ function App() {
                 <CardBody>
                     <h2>{current.label}</h2>
 
-                    {active === 'settings' ? (
+                    {active === 'linking' ? (
+                        <InternalLinkingEntry />
+                    ) : active === 'settings' ? (
                         <GeneralSettings />
                     ) : active === 'community' ? (
                         <WallOfFame />

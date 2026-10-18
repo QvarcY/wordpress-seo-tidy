@@ -1,0 +1,649 @@
+{
+  "description": "Synthetic editorial fixtures for local ranking and conservative review policy; not production accuracy evidence.",
+  "documents": [
+    {
+      "id": "GHANA-ITINERARY",
+      "language": "en",
+      "title": "Ghana itinerary",
+      "heading": "Accra and Kumasi route",
+      "body": "This Ghana travel itinerary begins in Accra where visitors can explore museums and markets. On the next day travelers move to Kumasi before exploring the coast. In Accra the city museums and historic attractions deserve a dedicated day.",
+      "topics": [
+        "ghana",
+        "accra",
+        "itinerary"
+      ],
+      "categories": [
+        "accra",
+        "ghana",
+        "travel"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "trip_plan"
+    },
+    {
+      "id": "ACCRA-ATTRACTIONS",
+      "language": "en",
+      "title": "Things to do in Accra",
+      "heading": "Markets and museums",
+      "body": "Accra offers museums, markets, coastal attractions and heritage tours. Visitors can spend a day exploring Jamestown and Ghanaian history. Airport transport is useful when preparing to depart.",
+      "topics": [
+        "accra",
+        "attractions",
+        "museums"
+      ],
+      "categories": [
+        "accra",
+        "ghana",
+        "travel"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "activity_guide"
+    },
+    {
+      "id": "ACCRA-TRANSPORT",
+      "language": "en",
+      "title": "Accra airport transfer guide",
+      "heading": "Airport transport",
+      "body": "This guide explains how visitors can travel between Accra airport and city hotels. Compare airport taxis, shuttle bookings and pickup information before travel.",
+      "topics": [
+        "accra",
+        "airport",
+        "transport"
+      ],
+      "categories": [
+        "accra",
+        "transport"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "transport_guide"
+    },
+    {
+      "id": "ACCRA-HOTELS",
+      "language": "en",
+      "title": "Best hotels in Accra",
+      "heading": "Compare accommodation",
+      "body": "Compare Accra hotels, accommodation locations, amenities and hotel prices. Visitors can choose a place to stay based on neighborhood and budget.",
+      "topics": [
+        "accra",
+        "hotels",
+        "accommodation"
+      ],
+      "categories": [
+        "accra",
+        "accommodation"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "accommodation_selection"
+    },
+    {
+      "id": "ACCRA-STAY",
+      "language": "en",
+      "title": "Where to stay in Accra",
+      "heading": "Hotel neighborhoods",
+      "body": "Find where to stay in Accra. This accommodation guide compares Accra hotels, neighborhood location and costs for visitors who need a place to sleep.",
+      "topics": [
+        "accra",
+        "hotels",
+        "accommodation"
+      ],
+      "categories": [
+        "accra",
+        "accommodation"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "accommodation_selection"
+    },
+    {
+      "id": "GHANA-BEACH",
+      "language": "en",
+      "title": "Best beaches in Ghana",
+      "heading": "Coastal swimming",
+      "body": "Ghana beaches are popular for swimming and coastal sightseeing. Plan beach visits and trips along the Ghana coast.",
+      "topics": [
+        "ghana",
+        "beaches",
+        "coast"
+      ],
+      "categories": [
+        "ghana",
+        "travel"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "beach_guide"
+    },
+    {
+      "id": "WP-SECURITY",
+      "language": "en",
+      "title": "WordPress security checklist",
+      "heading": "Software updates",
+      "body": "Keep WordPress secure with plugin updates, database backups, login hardening and administrative reviews.",
+      "topics": [
+        "wordpress",
+        "security",
+        "plugins"
+      ],
+      "categories": [
+        "wordpress",
+        "security"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "technical_checklist"
+    },
+    {
+      "id": "RIGA-ATTRACTIONS",
+      "language": "lv",
+      "title": "Rīgas apskates vietas",
+      "heading": "Muzeji un parki",
+      "body": "Rīgā iespējams izstaigāt Vecrīgu, apmeklēt muzejus un parkus. Ģimenēm ar bērniem Rīgas muzeji piedāvā daudz dažādu ekspozīciju. Rīgas apskates maršrutā var iekļaut interaktīvas izstādes.",
+      "topics": [
+        "rīga",
+        "apskates vietas",
+        "muzeji"
+      ],
+      "categories": [
+        "rīga",
+        "latvija",
+        "ceļošana"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "activity_guide"
+    },
+    {
+      "id": "RIGA-MUSEUMS",
+      "language": "lv",
+      "title": "Rīgas muzeji ģimenēm",
+      "heading": "Ekspozīcijas bērniem",
+      "body": "Rīgas muzeji ģimenēm piedāvā interaktīvas ekspozīcijas, darbnīcas un izglītojošas aktivitātes bērniem. Šajā rakstā salīdzināti muzeju piedāvājumi.",
+      "topics": [
+        "rīga",
+        "muzeji",
+        "ģimene"
+      ],
+      "categories": [
+        "rīga",
+        "latvija",
+        "ceļošana"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "family_museums"
+    },
+    {
+      "id": "SIGULDA-TRIP",
+      "language": "lv",
+      "title": "Ko redzēt Siguldā",
+      "heading": "Turaidas pils un Gauja",
+      "body": "Siguldā var apmeklēt Turaidas pili, doties pie Gaujas un iepazīt skatu takas. Turaidas pils ir vēsturisks apskates objekts un viens no maršruta pieturas punktiem.",
+      "topics": [
+        "sigulda",
+        "turaidas pils",
+        "apskates vietas"
+      ],
+      "categories": [
+        "sigulda",
+        "latvija",
+        "ceļošana"
+      ],
+      "outgoing": [
+        "TURAIDA"
+      ],
+      "status": "publish",
+      "indexable": true,
+      "intent": "activity_guide"
+    },
+    {
+      "id": "TURAIDA",
+      "language": "lv",
+      "title": "Turaidas pils apmeklējums",
+      "heading": "Pils muzejs",
+      "body": "Turaidas pils apmeklējums ietver vēsturisko pili, pagalmu un muzeja ekspozīciju. Apmeklētāji var iepazīt vēsturi Siguldas apkārtnē.",
+      "topics": [
+        "turaidas pils",
+        "pilis",
+        "vēsture"
+      ],
+      "categories": [
+        "sigulda",
+        "latvija",
+        "ceļošana"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "landmark_visit"
+    },
+    {
+      "id": "RIGA-HOTELS",
+      "language": "lv",
+      "title": "Labākās viesnīcas Rīgā",
+      "heading": "Naktsmītnes",
+      "body": "Rīgas viesnīcas piedāvā atšķirīgas cenas un atrašanās vietas. Salīdzinām, kur nakšņot Rīgā un kā izvēlēties viesnīcu.",
+      "topics": [
+        "rīga",
+        "viesnīcas",
+        "naktsmītnes"
+      ],
+      "categories": [
+        "rīga",
+        "ceļošana"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "accommodation_selection"
+    },
+    {
+      "id": "RIGA-STAY",
+      "language": "lv",
+      "title": "Kur nakšņot Rīgā",
+      "heading": "Viesnīcas un rajoni",
+      "body": "Šajā Rīgas naktsmītņu ceļvedī apskatītas viesnīcas un rajoni. Raksts palīdz izvēlēties kur nakšņot Rīgā pēc cenas un vietas.",
+      "topics": [
+        "rīga",
+        "viesnīcas",
+        "naktsmītnes"
+      ],
+      "categories": [
+        "rīga",
+        "ceļošana"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "accommodation_selection"
+    },
+    {
+      "id": "WP-UPDATES",
+      "language": "lv",
+      "title": "Kā atjaunināt WordPress",
+      "heading": "Spraudņu versijas",
+      "body": "WordPress atjaunināšana palīdz uzlabot drošību. Pirms spraudņu un tēmu atjaunināšanas izveido datubāzes rezerves kopiju.",
+      "topics": [
+        "wordpress",
+        "atjaunināšana",
+        "drošība"
+      ],
+      "categories": [
+        "wordpress",
+        "pamācība"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "technical_tutorial"
+    },
+    {
+      "id": "EN-PUNCT-ROUTE",
+      "language": "en",
+      "title": "Accra — heritage walk!",
+      "heading": "Markets, museums & history",
+      "body": "An Accra heritage walk includes Accra markets: food, crafts and museums. Plan a Ghana route around local history.",
+      "topics": [
+        "accra",
+        "heritage walk"
+      ],
+      "categories": [
+        "ghana",
+        "travel"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "heritage_walk"
+    },
+    {
+      "id": "EN-MARKETS",
+      "language": "en",
+      "title": "Accra markets: food & crafts",
+      "heading": "Food stalls",
+      "body": "Accra markets offer food and crafts. Heritage visitors can explore stalls before a Ghana journey.",
+      "topics": [
+        "accra markets",
+        "food",
+        "crafts"
+      ],
+      "categories": [
+        "ghana",
+        "travel"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "market_visit"
+    },
+    {
+      "id": "LV-PUNCT-ROUTE",
+      "language": "lv",
+      "title": "RĪGAS nedēļas nogale!",
+      "heading": "Muzeji — parks; vēsture",
+      "body": "Rīgas nedēļas nogalē apskatām ĀDAŽU vēstures muzeju; izstādes, vēstures ekspozīcijas un parku. Muzeja apmeklējums papildina pilsētas maršrutu.",
+      "topics": [
+        "rīgas nedēļas nogale",
+        "maršruts"
+      ],
+      "categories": [
+        "latvija",
+        "ceļošana"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "weekend_route"
+    },
+    {
+      "id": "LV-ADAZI-MUSEUM",
+      "language": "lv",
+      "title": "Ādažu vēstures muzejs",
+      "heading": "Vēstures ekspozīcija",
+      "body": "Ādažu vēstures muzejs piedāvā vēstures ekspozīciju. Rīgas nedēļas nogales maršrutā iespējams ieplānot apmeklējumu.",
+      "topics": [
+        "ādažu vēstures muzejs",
+        "izstādes"
+      ],
+      "categories": [
+        "latvija",
+        "ceļošana"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "museum_visit"
+    },
+    {
+      "id": "MIXED-MUSEUM-ROUTE",
+      "language": "lv-en",
+      "title": "Riga weekend museums",
+      "heading": "Rīgas muzeji — family visits",
+      "body": "A Riga weekend includes RĪGAS muzeji, ģimenēm draudzīgas izstādes — museum visits with children. WordPress nav šī maršruta tēma.",
+      "topics": [
+        "riga weekend",
+        "family visits",
+        "muzeji"
+      ],
+      "categories": [
+        "travel",
+        "ceļošana"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "mixed_weekend_route"
+    },
+    {
+      "id": "LV-RESTAURANTS",
+      "language": "lv",
+      "title": "Rīgas restorāni vakariņām",
+      "heading": "Restorāni",
+      "body": "Rīgas restorāni vakariņām piedāvā dažādas ēdienkartes. Nedēļas nogalē rezervē galdiņu.",
+      "topics": [
+        "rīga",
+        "restorāni",
+        "vakariņas"
+      ],
+      "categories": [
+        "latvija",
+        "ceļošana"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "dining"
+    },
+    {
+      "id": "EN-MARKETS-COMPETING",
+      "language": "en",
+      "title": "Accra markets food crafts",
+      "heading": "Market guide",
+      "body": "Choose Accra markets for local food and handmade crafts. Compare different market districts.",
+      "topics": [
+        "food",
+        "accra markets",
+        "crafts"
+      ],
+      "categories": [
+        "ghana",
+        "travel"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "market_visit"
+    },
+    {
+      "id": "LV-MUSEUM-COMPETING",
+      "language": "lv",
+      "title": "Vēstures muzejs Ādažos",
+      "heading": "Izstādes",
+      "body": "Ādažu vēstures muzejs un izstādes ir apskatīti atsevišķā ceļvedī ar padomiem apmeklējumam.",
+      "topics": [
+        "izstādes",
+        "ādažu vēstures muzejs"
+      ],
+      "categories": [
+        "latvija",
+        "ceļošana"
+      ],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "museum_visit"
+    },
+    {
+      "id": "EN-NEAR-DUP-SOURCE",
+      "language": "en",
+      "title": "Ghana itinerary planner",
+      "body": "This Ghana itinerary route covers Accra markets and museums before a coastal walk. Compare each day before arranging the journey.",
+      "topics": [],
+      "categories": [],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "trip_plan"
+    },
+    {
+      "id": "EN-NEAR-DUP-TARGET",
+      "language": "en",
+      "title": "Ghana itinerary route",
+      "body": "This Ghana itinerary route covers Accra markets and museums before a coastal walk. Compare each day before arranging the route.",
+      "topics": [],
+      "categories": [],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "trip_plan"
+    },
+    {
+      "id": "LV-NEAR-DUP-SOURCE",
+      "language": "lv",
+      "title": "Rīgas muzeju ceļvedis",
+      "body": "Rīgas muzeju saraksts palīdz ieplānot izstādes un apskates vietas nedēļas nogalei. Maršrutā iekļautas vēstures un mākslas ekspozīcijas.",
+      "topics": [],
+      "categories": [],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "museum_guide"
+    },
+    {
+      "id": "LV-NEAR-DUP-TARGET",
+      "language": "lv",
+      "title": "Rīgas muzeju saraksts",
+      "body": "Rīgas muzeju saraksts palīdz ieplānot izstādes un apskates vietas nedēļas nogalei. Maršrutā iekļautas vēstures un mākslas izstādes.",
+      "topics": [],
+      "categories": [],
+      "outgoing": [],
+      "status": "publish",
+      "indexable": true,
+      "intent": "museum_guide"
+    }
+  ],
+  "pairs": [
+    {
+      "source": "GHANA-ITINERARY",
+      "target": "ACCRA-ATTRACTIONS",
+      "expected": "recommend",
+      "context_note": "Accra"
+    },
+    {
+      "source": "ACCRA-ATTRACTIONS",
+      "target": "ACCRA-TRANSPORT",
+      "expected": "recommend"
+    },
+    {
+      "source": "ACCRA-HOTELS",
+      "target": "ACCRA-STAY",
+      "expected": "uncertain"
+    },
+    {
+      "source": "GHANA-BEACH",
+      "target": "WP-SECURITY",
+      "expected": "reject"
+    },
+    {
+      "source": "RIGA-ATTRACTIONS",
+      "target": "RIGA-MUSEUMS",
+      "expected": "recommend",
+      "context_note": "Rīgas muzeji"
+    },
+    {
+      "source": "RIGA-HOTELS",
+      "target": "RIGA-STAY",
+      "expected": "uncertain"
+    },
+    {
+      "source": "RIGA-ATTRACTIONS",
+      "target": "WP-UPDATES",
+      "expected": "reject"
+    },
+    {
+      "source": "GHANA-ITINERARY",
+      "target": "ACCRA-HOTELS",
+      "expected": "uncertain",
+      "context_note": "no explicit hotel discussion"
+    },
+    {
+      "source": "SIGULDA-TRIP",
+      "target": "RIGA-MUSEUMS",
+      "expected": "reject"
+    },
+    {
+      "source": "GHANA-ITINERARY",
+      "target": "ACCRA-TRANSPORT",
+      "expected": "uncertain"
+    },
+    {
+      "source": "RIGA-MUSEUMS",
+      "target": "RIGA-ATTRACTIONS",
+      "expected": "uncertain",
+      "context_note": "reverse broad guide"
+    },
+    {
+      "source": "ACCRA-ATTRACTIONS",
+      "target": "ACCRA-ATTRACTIONS",
+      "expected": "reject",
+      "reason": "self_link"
+    },
+    {
+      "source": "ACCRA-HOTELS",
+      "target": "ACCRA-STAY",
+      "expected": "uncertain",
+      "reason": "possible_same_intent"
+    },
+    {
+      "source": "RIGA-HOTELS",
+      "target": "RIGA-STAY",
+      "expected": "uncertain",
+      "reason": "possible_same_intent"
+    },
+    {
+      "source": "SIGULDA-TRIP",
+      "target": "TURAIDA",
+      "expected": "reject",
+      "reason": "already_linked",
+      "context_note": "existing link"
+    },
+    {
+      "source": "GHANA-ITINERARY",
+      "target": "WP-SECURITY",
+      "expected": "reject",
+      "reason": "unrelated"
+    },
+    {
+      "source": "EN-PUNCT-ROUTE",
+      "target": "EN-MARKETS",
+      "expected": "recommend",
+      "reason": "punctuation_with_explicit_context"
+    },
+    {
+      "source": "LV-PUNCT-ROUTE",
+      "target": "LV-ADAZI-MUSEUM",
+      "expected": "recommend",
+      "reason": "latvian_diacritics_and_punctuation"
+    },
+    {
+      "source": "MIXED-MUSEUM-ROUTE",
+      "target": "RIGA-MUSEUMS",
+      "expected": "recommend",
+      "reason": "mixed_language_explicit_context"
+    },
+    {
+      "source": "LV-PUNCT-ROUTE",
+      "target": "LV-RESTAURANTS",
+      "expected": "uncertain",
+      "reason": "place_only_without_dining_context"
+    },
+    {
+      "source": "EN-MARKETS",
+      "target": "EN-MARKETS-COMPETING",
+      "expected": "uncertain",
+      "reason": "possible_same_intent"
+    },
+    {
+      "source": "LV-ADAZI-MUSEUM",
+      "target": "LV-MUSEUM-COMPETING",
+      "expected": "uncertain",
+      "reason": "possible_same_intent"
+    },
+    {
+      "source": "LV-PUNCT-ROUTE",
+      "target": "WP-SECURITY",
+      "expected": "reject",
+      "reason": "unrelated"
+    },
+    {
+      "source": "MIXED-MUSEUM-ROUTE",
+      "target": "WP-UPDATES",
+      "expected": "uncertain",
+      "reason": "incidental_wordpress_mention_without_update_context"
+    },
+    {
+      "source": "EN-NEAR-DUP-SOURCE",
+      "target": "EN-NEAR-DUP-TARGET",
+      "expected": "uncertain",
+      "reason": "near_duplicate_without_topics"
+    },
+    {
+      "source": "LV-NEAR-DUP-SOURCE",
+      "target": "LV-NEAR-DUP-TARGET",
+      "expected": "uncertain",
+      "reason": "near_duplicate_without_topics"
+    }
+  ]
+}

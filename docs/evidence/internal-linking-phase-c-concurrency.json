@@ -1,0 +1,2438 @@
+{
+  "started_utc": "2026-10-18T16:03:51.117583+00:00",
+  "scope": "Concurrent scans, edit during scan, interrupted scan/recovery, small sequential indexing only",
+  "corpus": "Existing 25 published synthetic posts; 975 draft posts are not rebuilt",
+  "benchmarks_rerun": false,
+  "logs_directory_relative_to_isolated_environment": "logs/concurrency-431116986600",
+  "checks": [
+    {
+      "pass": true,
+      "description": "initial: no database error"
+    },
+    {
+      "pass": true,
+      "description": "sequential_touch: no database error"
+    },
+    {
+      "pass": true,
+      "description": "sequential_touch: Smart Topics preserved"
+    },
+    {
+      "pass": true,
+      "description": "sequential_scan: scan has no SQL/fatal error"
+    },
+    {
+      "pass": true,
+      "description": "sequential_scan: scan log has no database/duplicate-key error"
+    },
+    {
+      "pass": true,
+      "description": "sequential_complete: no database error"
+    },
+    {
+      "pass": true,
+      "description": "sequential_complete: Smart Topics preserved"
+    },
+    {
+      "pass": true,
+      "description": "sequential: fresh and persisted index state is complete and current"
+    },
+    {
+      "pass": true,
+      "description": "sequential: exactly 25 published documents are indexed"
+    },
+    {
+      "pass": true,
+      "description": "sequential: all 25 vectors match current WordPress content"
+    },
+    {
+      "pass": true,
+      "description": "sequential: no duplicate posting keys"
+    },
+    {
+      "pass": true,
+      "description": "sequential_noop: scan has no SQL/fatal error"
+    },
+    {
+      "pass": true,
+      "description": "sequential_noop: scan log has no database/duplicate-key error"
+    },
+    {
+      "pass": true,
+      "description": "sequential: completed scan is a no-op"
+    },
+    {
+      "pass": true,
+      "description": "overlap_touch: no database error"
+    },
+    {
+      "pass": true,
+      "description": "overlap_touch: Smart Topics preserved"
+    },
+    {
+      "pass": true,
+      "description": "overlap: barrier uses the first published article"
+    },
+    {
+      "pass": true,
+      "description": "overlap_active_before: no database error"
+    },
+    {
+      "pass": true,
+      "description": "overlap_active_before: Smart Topics preserved"
+    },
+    {
+      "pass": true,
+      "description": "overlap while worker A is active: fresh public state is unusable"
+    },
+    {
+      "pass": true,
+      "description": "overlap while worker A is active: raw persisted state is unusable"
+    },
+    {
+      "pass": true,
+      "description": "overlap while worker A is active: corpus statistics and indexed candidate retrieval are gated"
+    },
+    {
+      "pass": true,
+      "description": "overlap_scan_b: scan has no SQL/fatal error"
+    },
+    {
+      "pass": true,
+      "description": "overlap_scan_b: scan log has no database/duplicate-key error"
+    },
+    {
+      "pass": true,
+      "description": "overlap: worker A remains paused during worker B"
+    },
+    {
+      "pass": true,
+      "description": "overlap: worker B returns busy"
+    },
+    {
+      "pass": true,
+      "description": "overlap_active_after: no database error"
+    },
+    {
+      "pass": true,
+      "description": "overlap_active_after: Smart Topics preserved"
+    },
+    {
+      "pass": true,
+      "description": "overlap after competing request: fresh public state is unusable"
+    },
+    {
+      "pass": true,
+      "description": "overlap after competing request: raw persisted state is unusable"
+    },
+    {
+      "pass": true,
+      "description": "overlap after competing request: corpus statistics and indexed candidate retrieval are gated"
+    },
+    {
+      "pass": true,
+      "description": "overlap: busy worker neither changes active state nor writes postings"
+    },
+    {
+      "pass": true,
+      "description": "overlap_worker_a: worker exits normally"
+    },
+    {
+      "pass": true,
+      "description": "overlap_worker_a: no captured database errors"
+    },
+    {
+      "pass": true,
+      "description": "overlap_worker_a: no fatal PHP error"
+    },
+    {
+      "pass": true,
+      "description": "overlap_worker_a: no duplicate-key/database error in log"
+    },
+    {
+      "pass": true,
+      "description": "overlap_complete: no database error"
+    },
+    {
+      "pass": true,
+      "description": "overlap_complete: Smart Topics preserved"
+    },
+    {
+      "pass": true,
+      "description": "overlap completion: fresh and persisted index state is complete and current"
+    },
+    {
+      "pass": true,
+      "description": "overlap completion: exactly 25 published documents are indexed"
+    },
+    {
+      "pass": true,
+      "description": "overlap completion: all 25 vectors match current WordPress content"
+    },
+    {
+      "pass": true,
+      "description": "overlap completion: no duplicate posting keys"
+    },
+    {
+      "pass": true,
+      "description": "edit_touch: no database error"
+    },
+    {
+      "pass": true,
+      "description": "edit_touch: Smart Topics preserved"
+    },
+    {
+      "pass": true,
+      "description": "edit_during_scan: no database error"
+    },
+    {
+      "pass": true,
+      "description": "edit_during_scan: Smart Topics preserved"
+    },
+    {
+      "pass": true,
+      "description": "edit while worker A is active: fresh public state is unusable"
+    },
+    {
+      "pass": true,
+      "description": "edit while worker A is active: raw persisted state is unusable"
+    },
+    {
+      "pass": true,
+      "description": "edit while worker A is active: corpus statistics and indexed candidate retrieval are gated"
+    },
+    {
+      "pass": true,
+      "description": "edit changes the captured article body"
+    },
+    {
+      "pass": true,
+      "description": "edit_worker_a: worker exits normally"
+    },
+    {
+      "pass": true,
+      "description": "edit_worker_a: no captured database errors"
+    },
+    {
+      "pass": true,
+      "description": "edit_worker_a: no fatal PHP error"
+    },
+    {
+      "pass": true,
+      "description": "edit_worker_a: no duplicate-key/database error in log"
+    },
+    {
+      "pass": true,
+      "description": "edit_after_scan: no database error"
+    },
+    {
+      "pass": true,
+      "description": "edit_after_scan: Smart Topics preserved"
+    },
+    {
+      "pass": true,
+      "description": "edit after old worker finishes: fresh public state is unusable"
+    },
+    {
+      "pass": true,
+      "description": "edit after old worker finishes: raw persisted state is unusable"
+    },
+    {
+      "pass": true,
+      "description": "edit after old worker finishes: corpus statistics and indexed candidate retrieval are gated"
+    },
+    {
+      "pass": true,
+      "description": "edit_recovery_scan: scan has no SQL/fatal error"
+    },
+    {
+      "pass": true,
+      "description": "edit_recovery_scan: scan log has no database/duplicate-key error"
+    },
+    {
+      "pass": true,
+      "description": "edit_recovered: no database error"
+    },
+    {
+      "pass": true,
+      "description": "edit_recovered: Smart Topics preserved"
+    },
+    {
+      "pass": true,
+      "description": "edit recovery: fresh and persisted index state is complete and current"
+    },
+    {
+      "pass": true,
+      "description": "edit recovery: exactly 25 published documents are indexed"
+    },
+    {
+      "pass": true,
+      "description": "edit recovery: all 25 vectors match current WordPress content"
+    },
+    {
+      "pass": true,
+      "description": "edit recovery: no duplicate posting keys"
+    },
+    {
+      "pass": true,
+      "description": "interrupted_active: no database error"
+    },
+    {
+      "pass": true,
+      "description": "interrupted_active: Smart Topics preserved"
+    },
+    {
+      "pass": true,
+      "description": "interrupted before termination: fresh public state is unusable"
+    },
+    {
+      "pass": true,
+      "description": "interrupted before termination: raw persisted state is unusable"
+    },
+    {
+      "pass": true,
+      "description": "interrupted before termination: corpus statistics and indexed candidate retrieval are gated"
+    },
+    {
+      "pass": true,
+      "description": "interrupted: terminated worker did not complete normally"
+    },
+    {
+      "pass": true,
+      "description": "interrupted_after_termination: no database error"
+    },
+    {
+      "pass": true,
+      "description": "interrupted_after_termination: Smart Topics preserved"
+    },
+    {
+      "pass": true,
+      "description": "interrupted after termination: fresh public state is unusable"
+    },
+    {
+      "pass": true,
+      "description": "interrupted after termination: raw persisted state is unusable"
+    },
+    {
+      "pass": true,
+      "description": "interrupted after termination: corpus statistics and indexed candidate retrieval are gated"
+    },
+    {
+      "pass": true,
+      "description": "interrupted_recovery_scan: scan has no SQL/fatal error"
+    },
+    {
+      "pass": true,
+      "description": "interrupted_recovery_scan: scan log has no database/duplicate-key error"
+    },
+    {
+      "pass": true,
+      "description": "interrupted: disconnected owner no longer holds the database lock"
+    },
+    {
+      "pass": true,
+      "description": "interrupted_recovered: no database error"
+    },
+    {
+      "pass": true,
+      "description": "interrupted_recovered: Smart Topics preserved"
+    },
+    {
+      "pass": true,
+      "description": "interrupted recovery: fresh and persisted index state is complete and current"
+    },
+    {
+      "pass": true,
+      "description": "interrupted recovery: exactly 25 published documents are indexed"
+    },
+    {
+      "pass": true,
+      "description": "interrupted recovery: all 25 vectors match current WordPress content"
+    },
+    {
+      "pass": true,
+      "description": "interrupted recovery: no duplicate posting keys"
+    }
+  ],
+  "stages": {
+    "initial": {
+      "mode": "inspect",
+      "post_id": 50,
+      "published_posts": 25,
+      "state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": false,
+        "stale": true,
+        "schema": 5
+      },
+      "raw_state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": true,
+        "stale": false,
+        "schema": 5
+      },
+      "corpus": {
+        "count": 0,
+        "avgdl": 1
+      },
+      "candidate_ids": [],
+      "mismatched_vectors": [
+        {
+          "post_id": 50,
+          "stored_terms": 300,
+          "expected_terms": 6,
+          "missing_count": 2,
+          "missing_sha256": "0822f0f8d7cacc19cba5546aab3936f022120367caa8eed0f11b31ebad68e6e3",
+          "obsolete_count": 296,
+          "obsolete_sha256": "81029b60da65177593bc6b7b8800757059e26d5423cf5270c2fa27eba35ee11b"
+        }
+      ],
+      "indexed_documents": 25,
+      "postings": 7500,
+      "duplicate_primary_keys": [],
+      "smart_topics_sha256": "f3c591bfde2c07e0dbd65ec2c27e31175d89e9f0bfd8c563e3f503f2b463c44f",
+      "body_sha256": "b18a79a62a0b5002e27b12343a1f2592be93f96e9aac4f50f7f1afc03dcc908c",
+      "snapshot": {
+        "version": 2,
+        "updated": 1792332592
+      },
+      "database_error": "",
+      "environment": {
+        "wordpress": "6.8",
+        "php": "8.2.6",
+        "database": "11.4.12-MariaDB",
+        "home": "http://127.0.0.1:8896/"
+      },
+      "process_wall_seconds": 0.5189859999809414
+    },
+    "sequential_touch": {
+      "mode": "touch",
+      "post_id": 50,
+      "published_posts": 25,
+      "state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": false,
+        "stale": true,
+        "schema": 5
+      },
+      "raw_state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": false,
+        "stale": true,
+        "schema": 5
+      },
+      "corpus": {
+        "count": 0,
+        "avgdl": 1
+      },
+      "candidate_ids": [],
+      "mismatched_vectors": [
+        {
+          "post_id": 50,
+          "stored_terms": 300,
+          "expected_terms": 6,
+          "missing_count": 2,
+          "missing_sha256": "0822f0f8d7cacc19cba5546aab3936f022120367caa8eed0f11b31ebad68e6e3",
+          "obsolete_count": 296,
+          "obsolete_sha256": "81029b60da65177593bc6b7b8800757059e26d5423cf5270c2fa27eba35ee11b"
+        }
+      ],
+      "indexed_documents": 25,
+      "postings": 7500,
+      "duplicate_primary_keys": [],
+      "smart_topics_sha256": "f3c591bfde2c07e0dbd65ec2c27e31175d89e9f0bfd8c563e3f503f2b463c44f",
+      "body_sha256": "b18a79a62a0b5002e27b12343a1f2592be93f96e9aac4f50f7f1afc03dcc908c",
+      "snapshot": [],
+      "database_error": "",
+      "environment": {
+        "wordpress": "6.8",
+        "php": "8.2.6",
+        "database": "11.4.12-MariaDB",
+        "home": "http://127.0.0.1:8896/"
+      },
+      "process_wall_seconds": 0.5770658000838012
+    },
+    "sequential_scan": {
+      "mode": "scan",
+      "pid": 39920,
+      "seconds": 0.5227780342102051,
+      "queries": 291,
+      "peak_bytes": 37748736,
+      "state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": true,
+        "stale": false,
+        "in_progress": false,
+        "generation": "2",
+        "schema": 5
+      },
+      "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+      "database_error": "",
+      "fatal": null,
+      "process_wall_seconds": 0.9937282002065331
+    },
+    "sequential_complete": {
+      "mode": "inspect",
+      "post_id": 50,
+      "published_posts": 25,
+      "state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": true,
+        "stale": false,
+        "in_progress": false,
+        "generation": "2",
+        "schema": 5
+      },
+      "raw_state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": true,
+        "stale": false,
+        "in_progress": false,
+        "generation": "2",
+        "schema": 5
+      },
+      "corpus": {
+        "count": 25,
+        "avgdl": 374.56
+      },
+      "candidate_ids": [
+        52,
+        58,
+        60,
+        62,
+        64,
+        70,
+        72,
+        74,
+        51,
+        53,
+        54,
+        55,
+        56,
+        57,
+        59,
+        61,
+        63,
+        65,
+        66,
+        67,
+        68,
+        69,
+        71,
+        73
+      ],
+      "mismatched_vectors": [],
+      "indexed_documents": 25,
+      "postings": 7206,
+      "duplicate_primary_keys": [],
+      "smart_topics_sha256": "f3c591bfde2c07e0dbd65ec2c27e31175d89e9f0bfd8c563e3f503f2b463c44f",
+      "body_sha256": "b18a79a62a0b5002e27b12343a1f2592be93f96e9aac4f50f7f1afc03dcc908c",
+      "snapshot": {
+        "version": 2,
+        "updated": 1792339432
+      },
+      "database_error": "",
+      "environment": {
+        "wordpress": "6.8",
+        "php": "8.2.6",
+        "database": "11.4.12-MariaDB",
+        "home": "http://127.0.0.1:8896/"
+      },
+      "process_wall_seconds": 0.5192603000905365
+    },
+    "sequential_noop": {
+      "mode": "scan",
+      "pid": 41104,
+      "seconds": 0.051110029220581055,
+      "queries": 10,
+      "peak_bytes": 37748736,
+      "state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": true,
+        "stale": false,
+        "in_progress": false,
+        "generation": "2",
+        "schema": 5
+      },
+      "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=complete",
+      "database_error": "",
+      "fatal": null,
+      "process_wall_seconds": 0.5241135000251234
+    },
+    "overlap_touch": {
+      "mode": "touch",
+      "post_id": 50,
+      "published_posts": 25,
+      "state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": false,
+        "stale": true,
+        "in_progress": false,
+        "generation": "2",
+        "schema": 5
+      },
+      "raw_state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": false,
+        "stale": true,
+        "in_progress": false,
+        "generation": "2",
+        "schema": 5
+      },
+      "corpus": {
+        "count": 0,
+        "avgdl": 1
+      },
+      "candidate_ids": [],
+      "mismatched_vectors": [],
+      "indexed_documents": 25,
+      "postings": 7206,
+      "duplicate_primary_keys": [],
+      "smart_topics_sha256": "f3c591bfde2c07e0dbd65ec2c27e31175d89e9f0bfd8c563e3f503f2b463c44f",
+      "body_sha256": "b18a79a62a0b5002e27b12343a1f2592be93f96e9aac4f50f7f1afc03dcc908c",
+      "snapshot": [],
+      "database_error": "",
+      "environment": {
+        "wordpress": "6.8",
+        "php": "8.2.6",
+        "database": "11.4.12-MariaDB",
+        "home": "http://127.0.0.1:8896/"
+      },
+      "process_wall_seconds": 0.5542486999183893
+    },
+    "overlap_barrier": {
+      "worker": "cf-overlap-431116986600",
+      "post_id": 50,
+      "stage": "before first posting INSERT, after state/read/delete",
+      "state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "4",
+        "schema": 5
+      },
+      "snapshot_content_sha256": "b18a79a62a0b5002e27b12343a1f2592be93f96e9aac4f50f7f1afc03dcc908c",
+      "time": 1792339435.360003,
+      "captured_distinct_terms": 6,
+      "captured_terms_sha256": "98be1d95e2c14967144d825cad8c9dfedc694c531b0ac9e305573f42a966abb8"
+    },
+    "overlap_active_before": {
+      "mode": "inspect",
+      "post_id": 50,
+      "published_posts": 25,
+      "state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "4",
+        "schema": 5
+      },
+      "raw_state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "4",
+        "schema": 5
+      },
+      "corpus": {
+        "count": 0,
+        "avgdl": 1
+      },
+      "candidate_ids": [],
+      "mismatched_vectors": [
+        {
+          "post_id": 50,
+          "stored_terms": 0,
+          "expected_terms": 6,
+          "missing_count": 6,
+          "missing_sha256": "30d3b6ddf0de4bd0d767afe20733cd408c1479fd8c40e844f550efab73239776",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 51,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "68753ab18be7274c3e3b1694c763f02673f48275cd42e60d97e79404c05109a4",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 52,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "6629684939b663f48a7916070328df06d644c15ecf9e0493b4e28d8f328f7b26",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 53,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "d845790f583f59cf7d610fa5e6f2a56c6e3969caebd9923fe78cd92988451a87",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 54,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "4f874d746feabd480814657706b37a07c0d967af6a49276c343f25bde07b71c5",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 55,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "43c22da5b9f624e6cc25fdd61a902b60d1270e4f7453eeb6c9599f6a7895c86e",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 56,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "78f5c68ce46869553b11630518b078160476df863e806bacf2b7bc7421e49d78",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 57,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "dcbd004d34330ee9951d50441be31c1b43f028712139cde027b47fe0f744ef39",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 58,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "e45e150684dad9f57cb8fe5b3ddd6831c70706da6a01b104c4cadb64f78f5fcc",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 59,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "ad5931af617a5f481c3bbee0253d280ad5434387b0317fea61491d87d4c3de99",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 60,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "98be32564c303cde1a5a14a7ac33e4f4a5e94091f81f627a9659eb6fba2fd238",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 61,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "3447a5005445de46161cb47b2121f936ec5248fb3fe25285f5ad3d7dce33d0b3",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 62,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "fda642c846f3e64a04e33e9f298d84bb29c953556ecf99835886fff8a0c7a6f0",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 63,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "89429034f003d7e88f9b28ca20e55bb1015d32c8d4732e83e43a2790df546a27",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 64,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "f6ecb9367d5799eab22f5cde19c19ad3583d279c20b05f448c86dd662c166e8d",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 65,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "4bef58f952019568189bc107f7b505e3a04de31856eb2bd194ef2a9ef86c958c",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 66,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "8ec0ae79aafa22b05a33cd83d351d80168e52c382874e27da8f761a395b00f6d",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 67,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "673b992cdd31233f73ae617d037946f440da7206611f17d5fe577313ec168036",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 68,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "695c679c1aa8204a5d316cc52433fbb00f64469be950ecee2a8231f3239f6566",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 69,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "9b8b31ff7db3cebdd70d49cc37e35d9a425bb09cbe255e6a0a37e50d68d8ce3c",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 70,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "df3c63e4a956aac340f397a6b2591ea0da1727ca93ac15f3c6f788d71c0b2297",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 71,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "447c35b61cf5b66432859e8cbb747ad320178ba725d3f6f6aea4d12d79f034d9",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 72,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "fbdb0bbfa38c74418dce1f3fa7401ad34edfcdea35502c3efe29e80cef2ef4ff",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 73,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "b92e8ba736dfb02b7b688c80cd94f005221183112071953bf01aab9338ecfb12",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 74,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "2acaa82010ef9631dd0036e1651cd74fc181561d5082f6584aa662336afc3d06",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        }
+      ],
+      "indexed_documents": 0,
+      "postings": 0,
+      "duplicate_primary_keys": [],
+      "smart_topics_sha256": "f3c591bfde2c07e0dbd65ec2c27e31175d89e9f0bfd8c563e3f503f2b463c44f",
+      "body_sha256": "b18a79a62a0b5002e27b12343a1f2592be93f96e9aac4f50f7f1afc03dcc908c",
+      "snapshot": [],
+      "database_error": "",
+      "environment": {
+        "wordpress": "6.8",
+        "php": "8.2.6",
+        "database": "11.4.12-MariaDB",
+        "home": "http://127.0.0.1:8896/"
+      },
+      "process_wall_seconds": 0.4771879999898374
+    },
+    "overlap_scan_b": {
+      "mode": "scan",
+      "pid": 20680,
+      "seconds": 0.0017278194427490234,
+      "queries": 1,
+      "peak_bytes": 33554432,
+      "state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "4",
+        "schema": 5
+      },
+      "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=busy",
+      "database_error": "",
+      "fatal": null,
+      "process_wall_seconds": 0.4378681001253426
+    },
+    "overlap_active_after": {
+      "mode": "inspect",
+      "post_id": 50,
+      "published_posts": 25,
+      "state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "4",
+        "schema": 5
+      },
+      "raw_state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "4",
+        "schema": 5
+      },
+      "corpus": {
+        "count": 0,
+        "avgdl": 1
+      },
+      "candidate_ids": [],
+      "mismatched_vectors": [
+        {
+          "post_id": 50,
+          "stored_terms": 0,
+          "expected_terms": 6,
+          "missing_count": 6,
+          "missing_sha256": "30d3b6ddf0de4bd0d767afe20733cd408c1479fd8c40e844f550efab73239776",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 51,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "68753ab18be7274c3e3b1694c763f02673f48275cd42e60d97e79404c05109a4",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 52,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "6629684939b663f48a7916070328df06d644c15ecf9e0493b4e28d8f328f7b26",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 53,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "d845790f583f59cf7d610fa5e6f2a56c6e3969caebd9923fe78cd92988451a87",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 54,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "4f874d746feabd480814657706b37a07c0d967af6a49276c343f25bde07b71c5",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 55,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "43c22da5b9f624e6cc25fdd61a902b60d1270e4f7453eeb6c9599f6a7895c86e",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 56,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "78f5c68ce46869553b11630518b078160476df863e806bacf2b7bc7421e49d78",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 57,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "dcbd004d34330ee9951d50441be31c1b43f028712139cde027b47fe0f744ef39",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 58,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "e45e150684dad9f57cb8fe5b3ddd6831c70706da6a01b104c4cadb64f78f5fcc",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 59,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "ad5931af617a5f481c3bbee0253d280ad5434387b0317fea61491d87d4c3de99",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 60,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "98be32564c303cde1a5a14a7ac33e4f4a5e94091f81f627a9659eb6fba2fd238",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 61,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "3447a5005445de46161cb47b2121f936ec5248fb3fe25285f5ad3d7dce33d0b3",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 62,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "fda642c846f3e64a04e33e9f298d84bb29c953556ecf99835886fff8a0c7a6f0",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 63,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "89429034f003d7e88f9b28ca20e55bb1015d32c8d4732e83e43a2790df546a27",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 64,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "f6ecb9367d5799eab22f5cde19c19ad3583d279c20b05f448c86dd662c166e8d",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 65,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "4bef58f952019568189bc107f7b505e3a04de31856eb2bd194ef2a9ef86c958c",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 66,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "8ec0ae79aafa22b05a33cd83d351d80168e52c382874e27da8f761a395b00f6d",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 67,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "673b992cdd31233f73ae617d037946f440da7206611f17d5fe577313ec168036",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 68,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "695c679c1aa8204a5d316cc52433fbb00f64469be950ecee2a8231f3239f6566",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 69,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "9b8b31ff7db3cebdd70d49cc37e35d9a425bb09cbe255e6a0a37e50d68d8ce3c",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 70,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "df3c63e4a956aac340f397a6b2591ea0da1727ca93ac15f3c6f788d71c0b2297",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 71,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "447c35b61cf5b66432859e8cbb747ad320178ba725d3f6f6aea4d12d79f034d9",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 72,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "fbdb0bbfa38c74418dce1f3fa7401ad34edfcdea35502c3efe29e80cef2ef4ff",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 73,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "b92e8ba736dfb02b7b688c80cd94f005221183112071953bf01aab9338ecfb12",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 74,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "2acaa82010ef9631dd0036e1651cd74fc181561d5082f6584aa662336afc3d06",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        }
+      ],
+      "indexed_documents": 0,
+      "postings": 0,
+      "duplicate_primary_keys": [],
+      "smart_topics_sha256": "f3c591bfde2c07e0dbd65ec2c27e31175d89e9f0bfd8c563e3f503f2b463c44f",
+      "body_sha256": "b18a79a62a0b5002e27b12343a1f2592be93f96e9aac4f50f7f1afc03dcc908c",
+      "snapshot": [],
+      "database_error": "",
+      "environment": {
+        "wordpress": "6.8",
+        "php": "8.2.6",
+        "database": "11.4.12-MariaDB",
+        "home": "http://127.0.0.1:8896/"
+      },
+      "process_wall_seconds": 0.49123809998854995
+    },
+    "overlap_worker_a": {
+      "worker": "cf-overlap-431116986600",
+      "paused": true,
+      "duration_ms": 2020.8849906921387,
+      "queries": 301,
+      "last_db_error": "",
+      "captured_db_errors": [],
+      "last_php_error": null,
+      "stats": {
+        "published_posts": 25,
+        "published_pages": 0,
+        "synthetic_posts": 25,
+        "postings": 7206,
+        "indexed_documents": 25,
+        "state": {
+          "last_id": 74,
+          "processed": 25,
+          "complete": true,
+          "stale": false,
+          "in_progress": false,
+          "generation": "4",
+          "schema": 5
+        },
+        "corpus": {
+          "count": 25,
+          "avgdl": 374.56
+        },
+        "sql_error": ""
+      }
+    },
+    "overlap_complete": {
+      "mode": "inspect",
+      "post_id": 50,
+      "published_posts": 25,
+      "state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": true,
+        "stale": false,
+        "in_progress": false,
+        "generation": "4",
+        "schema": 5
+      },
+      "raw_state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": true,
+        "stale": false,
+        "in_progress": false,
+        "generation": "4",
+        "schema": 5
+      },
+      "corpus": {
+        "count": 25,
+        "avgdl": 374.56
+      },
+      "candidate_ids": [
+        52,
+        58,
+        60,
+        62,
+        64,
+        70,
+        72,
+        74,
+        51,
+        53,
+        54,
+        55,
+        56,
+        57,
+        59,
+        61,
+        63,
+        65,
+        66,
+        67,
+        68,
+        69,
+        71,
+        73
+      ],
+      "mismatched_vectors": [],
+      "indexed_documents": 25,
+      "postings": 7206,
+      "duplicate_primary_keys": [],
+      "smart_topics_sha256": "f3c591bfde2c07e0dbd65ec2c27e31175d89e9f0bfd8c563e3f503f2b463c44f",
+      "body_sha256": "b18a79a62a0b5002e27b12343a1f2592be93f96e9aac4f50f7f1afc03dcc908c",
+      "snapshot": {
+        "version": 2,
+        "updated": 1792339434
+      },
+      "database_error": "",
+      "environment": {
+        "wordpress": "6.8",
+        "php": "8.2.6",
+        "database": "11.4.12-MariaDB",
+        "home": "http://127.0.0.1:8896/"
+      },
+      "process_wall_seconds": 0.4957806000020355
+    },
+    "edit_touch": {
+      "mode": "touch",
+      "post_id": 50,
+      "published_posts": 25,
+      "state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": false,
+        "stale": true,
+        "in_progress": false,
+        "generation": "4",
+        "schema": 5
+      },
+      "raw_state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": false,
+        "stale": true,
+        "in_progress": false,
+        "generation": "4",
+        "schema": 5
+      },
+      "corpus": {
+        "count": 0,
+        "avgdl": 1
+      },
+      "candidate_ids": [],
+      "mismatched_vectors": [],
+      "indexed_documents": 25,
+      "postings": 7206,
+      "duplicate_primary_keys": [],
+      "smart_topics_sha256": "f3c591bfde2c07e0dbd65ec2c27e31175d89e9f0bfd8c563e3f503f2b463c44f",
+      "body_sha256": "b18a79a62a0b5002e27b12343a1f2592be93f96e9aac4f50f7f1afc03dcc908c",
+      "snapshot": [],
+      "database_error": "",
+      "environment": {
+        "wordpress": "6.8",
+        "php": "8.2.6",
+        "database": "11.4.12-MariaDB",
+        "home": "http://127.0.0.1:8896/"
+      },
+      "process_wall_seconds": 0.5273215000052005
+    },
+    "edit_barrier": {
+      "worker": "cf-edit-431116986600",
+      "post_id": 50,
+      "stage": "before first posting INSERT, after state/read/delete",
+      "state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "6",
+        "schema": 5
+      },
+      "snapshot_content_sha256": "b18a79a62a0b5002e27b12343a1f2592be93f96e9aac4f50f7f1afc03dcc908c",
+      "time": 1792339438.95561,
+      "captured_distinct_terms": 6,
+      "captured_terms_sha256": "98be1d95e2c14967144d825cad8c9dfedc694c531b0ac9e305573f42a966abb8"
+    },
+    "edit_during_scan": {
+      "mode": "edit",
+      "post_id": 50,
+      "published_posts": 25,
+      "state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "6",
+        "schema": 5
+      },
+      "raw_state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "6",
+        "schema": 5
+      },
+      "corpus": {
+        "count": 0,
+        "avgdl": 1
+      },
+      "candidate_ids": [],
+      "mismatched_vectors": [
+        {
+          "post_id": 50,
+          "stored_terms": 0,
+          "expected_terms": 14,
+          "missing_count": 14,
+          "missing_sha256": "7bee5e455c323ea43e349e3b2b5c26cfbef3c3d953f8cd25b1b60b0f1abf5840",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 51,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "68753ab18be7274c3e3b1694c763f02673f48275cd42e60d97e79404c05109a4",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 52,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "6629684939b663f48a7916070328df06d644c15ecf9e0493b4e28d8f328f7b26",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 53,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "d845790f583f59cf7d610fa5e6f2a56c6e3969caebd9923fe78cd92988451a87",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 54,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "4f874d746feabd480814657706b37a07c0d967af6a49276c343f25bde07b71c5",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 55,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "43c22da5b9f624e6cc25fdd61a902b60d1270e4f7453eeb6c9599f6a7895c86e",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 56,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "78f5c68ce46869553b11630518b078160476df863e806bacf2b7bc7421e49d78",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 57,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "dcbd004d34330ee9951d50441be31c1b43f028712139cde027b47fe0f744ef39",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 58,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "e45e150684dad9f57cb8fe5b3ddd6831c70706da6a01b104c4cadb64f78f5fcc",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 59,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "ad5931af617a5f481c3bbee0253d280ad5434387b0317fea61491d87d4c3de99",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 60,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "98be32564c303cde1a5a14a7ac33e4f4a5e94091f81f627a9659eb6fba2fd238",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 61,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "3447a5005445de46161cb47b2121f936ec5248fb3fe25285f5ad3d7dce33d0b3",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 62,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "fda642c846f3e64a04e33e9f298d84bb29c953556ecf99835886fff8a0c7a6f0",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 63,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "89429034f003d7e88f9b28ca20e55bb1015d32c8d4732e83e43a2790df546a27",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 64,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "f6ecb9367d5799eab22f5cde19c19ad3583d279c20b05f448c86dd662c166e8d",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 65,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "4bef58f952019568189bc107f7b505e3a04de31856eb2bd194ef2a9ef86c958c",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 66,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "8ec0ae79aafa22b05a33cd83d351d80168e52c382874e27da8f761a395b00f6d",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 67,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "673b992cdd31233f73ae617d037946f440da7206611f17d5fe577313ec168036",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 68,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "695c679c1aa8204a5d316cc52433fbb00f64469be950ecee2a8231f3239f6566",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 69,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "9b8b31ff7db3cebdd70d49cc37e35d9a425bb09cbe255e6a0a37e50d68d8ce3c",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 70,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "df3c63e4a956aac340f397a6b2591ea0da1727ca93ac15f3c6f788d71c0b2297",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 71,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "447c35b61cf5b66432859e8cbb747ad320178ba725d3f6f6aea4d12d79f034d9",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 72,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "fbdb0bbfa38c74418dce1f3fa7401ad34edfcdea35502c3efe29e80cef2ef4ff",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 73,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "b92e8ba736dfb02b7b688c80cd94f005221183112071953bf01aab9338ecfb12",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 74,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "2acaa82010ef9631dd0036e1651cd74fc181561d5082f6584aa662336afc3d06",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        }
+      ],
+      "indexed_documents": 0,
+      "postings": 0,
+      "duplicate_primary_keys": [],
+      "smart_topics_sha256": "f3c591bfde2c07e0dbd65ec2c27e31175d89e9f0bfd8c563e3f503f2b463c44f",
+      "body_sha256": "ccb94f8c0dd9d2a347d6ef7323a1af61c3571bdad02c4167b216f24c4eb6305d",
+      "snapshot": [],
+      "database_error": "",
+      "environment": {
+        "wordpress": "6.8",
+        "php": "8.2.6",
+        "database": "11.4.12-MariaDB",
+        "home": "http://127.0.0.1:8896/"
+      },
+      "process_wall_seconds": 0.4948625999968499
+    },
+    "edit_worker_a": {
+      "worker": "cf-edit-431116986600",
+      "paused": true,
+      "duration_ms": 1090.461015701294,
+      "queries": 303,
+      "last_db_error": "",
+      "captured_db_errors": [],
+      "last_php_error": null,
+      "stats": {
+        "published_posts": 25,
+        "published_pages": 0,
+        "synthetic_posts": 25,
+        "postings": 7206,
+        "indexed_documents": 25,
+        "state": {
+          "complete": false,
+          "stale": true,
+          "in_progress": true,
+          "generation": "6",
+          "schema": 5
+        },
+        "corpus": {
+          "count": 0,
+          "avgdl": 1
+        },
+        "sql_error": ""
+      }
+    },
+    "edit_after_scan": {
+      "mode": "inspect",
+      "post_id": 50,
+      "published_posts": 25,
+      "state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "6",
+        "schema": 5
+      },
+      "raw_state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "6",
+        "schema": 5
+      },
+      "corpus": {
+        "count": 0,
+        "avgdl": 1
+      },
+      "candidate_ids": [],
+      "mismatched_vectors": [
+        {
+          "post_id": 50,
+          "stored_terms": 6,
+          "expected_terms": 14,
+          "missing_count": 10,
+          "missing_sha256": "f0385d54d57f5e2d7e109a2f0b04ed9d0f5d3af4a2f8e7659c4e904832bd64f7",
+          "obsolete_count": 2,
+          "obsolete_sha256": "0822f0f8d7cacc19cba5546aab3936f022120367caa8eed0f11b31ebad68e6e3"
+        }
+      ],
+      "indexed_documents": 25,
+      "postings": 7206,
+      "duplicate_primary_keys": [],
+      "smart_topics_sha256": "f3c591bfde2c07e0dbd65ec2c27e31175d89e9f0bfd8c563e3f503f2b463c44f",
+      "body_sha256": "ccb94f8c0dd9d2a347d6ef7323a1af61c3571bdad02c4167b216f24c4eb6305d",
+      "snapshot": {
+        "version": 2,
+        "updated": 1792339438
+      },
+      "database_error": "",
+      "environment": {
+        "wordpress": "6.8",
+        "php": "8.2.6",
+        "database": "11.4.12-MariaDB",
+        "home": "http://127.0.0.1:8896/"
+      },
+      "process_wall_seconds": 0.482746500056237
+    },
+    "edit_recovery_scan": {
+      "mode": "scan",
+      "pid": 41056,
+      "seconds": 0.544475793838501,
+      "queries": 291,
+      "peak_bytes": 37748736,
+      "state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": true,
+        "stale": false,
+        "in_progress": false,
+        "generation": "9",
+        "schema": 5
+      },
+      "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+      "database_error": "",
+      "fatal": null,
+      "process_wall_seconds": 0.9899575999006629
+    },
+    "edit_recovered": {
+      "mode": "inspect",
+      "post_id": 50,
+      "published_posts": 25,
+      "state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": true,
+        "stale": false,
+        "in_progress": false,
+        "generation": "9",
+        "schema": 5
+      },
+      "raw_state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": true,
+        "stale": false,
+        "in_progress": false,
+        "generation": "9",
+        "schema": 5
+      },
+      "corpus": {
+        "count": 25,
+        "avgdl": 374.88
+      },
+      "candidate_ids": [
+        52,
+        58,
+        60,
+        62,
+        64,
+        70,
+        72,
+        74,
+        51,
+        53,
+        54,
+        55,
+        56,
+        57,
+        59,
+        61,
+        63,
+        65,
+        66,
+        67,
+        68,
+        69,
+        71,
+        73
+      ],
+      "mismatched_vectors": [],
+      "indexed_documents": 25,
+      "postings": 7214,
+      "duplicate_primary_keys": [],
+      "smart_topics_sha256": "f3c591bfde2c07e0dbd65ec2c27e31175d89e9f0bfd8c563e3f503f2b463c44f",
+      "body_sha256": "ccb94f8c0dd9d2a347d6ef7323a1af61c3571bdad02c4167b216f24c4eb6305d",
+      "snapshot": {
+        "version": 2,
+        "updated": 1792339439
+      },
+      "database_error": "",
+      "environment": {
+        "wordpress": "6.8",
+        "php": "8.2.6",
+        "database": "11.4.12-MariaDB",
+        "home": "http://127.0.0.1:8896/"
+      },
+      "process_wall_seconds": 0.5389203999657184
+    },
+    "interrupt_barrier": {
+      "worker": "cf-interrupt-431116986600",
+      "post_id": 50,
+      "stage": "before first posting INSERT, after state/read/delete",
+      "state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "9",
+        "schema": 5
+      },
+      "snapshot_content_sha256": "ccb94f8c0dd9d2a347d6ef7323a1af61c3571bdad02c4167b216f24c4eb6305d",
+      "time": 1792339442.742684,
+      "captured_distinct_terms": 14,
+      "captured_terms_sha256": "04d1901975e5f261b7106275b535247523856239d570bbe2416d4a009854d853"
+    },
+    "interrupted_active": {
+      "mode": "inspect",
+      "post_id": 50,
+      "published_posts": 25,
+      "state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "9",
+        "schema": 5
+      },
+      "raw_state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "9",
+        "schema": 5
+      },
+      "corpus": {
+        "count": 0,
+        "avgdl": 1
+      },
+      "candidate_ids": [],
+      "mismatched_vectors": [
+        {
+          "post_id": 50,
+          "stored_terms": 0,
+          "expected_terms": 14,
+          "missing_count": 14,
+          "missing_sha256": "7bee5e455c323ea43e349e3b2b5c26cfbef3c3d953f8cd25b1b60b0f1abf5840",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 51,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "68753ab18be7274c3e3b1694c763f02673f48275cd42e60d97e79404c05109a4",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 52,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "6629684939b663f48a7916070328df06d644c15ecf9e0493b4e28d8f328f7b26",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 53,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "d845790f583f59cf7d610fa5e6f2a56c6e3969caebd9923fe78cd92988451a87",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 54,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "4f874d746feabd480814657706b37a07c0d967af6a49276c343f25bde07b71c5",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 55,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "43c22da5b9f624e6cc25fdd61a902b60d1270e4f7453eeb6c9599f6a7895c86e",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 56,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "78f5c68ce46869553b11630518b078160476df863e806bacf2b7bc7421e49d78",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 57,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "dcbd004d34330ee9951d50441be31c1b43f028712139cde027b47fe0f744ef39",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 58,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "e45e150684dad9f57cb8fe5b3ddd6831c70706da6a01b104c4cadb64f78f5fcc",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 59,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "ad5931af617a5f481c3bbee0253d280ad5434387b0317fea61491d87d4c3de99",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 60,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "98be32564c303cde1a5a14a7ac33e4f4a5e94091f81f627a9659eb6fba2fd238",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 61,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "3447a5005445de46161cb47b2121f936ec5248fb3fe25285f5ad3d7dce33d0b3",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 62,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "fda642c846f3e64a04e33e9f298d84bb29c953556ecf99835886fff8a0c7a6f0",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 63,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "89429034f003d7e88f9b28ca20e55bb1015d32c8d4732e83e43a2790df546a27",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 64,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "f6ecb9367d5799eab22f5cde19c19ad3583d279c20b05f448c86dd662c166e8d",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 65,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "4bef58f952019568189bc107f7b505e3a04de31856eb2bd194ef2a9ef86c958c",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 66,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "8ec0ae79aafa22b05a33cd83d351d80168e52c382874e27da8f761a395b00f6d",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 67,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "673b992cdd31233f73ae617d037946f440da7206611f17d5fe577313ec168036",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 68,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "695c679c1aa8204a5d316cc52433fbb00f64469be950ecee2a8231f3239f6566",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 69,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "9b8b31ff7db3cebdd70d49cc37e35d9a425bb09cbe255e6a0a37e50d68d8ce3c",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 70,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "df3c63e4a956aac340f397a6b2591ea0da1727ca93ac15f3c6f788d71c0b2297",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 71,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "447c35b61cf5b66432859e8cbb747ad320178ba725d3f6f6aea4d12d79f034d9",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 72,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "fbdb0bbfa38c74418dce1f3fa7401ad34edfcdea35502c3efe29e80cef2ef4ff",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 73,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "b92e8ba736dfb02b7b688c80cd94f005221183112071953bf01aab9338ecfb12",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 74,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "2acaa82010ef9631dd0036e1651cd74fc181561d5082f6584aa662336afc3d06",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        }
+      ],
+      "indexed_documents": 0,
+      "postings": 0,
+      "duplicate_primary_keys": [],
+      "smart_topics_sha256": "f3c591bfde2c07e0dbd65ec2c27e31175d89e9f0bfd8c563e3f503f2b463c44f",
+      "body_sha256": "ccb94f8c0dd9d2a347d6ef7323a1af61c3571bdad02c4167b216f24c4eb6305d",
+      "snapshot": [],
+      "database_error": "",
+      "environment": {
+        "wordpress": "6.8",
+        "php": "8.2.6",
+        "database": "11.4.12-MariaDB",
+        "home": "http://127.0.0.1:8896/"
+      },
+      "process_wall_seconds": 0.47079279995523393
+    },
+    "interrupted_termination": {
+      "exit_code": 1,
+      "method": "Terminate the paused PHP process without releasing its first-INSERT barrier"
+    },
+    "interrupted_after_termination": {
+      "mode": "inspect",
+      "post_id": 50,
+      "published_posts": 25,
+      "state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "9",
+        "schema": 5
+      },
+      "raw_state": {
+        "complete": false,
+        "stale": true,
+        "in_progress": true,
+        "generation": "9",
+        "schema": 5
+      },
+      "corpus": {
+        "count": 0,
+        "avgdl": 1
+      },
+      "candidate_ids": [],
+      "mismatched_vectors": [
+        {
+          "post_id": 50,
+          "stored_terms": 0,
+          "expected_terms": 14,
+          "missing_count": 14,
+          "missing_sha256": "7bee5e455c323ea43e349e3b2b5c26cfbef3c3d953f8cd25b1b60b0f1abf5840",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 51,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "68753ab18be7274c3e3b1694c763f02673f48275cd42e60d97e79404c05109a4",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 52,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "6629684939b663f48a7916070328df06d644c15ecf9e0493b4e28d8f328f7b26",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 53,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "d845790f583f59cf7d610fa5e6f2a56c6e3969caebd9923fe78cd92988451a87",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 54,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "4f874d746feabd480814657706b37a07c0d967af6a49276c343f25bde07b71c5",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 55,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "43c22da5b9f624e6cc25fdd61a902b60d1270e4f7453eeb6c9599f6a7895c86e",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 56,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "78f5c68ce46869553b11630518b078160476df863e806bacf2b7bc7421e49d78",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 57,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "dcbd004d34330ee9951d50441be31c1b43f028712139cde027b47fe0f744ef39",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 58,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "e45e150684dad9f57cb8fe5b3ddd6831c70706da6a01b104c4cadb64f78f5fcc",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 59,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "ad5931af617a5f481c3bbee0253d280ad5434387b0317fea61491d87d4c3de99",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 60,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "98be32564c303cde1a5a14a7ac33e4f4a5e94091f81f627a9659eb6fba2fd238",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 61,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "3447a5005445de46161cb47b2121f936ec5248fb3fe25285f5ad3d7dce33d0b3",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 62,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "fda642c846f3e64a04e33e9f298d84bb29c953556ecf99835886fff8a0c7a6f0",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 63,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "89429034f003d7e88f9b28ca20e55bb1015d32c8d4732e83e43a2790df546a27",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 64,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "f6ecb9367d5799eab22f5cde19c19ad3583d279c20b05f448c86dd662c166e8d",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 65,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "4bef58f952019568189bc107f7b505e3a04de31856eb2bd194ef2a9ef86c958c",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 66,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "8ec0ae79aafa22b05a33cd83d351d80168e52c382874e27da8f761a395b00f6d",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 67,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "673b992cdd31233f73ae617d037946f440da7206611f17d5fe577313ec168036",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 68,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "695c679c1aa8204a5d316cc52433fbb00f64469be950ecee2a8231f3239f6566",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 69,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "9b8b31ff7db3cebdd70d49cc37e35d9a425bb09cbe255e6a0a37e50d68d8ce3c",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 70,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "df3c63e4a956aac340f397a6b2591ea0da1727ca93ac15f3c6f788d71c0b2297",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 71,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "447c35b61cf5b66432859e8cbb747ad320178ba725d3f6f6aea4d12d79f034d9",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 72,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "fbdb0bbfa38c74418dce1f3fa7401ad34edfcdea35502c3efe29e80cef2ef4ff",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 73,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "b92e8ba736dfb02b7b688c80cd94f005221183112071953bf01aab9338ecfb12",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "post_id": 74,
+          "stored_terms": 0,
+          "expected_terms": 300,
+          "missing_count": 300,
+          "missing_sha256": "2acaa82010ef9631dd0036e1651cd74fc181561d5082f6584aa662336afc3d06",
+          "obsolete_count": 0,
+          "obsolete_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        }
+      ],
+      "indexed_documents": 0,
+      "postings": 0,
+      "duplicate_primary_keys": [],
+      "smart_topics_sha256": "f3c591bfde2c07e0dbd65ec2c27e31175d89e9f0bfd8c563e3f503f2b463c44f",
+      "body_sha256": "ccb94f8c0dd9d2a347d6ef7323a1af61c3571bdad02c4167b216f24c4eb6305d",
+      "snapshot": [],
+      "database_error": "",
+      "environment": {
+        "wordpress": "6.8",
+        "php": "8.2.6",
+        "database": "11.4.12-MariaDB",
+        "home": "http://127.0.0.1:8896/"
+      },
+      "process_wall_seconds": 0.4866583999246359
+    },
+    "interrupted_recovery_scan": {
+      "mode": "scan",
+      "pid": 39900,
+      "seconds": 0.4255239963531494,
+      "queries": 291,
+      "peak_bytes": 37748736,
+      "state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": true,
+        "stale": false,
+        "in_progress": false,
+        "generation": "9",
+        "schema": 5
+      },
+      "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+      "database_error": "",
+      "fatal": null,
+      "process_wall_seconds": 0.8848802000284195
+    },
+    "interrupted_recovered": {
+      "mode": "inspect",
+      "post_id": 50,
+      "published_posts": 25,
+      "state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": true,
+        "stale": false,
+        "in_progress": false,
+        "generation": "9",
+        "schema": 5
+      },
+      "raw_state": {
+        "last_id": 74,
+        "processed": 25,
+        "complete": true,
+        "stale": false,
+        "in_progress": false,
+        "generation": "9",
+        "schema": 5
+      },
+      "corpus": {
+        "count": 25,
+        "avgdl": 374.88
+      },
+      "candidate_ids": [
+        52,
+        58,
+        60,
+        62,
+        64,
+        70,
+        72,
+        74,
+        51,
+        53,
+        54,
+        55,
+        56,
+        57,
+        59,
+        61,
+        63,
+        65,
+        66,
+        67,
+        68,
+        69,
+        71,
+        73
+      ],
+      "mismatched_vectors": [],
+      "indexed_documents": 25,
+      "postings": 7214,
+      "duplicate_primary_keys": [],
+      "smart_topics_sha256": "f3c591bfde2c07e0dbd65ec2c27e31175d89e9f0bfd8c563e3f503f2b463c44f",
+      "body_sha256": "ccb94f8c0dd9d2a347d6ef7323a1af61c3571bdad02c4167b216f24c4eb6305d",
+      "snapshot": {
+        "version": 2,
+        "updated": 1792339439
+      },
+      "database_error": "",
+      "environment": {
+        "wordpress": "6.8",
+        "php": "8.2.6",
+        "database": "11.4.12-MariaDB",
+        "home": "http://127.0.0.1:8896/"
+      },
+      "process_wall_seconds": 0.5244479000102729
+    }
+  },
+  "passed": true,
+  "environment": {
+    "wordpress": "6.8",
+    "php": "8.2.6",
+    "database": "11.4.12-MariaDB",
+    "home": "http://127.0.0.1:8896/"
+  },
+  "finished_utc": "2026-10-18T16:04:05.437511+00:00",
+  "assertions": 87,
+  "runtime_sha256": {
+    "includes/InternalLinkingIndex.php": "60ceef8feb3680c3e16a83d7ae63fb0747785d3a7a37071f68a18de8620762c0"
+  },
+  "test_file_sha256": {
+    "tests/integration/internal-linking-phase-c-concurrency.php": "d46c877c7fe554b3ec72e7d15f549d8e8b0536f9503b23befe8d025f00e5e639",
+    "tests/integration/run-internal-linking-concurrency.py": "2b7b0a4766830d1f4fa547ee43c2dc089233b227f6b952036c0ebf146ef2b9c6",
+    "tests/integration/internal-linking-phase-c-performance.php": "392ae31a040e7f1b169e1c679b68dc3c7b8f3ba44131ac02f43a2fb3da1974b7"
+  },
+  "execution_notes": [
+    "Only concurrent scan, edit-during-scan, interrupted/recovery and 25-post sequential regressions executed.",
+    "First harness attempt rejected a marker before any save/scan; corrected runner then passed 87 assertions.",
+    "Modified standalone doubles were syntax-checked only; their suites were not executed.",
+    "Earlier 200/1000-post benchmarks were not rerun and are not measurements of this coordinated runtime."
+  ]
+}

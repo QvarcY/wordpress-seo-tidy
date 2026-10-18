@@ -705,6 +705,99 @@
       ],
       "Visit website": [
         "Apmeklēt vietni"
+      ],
+      "Internal Links": [
+        "Iekšējās saites"
+      ],
+      "Internal linking is not enabled for this site.": [
+        "Iekšējās saites šajā vietnē vēl nav iespējotas."
+      ],
+      "Find an article here, then manage topics and review suggested links in its WordPress editor.": [
+        "Atrodi rakstu un atver tā WordPress redaktoru, lai pārvaldītu tēmas un pārskatītu ieteiktās saites."
+      ],
+      "Could not load the internal linking overview.": [
+        "Neizdevās ielādēt iekšējo saišu pārskatu."
+      ],
+      "Try again": [
+        "Mēģināt vēlreiz"
+      ],
+      "Pending": [
+        "Gaida indeksēšanu"
+      ],
+      "Excluded": [
+        "Neiekļauts"
+      ],
+      "Indexed": [
+        "Indeksēts"
+      ],
+      "Not indexed": [
+        "Nav indeksēts"
+      ],
+      "Index status": [
+        "Indeksa statuss"
+      ],
+      "Complete": [
+        "Pabeigts"
+      ],
+      "Needs rebuilding": [
+        "Nepieciešama pārbūve"
+      ],
+      "In progress or not started": [
+        "Procesā vai vēl nav sākts"
+      ],
+      "Published articles and pages": [
+        "Publicētie raksti un lapas"
+      ],
+      "Processed articles": [
+        "Apstrādāti raksti"
+      ],
+      "Indexing progress": [
+        "Indeksēšanas progress"
+      ],
+      "Indexing runs in batches of 25. Start or continue it when you are ready.": [
+        "Indeksēšana notiek pa 25 rakstiem. Sāc vai turpini to, kad esi gatavs."
+      ],
+      "Indexing...": [
+        "Notiek indeksēšana…"
+      ],
+      "Rebuild index from beginning": [
+        "Pārbūvēt indeksu no sākuma"
+      ],
+      "Index next 25 articles": [
+        "Indeksēt nākamos 25 rakstus"
+      ],
+      "What does rebuilding do?": [
+        "Ko nozīmē pārbūvēt indeksu?"
+      ],
+      "Rebuilding clears the existing experimental index and starts again. Only use it if content has changed substantially or the index is invalid.": [
+        "Pārbūvēšana notīra pašreizējo eksperimentālo indeksu un sāk darbu no jauna. Izmanto to tikai pēc būtiskām satura izmaiņām vai nederīga indeksa gadījumā."
+      ],
+      "Find an article": [
+        "Atrast rakstu"
+      ],
+      "Search titles and content": [
+        "Meklēt virsrakstos un saturā"
+      ],
+      "Search": [
+        "Meklēt"
+      ],
+      "Articles found": [
+        "atrasti raksti un lapas"
+      ],
+      "Article": [
+        "Raksts"
+      ],
+      "Topics": [
+        "Tēmas"
+      ],
+      "Index": [
+        "Indekss"
+      ],
+      "Open in editor": [
+        "Atvērt redaktorā"
+      ],
+      "No articles found.": [
+        "Raksti nav atrasti."
       ]
     }
   }
