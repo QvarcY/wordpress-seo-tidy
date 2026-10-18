@@ -10,11 +10,11 @@ Opt-in application with explicit consent; DNS TXT verification; manual approval;
 
 Copy ONLY files inside wall-of-fame-area/public/ into the web directory corresponding to kas.id.lv/SEO-TidY/Wall-Of-Fame/.
 
-Copy wall-of-fame-area/private/config.example.php to /home/kasidlv/seo-tidy-wall-of-fame-private/config.php, then fill in database credentials, Turnstile site and secret keys, public origin, and a securely generated random admin token of at least 32 characters.
+Copy `wall-of-fame-area/private/config.example.php` to a private `config.php` location **outside the website's document root**. Configure the `SEO_TIDY_WOF_CONFIG` environment variable with that absolute private path, then fill in database credentials, Turnstile site and secret keys, public origin, and a securely generated random admin token of at least 32 characters. Do not commit the populated configuration.
 
 Import wall-of-fame-area/schema.sql into a new MariaDB database using cPanel/phpMyAdmin. NEVER place config.php, schema.sql or database secrets into the public website directory.
 
-By default, api.php searches for the private configuration three directory levels above its public directory, inside seo-tidy-wall-of-fame-private/config.php. The public path must be /home/kasidlv/<site-docroot>/SEO-TidY/Wall-Of-Fame. If the layout differs, configure SEO_TIDY_WOF_CONFIG in the hosting environment with an absolute path to the private config file. Do not move secrets inside webroot.
+The API supports `SEO_TIDY_WOF_CONFIG` as the explicit private configuration location. The current runtime also retains a **legacy hosting-specific fallback path** for compatibility; it should not be copied into public deployment guides or relied upon for new installations. Before removing or generalizing that fallback in PHP, migrate any existing host to the environment variable and verify that the service loads its configuration. Do not move secrets inside the public web root.
 
 The public .htaccess rewrites api/ requests to api.php. The API uses PDO MySQL with utf8mb4. Configure Turnstile for the kas.id.lv hostname, restrict moderator access, and set endpoint rate limits through the host or WAF before accepting registrations.
 
