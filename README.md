@@ -8,13 +8,15 @@ Clean SEO. Smarter discovery. Completely free.
 
 ## Release status
 
-**Latest stable release: [SEO-TidY 1.0.0](https://github.com/QvarcY/wordpress-seo-tidy/releases/tag/v1.0.0)**
+**Latest published stable release: [SEO-TidY 1.0.0](https://github.com/QvarcY/wordpress-seo-tidy/releases/tag/v1.0.0)**
 
 Download **[seo-tidy-1.0.0.zip](https://github.com/QvarcY/wordpress-seo-tidy/releases/download/v1.0.0/seo-tidy-1.0.0.zip)** from GitHub Releases under **Assets**. This is the ready-to-install WordPress plugin. Do not use GitHub's automatically generated source archives.
 
 SEO-TidY 1.0.0 is the first stable release, intended for regular WordPress use. Requirements: WordPress 6.8+ and PHP 8.1+. As with any site plugin, keep a backup before updating.
 
-## Features
+**Release boundaries:** The features listed below describe the published **1.0.0** package. Development branches, draft pull requests and work tested on individual websites are **not** included in an official update until a compatible, versioned GitHub release is published.
+
+## Features available in 1.0.0
 
 - Custom SEO titles and meta descriptions for posts and pages
 - WordPress block editor and classic editor metadata support
@@ -22,7 +24,8 @@ SEO-TidY 1.0.0 is the first stable release, intended for regular WordPress use. 
 - Automatic BlogPosting and WebPage JSON-LD structured data
 - Search result previews with title and description guidance
 - SEO audit for duplicate metadata, noindex settings, headings and image ALT
-- Outgoing and incoming internal content link recommendations
+- Existing SEO Audit checks for outgoing and incoming internal content links (not relevance-scored source-to-target suggestions)
+- Incoming-link audit is unavailable above 200 eligible published posts/pages; this limit does not apply to a future recommendation index
 - Review of missing or unpublished WordPress post-ID link targets
 - Affected URL details for supported link checks
 - Cached incoming link and duplicate metadata analysis
@@ -40,6 +43,41 @@ SEO-TidY 1.0.0 is the first stable release, intended for regular WordPress use. 
 
 Content recommendations are heuristic and do not guarantee search
 rankings, indexing, or inclusion in AI-generated answers.
+
+## Development roadmap — not included in 1.0.0
+
+The following items are **under development or proposed**, not promises of a release date. They are **not installed by updating to 1.0.0**. Track progress and remaining acceptance checks through the linked GitHub issues and pull requests.
+
+### In development: relevance-aware internal linking
+
+[Issue #29](https://github.com/QvarcY/wordpress-seo-tidy/issues/29) · [Draft PR #31](https://github.com/QvarcY/wordpress-seo-tidy/pull/31)
+
+- **Smart Topics:** privately review and approve subjects for an article without creating public WordPress tags.
+- **Local, explainable recommendations:** build a bounded index, rank candidate articles with BM25 and show the source, destination and matching context for **manual editorial review**. No automatic insertion into published articles.
+- **Safety checks:** avoid self-links, existing links, ineligible/noindex content, and weak or potentially competing article pairs.
+- **Index maintenance:** explicit administrator-run batches, rebuilds and stale-index handling, without paid SEO APIs or external AI services.
+
+**Status:** experimental work, not release-ready. Deterministic checks and isolated WordPress/MariaDB integration and performance measurements have been recorded; concurrent scan and edit races exposed blocking freshness defects. Those defects and other compatibility and quality checks must pass before a public release. The latest development work may exist only in a local checkout and is not necessarily on GitHub.
+
+The existing 1.0.0 **SEO Audit internal-link checks** and the proposed **relevance-aware source-to-target recommendation system** are different features.
+
+### Planned: international article-language management
+
+[Language-management requirements in Issue #29](https://github.com/QvarcY/wordpress-seo-tidy/issues/29)
+
+- A site-wide default **new article language** chosen during setup or later in SEO-TidY Settings, with WordPress site locale as an editable suggestion — **no hard-coded Latvian or English default**.
+- An optional **per-author default** and a prominent, editable language selector near the publishing controls in both block and classic editors.
+- Clear language columns, filters and bounded bulk assignment for **existing** posts/pages, with an Unassigned / Needs review state instead of silently relabeling older content.
+- Language-aware internal-link recommendations: normally recommend articles in the **same confirmed language**; ambiguous or mixed-language cases require review.
+- Initially validated EN/LV stopwords and language-scoped BM25 statistics; other languages should have conservative behavior with accurately described limitations.
+
+### Future multilingual integrations and quality improvements
+
+- Respect authoritative WPML/Polylang language and translation relationships when those plugins are used; avoid conflicting controls and duplicate language output.
+- Review related language versions separately from ordinary topic-link suggestions, and optionally inspect existing `hreflang` relationships without rewriting content or canonicals.
+- Expand real-site editorial review using published multilingual articles, including relevant articles on [kas.id.lv](https://kas.id.lv/), with user feedback informing usability and recommendation refinements.
+
+**Feedback is welcome:** inaccurate recommendations, confusing workflows, translation issues, bugs and feature ideas can be reported through [GitHub Issues](https://github.com/QvarcY/wordpress-seo-tidy/issues/new). Reports are reviewed; actionable and feasible improvements are considered for subsequent updates.
 
 ## Wall of Fame — public directory
 
@@ -65,6 +103,18 @@ Participation is optional. The public directory and approved profiles are availa
 
 The ZIP already contains compiled JavaScript assets.
 Node.js and npm are not required for normal installation.
+
+## Updates through WordPress
+
+SEO-TidY includes a GitHub release updater in **1.0.0**. You normally do **not** need to uninstall the plugin or manually upload another ZIP to install a later compatible official release.
+
+1. In WordPress administration, open **Dashboard > Updates** or **Plugins** and check for available updates.
+2. When a newer eligible SEO-TidY release is offered, review its release notes and your backup, then choose the usual WordPress **Update now** action.
+3. If it does not appear immediately, use **Dashboard > Updates > Check Again**. GitHub release metadata can be cached for up to 12 hours, and the site must be able to reach GitHub.
+
+The updater looks for eligible GitHub releases with a versioned tag such as `v1.1.0` and a matching **release asset** named `seo-tidy-1.1.0.zip`. An ordinary Git commit, development branch, draft PR, GitHub source archive or undocumented ZIP is **not** an installable WordPress update. Experimental beta releases are only considered when beta updates are enabled in SEO-TidY settings, and they must still be newer than the installed version. Automatic background updating is **not enabled** by the SEO-TidY updater.
+
+Publishing documentation or closing an issue does not itself publish a plugin update. A tested, tagged GitHub release with the correct ZIP asset is required. The current published stable package remains **1.0.0**.
 
 ## Getting started
 
@@ -125,7 +175,8 @@ GPL-2.0-or-later. See [LICENSE](LICENSE).
 ## Support
 
 - GitHub: https://github.com/QvarcY
-- Report an issue: https://github.com/QvarcY/wordpress-seo-tidy/issues
+- Report bugs, inaccurate suggestions, usability problems or feature requests: https://github.com/QvarcY/wordpress-seo-tidy/issues/new
+- Follow the feature roadmap: https://github.com/QvarcY/wordpress-seo-tidy/issues/29
 - Buy Me a Coffee: https://buymeacoffee.com/craftin
 
 Donations are optional. Every SEO-TidY feature remains free.
