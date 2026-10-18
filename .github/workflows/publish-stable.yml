@@ -3,7 +3,8 @@ name: SEO-TidY Publish Stable
 on:
   push:
     tags:
-      - 'v1.0.0'
+      - 'v*.*.*'
+      - '!v*.*.*-*'
 
 permissions:
   contents: write
@@ -41,7 +42,7 @@ jobs:
 
           VERSION="${RELEASE_TAG#v}"
 
-          if [[ "$VERSION" != "1.0.0" ]]; then
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "Invalid stable tag"
             exit 1
           fi
@@ -156,7 +157,7 @@ jobs:
 
           ## Release status
 
-          This is the first stable SEO-TidY 1.0 release for everyday WordPress use. Keeping a website backup before updates is recommended. Requirements: WordPress 6.8+ and PHP 8.1+.
+          This is a stable SEO-TidY release for everyday WordPress use. Keeping a website backup before updates is recommended. Requirements: WordPress 6.8+ and PHP 8.1+.
 
           Report issues: https://github.com/QvarcY/wordpress-seo-tidy/issues
 
