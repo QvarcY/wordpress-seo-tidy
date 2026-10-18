@@ -9,6 +9,7 @@ namespace {
     file_put_contents($temporary . '/wp-admin/includes/upgrade.php', '<?php');
     define('ABSPATH', $temporary . '/');
     define('ARRAY_A', 'ARRAY_A');
+    define('DB_NAME', 'standalone_index_contracts');
     define('SEO_TIDY_INTERNAL_LINKING_PREVIEW', true);
     register_shutdown_function(static function () use ($temporary): void {
         unlink($temporary . '/wp-admin/includes/upgrade.php');
@@ -36,6 +37,16 @@ namespace {
     $checks = 0;
 
     function get_option(string $key, $default = false) { return $GLOBALS['options'][$key] ?? $default; }
+    function maybe_serialize($value) { return is_array($value) || is_object($value) ? serialize($value) : $value; }
+    function maybe_unserialize($value)
+    {
+        if (!is_string($value)) {
+            return $value;
+        }
+        $decoded = @unserialize($value, ['allowed_classes' => false]);
+        return $decoded !== false || $value === 'b:0;' ? $decoded : $value;
+    }
+    function wp_cache_delete($key, $group = ''): bool { return true; }
     function update_option(string $key, $value, $autoload = null): bool
     {
         $GLOBALS['options'][$key] = $value;
@@ -77,11 +88,13 @@ namespace {
         public string $prefix = 'wp_';
         public string $posts = 'wp_posts';
         public string $postmeta = 'wp_postmeta';
+        public string $options = 'wp_options';
         public string $charset = 'utf8mb4';
         public string $last_error = '';
         public array $postings = [];
         public array $queries = [];
         public string $failure = '';
+        private string $lock = '';
 
         public function get_charset_collate(): string { return 'DEFAULT CHARACTER SET utf8mb4'; }
         public function esc_like(string $value): string { return $value; }
@@ -106,6 +119,22 @@ namespace {
         public function get_var(string $sql)
         {
             $this->queries[] = $sql;
+            $this->last_error = '';
+            if (preg_match("/^SELECT option_value FROM wp_options WHERE option_name='([^']+)'$/", $sql, $match)) {
+                return array_key_exists($match[1], $GLOBALS['options'])
+                    ? maybe_serialize($GLOBALS['options'][$match[1]]) : null;
+            }
+            if (preg_match("/^SELECT (GET_LOCK|RELEASE_LOCK|IS_USED_LOCK)\('([^']+)'/", $sql, $match)) {
+                if ($match[1] === 'GET_LOCK') {
+                    $this->lock = $match[2];
+                    return '1';
+                }
+                $owned = $this->lock === $match[2];
+                if ($match[1] === 'RELEASE_LOCK' && $owned) {
+                    $this->lock = '';
+                }
+                return $owned ? '1' : null;
+            }
             $this->failed('table');
             return $this->last_error === '' ? 'wp_seo_tidy_link_terms' : null;
         }
@@ -195,17 +224,69 @@ namespace {
         public function query(string $sql)
         {
             $this->queries[] = $sql;
+            $this->last_error = '';
+            $quoted = "'((?:[^']|'')*)'";
+            if (preg_match('/^INSERT(?: IGNORE)? INTO wp_options/', $sql)) {
+                preg_match('/VALUES \(' . $quoted . ',' . $quoted . ",\s*'no'\)/", $sql, $match);
+                if (!$match) {
+                    throw new \RuntimeException('Unsupported option INSERT in index stub');
+                }
+                $key = str_replace("''", "'", $match[1]);
+                $exists = array_key_exists($key, $GLOBALS['options']);
+                if (str_contains($sql, 'CAST(option_value AS UNSIGNED)+1')) {
+                    $GLOBALS['options'][$key] = $exists ? (string) ((int) $GLOBALS['options'][$key] + 1) : '1';
+                } elseif (!str_contains($sql, 'INSERT IGNORE') || !$exists) {
+                    $GLOBALS['options'][$key] = maybe_unserialize(str_replace("''", "'", $match[2]));
+                } else {
+                    return 0;
+                }
+                return $exists ? 2 : 1;
+            }
+            if (str_starts_with($sql, 'UPDATE wp_options s INNER JOIN wp_options g')) {
+                preg_match('/g.option_name=' . $quoted . '\s+SET s.option_value=' . $quoted .
+                    ' WHERE s.option_name=' . $quoted . ' AND g.option_value=' . $quoted .
+                    '\s+AND IS_USED_LOCK\(' . $quoted . '\)=CONNECTION_ID\(\)/s', $sql, $match);
+                if (!$match) {
+                    throw new \RuntimeException('Unsupported option publication in index stub');
+                }
+                if ($this->lock !== $match[5] || (string) ($GLOBALS['options'][$match[1]] ?? '') !== $match[4]) {
+                    return 0;
+                }
+                $GLOBALS['options'][$match[3]] = maybe_unserialize(str_replace("''", "'", $match[2]));
+                return 1;
+            }
+            if (str_contains($sql, 'IS_USED_LOCK(') &&
+                !str_contains($sql, "IS_USED_LOCK('" . $this->lock . "')=CONNECTION_ID()")) {
+                return 0;
+            }
             if (str_starts_with($sql, 'DELETE FROM')) {
-                if ($this->failed('clear_terms')) {
+                if (str_starts_with($sql, 'DELETE FROM wp_postmeta')) {
+                    if ($this->failed('clear_meta')) {
+                        return false;
+                    }
+                    foreach ($GLOBALS['metadata'] as $id => $data) {
+                        unset($GLOBALS['metadata'][$id]['_seo_tidy_link_index_v1']);
+                    }
+                    return 1;
+                }
+                $postDelete = preg_match('/WHERE post_id=(\d+)/', $sql, $post);
+                if ($this->failed($postDelete ? 'delete_post' : 'clear_terms')) {
                     return false;
                 }
-                $this->postings = [];
+                if ($postDelete) {
+                    unset($this->postings[(int) $post[1]]);
+                } else {
+                    $this->postings = [];
+                }
                 return 1;
             }
             if ($this->failed('insert')) {
                 return false;
             }
-            preg_match_all("/\((\d+),'((?:[^']|'')*)',(\d+)\)/u", $sql, $values, PREG_SET_ORDER);
+            preg_match_all("/SELECT (\d+)(?: AS post_id)?,'((?:[^']|'')*)'(?: AS term)?,(\d+)(?: AS frequency)?/u", $sql, $values, PREG_SET_ORDER);
+            if (!$values) {
+                throw new \RuntimeException('Unsupported posting INSERT in index stub');
+            }
             foreach ($values as $row) {
                 $id = (int) $row[1];
                 $this->postings[$id][str_replace("''", "'", $row[2])] = (int) $row[3];
@@ -225,8 +306,8 @@ namespace {
     }
     function resetIndex(bool $ready = true): void
     {
-        $GLOBALS['options'] = ['seo_tidy_link_index_state_v1' => [
-            'complete' => $ready, 'stale' => false, 'schema' => 5,
+        $GLOBALS['options'] = ['seo_tidy_link_index_generation_v1' => '0', 'seo_tidy_link_index_state_v1' => [
+            'complete' => $ready, 'stale' => false, 'schema' => 5, 'generation' => '0',
         ]];
         $GLOBALS['metadata'] = [];
         $GLOBALS['posts'] = [];
@@ -305,11 +386,13 @@ namespace {
         indexCheck($failure . ' database failure yields no usable evidence', $result ===
             ($failure === 'stats' ? ['count' => 0, 'avgdl' => 1.0] : []));
         indexCheck($failure . ' database failure invalidates complete state', !empty(Index::state()['stale']));
-        $count = count($wpdb->queries);
+        $rankingReads = static fn(array $queries): int => count(array_filter($queries,
+            static fn($sql): bool => is_string($sql) && str_contains($sql, 'wp_seo_tidy_link_terms')));
+        $count = $rankingReads($wpdb->queries);
         Index::candidateIds(['accra'], 1);
         Index::documentFrequency(['accra']);
         Index::corpusStats();
-        indexCheck($failure . ' stale state blocks subsequent ranking reads', count($wpdb->queries) === $count);
+        indexCheck($failure . ' stale state blocks subsequent ranking reads', $rankingReads($wpdb->queries) === $count);
     }
 
     foreach (['_yoast_wpseo_meta-robots-noindex', 'rank_math_robots', '_yoast_wpseo_canonical',

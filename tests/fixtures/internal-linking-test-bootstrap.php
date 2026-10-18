@@ -73,6 +73,8 @@ final class LinkFixtureDatabase
     public string $prefix = 'wp_';
     public string $posts = 'wp_posts';
     public string $postmeta = 'wp_postmeta';
+    public string $options = 'wp_options';
+    public string $last_error = '';
     private PDO $database;
 
     public function __construct()
@@ -105,6 +107,17 @@ final class LinkFixtureDatabase
     public function get_col(string $sql): array
     {
         return $this->database->query($sql)->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    public function get_var(string $sql)
+    {
+        // Options share the existing fixture store; production ranking SQL still
+        // executes against SQLite. This does not simulate database concurrency.
+        if (preg_match("/^SELECT option_value FROM wp_options WHERE option_name='([^']+)'$/", $sql, $match)) {
+            return array_key_exists($match[1], $GLOBALS['fixture_options'])
+                ? maybe_serialize($GLOBALS['fixture_options'][$match[1]]) : null;
+        }
+        return $this->database->query($sql)->fetchColumn();
     }
 
     public function get_row(string $sql, $format = null)
@@ -140,6 +153,15 @@ $GLOBALS['fixture_urls'] = [];
 $GLOBALS['fixture_options'] = [];
 
 function get_option(string $key, $default = false) { return $GLOBALS['fixture_options'][$key] ?? $default; }
+function maybe_serialize($value) { return is_array($value) || is_object($value) ? serialize($value) : $value; }
+function maybe_unserialize($value)
+{
+    if (!is_string($value)) {
+        return $value;
+    }
+    $decoded = @unserialize($value, ['allowed_classes' => false]);
+    return $decoded !== false || $value === 'b:0;' ? $decoded : $value;
+}
 function get_post_meta(int $id, string $key, bool $single = false) { return $GLOBALS['fixture_meta'][$id][$key] ?? ''; }
 function wp_get_post_terms(int $id, $taxonomies, array $args = []): array { return $GLOBALS['fixture_terms'][$id] ?? []; }
 function is_wp_error($value): bool { return false; }
@@ -190,7 +212,9 @@ function fixture_reset(array $documents): array
     $GLOBALS['fixture_posts'] = $GLOBALS['fixture_meta'] = $GLOBALS['fixture_terms'] = $GLOBALS['fixture_urls'] = [];
     $schema = (new ReflectionClass(QvarcY\SeoTidy\InternalLinkingIndex::class))->getConstant('SCHEMA');
     $GLOBALS['fixture_options'] = ['blog_public' => '1', 'home' => 'https://example.test',
-        'seo_tidy_link_index_state_v1' => ['complete' => true, 'stale' => false, 'schema' => $schema]];
+        'seo_tidy_link_index_generation_v1' => '0',
+        'seo_tidy_link_index_state_v1' => ['complete' => true, 'stale' => false, 'schema' => $schema,
+            'generation' => '0']];
     $GLOBALS['wpdb'] = new LinkFixtureDatabase();
     $keys = [];
     foreach ($documents as $offset => $document) {

@@ -1,0 +1,2874 @@
+{
+  "date": "2026-10-18",
+  "repository": "QvarcY/wordpress-seo-tidy",
+  "branch": "feature/issue-29-smart-topics-prototype",
+  "plugin_commit": "253c2cb1a9d7ae4fb3c989a9a072dac550990487",
+  "environment": {
+    "wordpress": "6.8",
+    "php": "8.2.6",
+    "database": "MariaDB 11.4.12",
+    "os": "Windows",
+    "architecture": "AMD64",
+    "cpu_logical_count": 8,
+    "origin": "http://127.0.0.1:8896",
+    "database_host": "127.0.0.1:33929",
+    "database_name": "seo_tidy_phase_c",
+    "database_buffer_pool_mib": 128,
+    "core_zip_sha256": "6ec3954f27bfbf365b203de360734672605b1075cacc15cc791d79fe83d67c2a",
+    "network": "External WordPress HTTP blocked; local loopback HTTP only",
+    "lifecycle": "Dedicated loopback PHP server stopped; isolated MariaDB shut down normally after data-directory identity check. Disposable data and logs retained."
+  },
+  "contracts": {
+    "mode": "contracts",
+    "checks": 131,
+    "failures": 0,
+    "seconds": 4.600786924362183,
+    "peak_bytes": 39845888,
+    "results": [
+      {
+        "pass": true,
+        "description": "Active plugin registers the real scan action"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress HTML Tag Processor is available"
+      },
+      {
+        "pass": true,
+        "description": "Real dbDelta creates the absent index table"
+      },
+      {
+        "pass": true,
+        "description": "New term column uses the required binary collation"
+      },
+      {
+        "pass": true,
+        "description": "Real schema has composite post_id/term primary key"
+      },
+      {
+        "pass": true,
+        "description": "Real schema has term retrieval index"
+      },
+      {
+        "pass": true,
+        "description": "Existing nonbinary term column migrates successfully"
+      },
+      {
+        "pass": true,
+        "description": "Migration changes actual term collation to binary"
+      },
+      {
+        "pass": true,
+        "description": "Collation migration preserves an existing row and frequency"
+      },
+      {
+        "pass": true,
+        "description": "Binary term identity distinguishes mājas from majas in actual SQL"
+      },
+      {
+        "pass": true,
+        "description": "Actual stored source excludes yoast-noindex"
+      },
+      {
+        "pass": true,
+        "description": "Actual stored target excludes yoast-noindex"
+      },
+      {
+        "pass": true,
+        "description": "Actual stored source excludes rankmath-noindex"
+      },
+      {
+        "pass": true,
+        "description": "Actual stored target excludes rankmath-noindex"
+      },
+      {
+        "pass": true,
+        "description": "Actual stored source excludes external-canonical"
+      },
+      {
+        "pass": true,
+        "description": "Actual stored target excludes external-canonical"
+      },
+      {
+        "pass": true,
+        "description": "Actual stored source excludes other-page-canonical"
+      },
+      {
+        "pass": true,
+        "description": "Actual stored target excludes other-page-canonical"
+      },
+      {
+        "pass": true,
+        "description": "Actual stored source excludes password"
+      },
+      {
+        "pass": true,
+        "description": "Actual stored target excludes password"
+      },
+      {
+        "pass": true,
+        "description": "Actual stored source excludes draft"
+      },
+      {
+        "pass": true,
+        "description": "Actual stored target excludes draft"
+      },
+      {
+        "pass": true,
+        "description": "Actual stored source excludes private"
+      },
+      {
+        "pass": true,
+        "description": "Actual stored target excludes private"
+      },
+      {
+        "pass": true,
+        "description": "Absolute self canonical with fragment and root relative self canonical remain eligible"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan action completes the fixture index"
+      },
+      {
+        "pass": true,
+        "description": "Actual rebuild preserves complete existing Smart Topics data"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan writes source and target snapshots"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan excludes snapshot and SQL postings for source-yoast-noindex"
+      },
+      {
+        "pass": true,
+        "description": "Ineligible source-yoast-noindex cannot request suggestions"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan excludes snapshot and SQL postings for target-yoast-noindex"
+      },
+      {
+        "pass": true,
+        "description": "Recommendation retrieval omits ineligible target-yoast-noindex"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan excludes snapshot and SQL postings for source-rankmath-noindex"
+      },
+      {
+        "pass": true,
+        "description": "Ineligible source-rankmath-noindex cannot request suggestions"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan excludes snapshot and SQL postings for target-rankmath-noindex"
+      },
+      {
+        "pass": true,
+        "description": "Recommendation retrieval omits ineligible target-rankmath-noindex"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan excludes snapshot and SQL postings for source-external-canonical"
+      },
+      {
+        "pass": true,
+        "description": "Ineligible source-external-canonical cannot request suggestions"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan excludes snapshot and SQL postings for target-external-canonical"
+      },
+      {
+        "pass": true,
+        "description": "Recommendation retrieval omits ineligible target-external-canonical"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan excludes snapshot and SQL postings for source-other-page-canonical"
+      },
+      {
+        "pass": true,
+        "description": "Ineligible source-other-page-canonical cannot request suggestions"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan excludes snapshot and SQL postings for target-other-page-canonical"
+      },
+      {
+        "pass": true,
+        "description": "Recommendation retrieval omits ineligible target-other-page-canonical"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan excludes snapshot and SQL postings for source-password"
+      },
+      {
+        "pass": true,
+        "description": "Ineligible source-password cannot request suggestions"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan excludes snapshot and SQL postings for target-password"
+      },
+      {
+        "pass": true,
+        "description": "Recommendation retrieval omits ineligible target-password"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan excludes snapshot and SQL postings for source-draft"
+      },
+      {
+        "pass": true,
+        "description": "Ineligible source-draft cannot request suggestions"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan excludes snapshot and SQL postings for target-draft"
+      },
+      {
+        "pass": true,
+        "description": "Recommendation retrieval omits ineligible target-draft"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan excludes snapshot and SQL postings for source-private"
+      },
+      {
+        "pass": true,
+        "description": "Ineligible source-private cannot request suggestions"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan excludes snapshot and SQL postings for target-private"
+      },
+      {
+        "pass": true,
+        "description": "Recommendation retrieval omits ineligible target-private"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture GHANA-ITINERARY -> ACCRA-ATTRACTIONS [recommend]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture ACCRA-ATTRACTIONS -> ACCRA-TRANSPORT [recommend]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture ACCRA-HOTELS -> ACCRA-STAY [uncertain]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture GHANA-BEACH -> WP-SECURITY [reject]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture RIGA-ATTRACTIONS -> RIGA-MUSEUMS [recommend]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture RIGA-HOTELS -> RIGA-STAY [uncertain]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture RIGA-ATTRACTIONS -> WP-UPDATES [reject]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture GHANA-ITINERARY -> ACCRA-HOTELS [uncertain]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture SIGULDA-TRIP -> RIGA-MUSEUMS [reject]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture GHANA-ITINERARY -> ACCRA-TRANSPORT [uncertain]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture RIGA-MUSEUMS -> RIGA-ATTRACTIONS [uncertain]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture ACCRA-ATTRACTIONS -> ACCRA-ATTRACTIONS [reject]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture ACCRA-HOTELS -> ACCRA-STAY [uncertain]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture RIGA-HOTELS -> RIGA-STAY [uncertain]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture SIGULDA-TRIP -> TURAIDA [reject]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture GHANA-ITINERARY -> WP-SECURITY [reject]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture EN-PUNCT-ROUTE -> EN-MARKETS [recommend]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture LV-PUNCT-ROUTE -> LV-ADAZI-MUSEUM [recommend]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture MIXED-MUSEUM-ROUTE -> RIGA-MUSEUMS [recommend]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture LV-PUNCT-ROUTE -> LV-RESTAURANTS [uncertain]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture EN-MARKETS -> EN-MARKETS-COMPETING [uncertain]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture LV-ADAZI-MUSEUM -> LV-MUSEUM-COMPETING [uncertain]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture LV-PUNCT-ROUTE -> WP-SECURITY [reject]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture MIXED-MUSEUM-ROUTE -> WP-UPDATES [uncertain]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture EN-NEAR-DUP-SOURCE -> EN-NEAR-DUP-TARGET [uncertain]"
+      },
+      {
+        "pass": true,
+        "description": "Real WordPress fixture LV-NEAR-DUP-SOURCE -> LV-NEAR-DUP-TARGET [uncertain]"
+      },
+      {
+        "pass": true,
+        "description": "Actual indexed URL test baseline recommends destination"
+      },
+      {
+        "pass": true,
+        "description": "Core url_to_postid resolves actual pretty permalink"
+      },
+      {
+        "pass": true,
+        "description": "Core url_to_postid resolves actual plain p permalink"
+      },
+      {
+        "pass": true,
+        "description": "Real parser/resolver excludes existing link: absolute"
+      },
+      {
+        "pass": true,
+        "description": "Real parser/resolver excludes existing link: absolute tracking and fragment"
+      },
+      {
+        "pass": true,
+        "description": "Real parser/resolver excludes existing link: root relative"
+      },
+      {
+        "pass": true,
+        "description": "Real parser/resolver excludes existing link: root relative tracking and fragment"
+      },
+      {
+        "pass": true,
+        "description": "Real parser/resolver excludes existing link: scheme relative"
+      },
+      {
+        "pass": true,
+        "description": "Real parser/resolver excludes existing link: sibling path relative"
+      },
+      {
+        "pass": true,
+        "description": "Real parser/resolver excludes existing link: dot path relative"
+      },
+      {
+        "pass": true,
+        "description": "Real parser/resolver excludes existing link: encoded parent dots"
+      },
+      {
+        "pass": true,
+        "description": "Real parser/resolver excludes existing link: mixed encoded parent dots"
+      },
+      {
+        "pass": true,
+        "description": "Real parser/resolver excludes existing link: encoded current then parent"
+      },
+      {
+        "pass": true,
+        "description": "Real parser/resolver excludes existing link: plain absolute p permalink"
+      },
+      {
+        "pass": true,
+        "description": "Real parser/resolver excludes existing link: plain root page_id permalink"
+      },
+      {
+        "pass": true,
+        "description": "Real parser/resolver excludes existing link: query only p permalink"
+      },
+      {
+        "pass": true,
+        "description": "Real parser/resolver excludes existing link: HTML entity query separator"
+      },
+      {
+        "pass": true,
+        "description": "Real parser/resolver excludes existing link: surrounding whitespace"
+      },
+      {
+        "pass": true,
+        "description": "Unrelated href does not suppress a valid destination: external host"
+      },
+      {
+        "pass": true,
+        "description": "Unrelated href does not suppress a valid destination: different local port"
+      },
+      {
+        "pass": true,
+        "description": "Unrelated href does not suppress a valid destination: source fragment"
+      },
+      {
+        "pass": true,
+        "description": "Unrelated href does not suppress a valid destination: nonweb scheme"
+      },
+      {
+        "pass": true,
+        "description": "Real indexed result excludes self and exposes a finite raw ranking score"
+      },
+      {
+        "pass": true,
+        "description": "Real indexed result excludes self and exposes a finite raw ranking score"
+      },
+      {
+        "pass": true,
+        "description": "Real indexed result excludes self and exposes a finite raw ranking score"
+      },
+      {
+        "pass": true,
+        "description": "Real REST dispatch /seo-tidy/v1/internal-linking enforces administrator permission (200)"
+      },
+      {
+        "pass": true,
+        "description": "Administrator REST result retains expected collection contract: /seo-tidy/v1/internal-linking"
+      },
+      {
+        "pass": true,
+        "description": "Real linking REST endpoint reports ready state and usable scan nonce"
+      },
+      {
+        "pass": true,
+        "description": "Real REST dispatch /seo-tidy/v1/audit enforces administrator permission (200)"
+      },
+      {
+        "pass": true,
+        "description": "Administrator REST result retains expected collection contract: /seo-tidy/v1/audit"
+      },
+      {
+        "pass": true,
+        "description": "Real REST dispatch /seo-tidy/v1/internal-linking enforces subscriber permission (403)"
+      },
+      {
+        "pass": true,
+        "description": "Real REST dispatch /seo-tidy/v1/audit enforces subscriber permission (403)"
+      },
+      {
+        "pass": true,
+        "description": "Real REST dispatch /seo-tidy/v1/internal-linking enforces anonymous permission (401)"
+      },
+      {
+        "pass": true,
+        "description": "Real REST dispatch /seo-tidy/v1/audit enforces anonymous permission (401)"
+      },
+      {
+        "pass": true,
+        "description": "REST schema rejects page below minimum"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan callback denies subscriber before index mutation"
+      },
+      {
+        "pass": true,
+        "description": "Actual scan callback denies anonymous before index mutation"
+      },
+      {
+        "pass": true,
+        "description": "Actual administrator scan rejects invalid nonce before index mutation"
+      },
+      {
+        "pass": true,
+        "description": "Actual article save marks index stale and removes changed article snapshot"
+      },
+      {
+        "pass": true,
+        "description": "Actual article edit blocks recommendations pending rebuild"
+      },
+      {
+        "pass": true,
+        "description": "Persisted existing link remains excluded after actual rebuild"
+      },
+      {
+        "pass": true,
+        "description": "Article edit and second rebuild preserve Smart Topics data model and values"
+      },
+      {
+        "pass": true,
+        "description": "Metadata invalidation starts from real indexed snapshot"
+      },
+      {
+        "pass": true,
+        "description": "Actual noindex metadata update invalidates snapshot and index"
+      },
+      {
+        "pass": true,
+        "description": "Actual Smart Topics metadata update removes existing snapshot"
+      },
+      {
+        "pass": true,
+        "description": "Actual taxonomy update removes existing snapshot"
+      },
+      {
+        "pass": true,
+        "description": "Actual transition from publish to draft removes snapshot and eligibility"
+      },
+      {
+        "pass": true,
+        "description": "Actual permanent article deletion removes snapshot"
+      },
+      {
+        "pass": true,
+        "description": "Actual site noindex excludes both roles and recommendations"
+      }
+    ],
+    "details": {
+      "versions": {
+        "wordpress": "6.8",
+        "php": "8.2.6",
+        "database": "11.4.12",
+        "database_server": "11.4.12-MariaDB",
+        "charset": "utf8mb4"
+      },
+      "schema": {
+        "columns": [
+          {
+            "Field": "post_id",
+            "Type": "bigint(20) unsigned",
+            "Collation": null,
+            "Null": "NO",
+            "Key": "PRI",
+            "Default": null,
+            "Extra": "",
+            "Privileges": "select,insert,update,references",
+            "Comment": ""
+          },
+          {
+            "Field": "term",
+            "Type": "varchar(191)",
+            "Collation": "utf8mb4_bin",
+            "Null": "NO",
+            "Key": "PRI",
+            "Default": null,
+            "Extra": "",
+            "Privileges": "select,insert,update,references",
+            "Comment": ""
+          },
+          {
+            "Field": "frequency",
+            "Type": "int(10) unsigned",
+            "Collation": null,
+            "Null": "NO",
+            "Key": "",
+            "Default": "0",
+            "Extra": "",
+            "Privileges": "select,insert,update,references",
+            "Comment": ""
+          }
+        ],
+        "indexes": [
+          {
+            "Table": "phasec_seo_tidy_link_terms",
+            "Non_unique": "0",
+            "Key_name": "PRIMARY",
+            "Seq_in_index": "1",
+            "Column_name": "post_id",
+            "Collation": "A",
+            "Cardinality": "0",
+            "Sub_part": null,
+            "Packed": null,
+            "Null": "",
+            "Index_type": "BTREE",
+            "Comment": "",
+            "Index_comment": "",
+            "Ignored": "NO"
+          },
+          {
+            "Table": "phasec_seo_tidy_link_terms",
+            "Non_unique": "0",
+            "Key_name": "PRIMARY",
+            "Seq_in_index": "2",
+            "Column_name": "term",
+            "Collation": "A",
+            "Cardinality": "0",
+            "Sub_part": null,
+            "Packed": null,
+            "Null": "",
+            "Index_type": "BTREE",
+            "Comment": "",
+            "Index_comment": "",
+            "Ignored": "NO"
+          },
+          {
+            "Table": "phasec_seo_tidy_link_terms",
+            "Non_unique": "1",
+            "Key_name": "term",
+            "Seq_in_index": "1",
+            "Column_name": "term",
+            "Collation": "A",
+            "Cardinality": "0",
+            "Sub_part": null,
+            "Packed": null,
+            "Null": "",
+            "Index_type": "BTREE",
+            "Comment": "",
+            "Index_comment": "",
+            "Ignored": "NO"
+          }
+        ],
+        "migrated_term": {
+          "Field": "term",
+          "Type": "varchar(191)",
+          "Collation": "utf8mb4_bin",
+          "Null": "NO",
+          "Key": "PRI",
+          "Default": null,
+          "Extra": "",
+          "Privileges": "select,insert,update,references",
+          "Comment": ""
+        }
+      },
+      "initial_scan_batches": [
+        {
+          "mode": "scan",
+          "pid": 14304,
+          "seconds": 0.191633939743042,
+          "queries": 163,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 26,
+            "processed": 25,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null
+        },
+        {
+          "mode": "scan",
+          "pid": 33660,
+          "seconds": 0.08926200866699219,
+          "queries": 78,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 42,
+            "processed": 40,
+            "complete": true,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null
+        }
+      ],
+      "saved_link_rebuild_batches": [
+        {
+          "mode": "scan",
+          "pid": 39876,
+          "seconds": 0.169281005859375,
+          "queries": 163,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 26,
+            "processed": 25,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null
+        },
+        {
+          "mode": "scan",
+          "pid": 39608,
+          "seconds": 0.10229015350341797,
+          "queries": 78,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 42,
+            "processed": 40,
+            "complete": true,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null
+        }
+      ],
+      "final_state": {
+        "last_id": 42,
+        "processed": 40,
+        "complete": true,
+        "stale": true,
+        "schema": 5
+      },
+      "fixture_ids": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46
+      ],
+      "limitations": [
+        "REST uses real in-process WordPress dispatch; HTTP authentication/cookie transport is not established here.",
+        "Scan authorization invokes registered callback; normal admin-post.php HTTP routing is not established here.",
+        "URL variants alter raw stored-content input in memory; one persisted existing link is separately rebuilt and checked.",
+        "Only explicit post_content anchors are tested; rendered blocks, shortcodes, menus and theme links remain outside this contract.",
+        "Fixture labels and BM25 outputs do not establish semantic accuracy or release readiness."
+      ]
+    }
+  },
+  "http": {
+    "checks": 17,
+    "failures": 0,
+    "results": [
+      {
+        "pass": true,
+        "description": "Anonymous linking REST request rejected",
+        "http_status": 401
+      },
+      {
+        "pass": true,
+        "description": "admin authenticated cookie obtains real REST nonce",
+        "http_status": 200
+      },
+      {
+        "pass": true,
+        "description": "subscriber authenticated cookie obtains real REST nonce",
+        "http_status": 200
+      },
+      {
+        "pass": true,
+        "description": "Subscriber linking REST request rejected",
+        "http_status": 403
+      },
+      {
+        "pass": true,
+        "description": "Cookie REST request without nonce is unauthenticated",
+        "http_status": 401
+      },
+      {
+        "pass": true,
+        "description": "Invalid REST nonce rejected",
+        "http_status": 403
+      },
+      {
+        "pass": true,
+        "description": "Administrator linking REST request returns collection and scan nonce",
+        "http_status": 200
+      },
+      {
+        "pass": true,
+        "description": "REST rejects page below minimum",
+        "http_status": 400
+      },
+      {
+        "pass": true,
+        "description": "REST pagination reaches page two",
+        "http_status": 200
+      },
+      {
+        "pass": true,
+        "description": "REST search returns matching articles",
+        "http_status": 200
+      },
+      {
+        "pass": true,
+        "description": "Existing SEO Audit REST responds for administrator",
+        "http_status": 200
+      },
+      {
+        "pass": true,
+        "description": "Subscriber cannot open linking administration page",
+        "http_status": 403
+      },
+      {
+        "pass": true,
+        "description": "Anonymous admin-post scan has no public handler",
+        "http_status": 400
+      },
+      {
+        "pass": true,
+        "description": "Subscriber scan denied before mutation",
+        "http_status": 500
+      },
+      {
+        "pass": true,
+        "description": "Administrator scan with invalid nonce rejected",
+        "http_status": 403
+      },
+      {
+        "pass": true,
+        "description": "Denied scans leave index state unchanged",
+        "http_status": 200
+      },
+      {
+        "pass": true,
+        "description": "Authorized actual admin-post scan redirects to dashboard",
+        "http_status": 302
+      }
+    ],
+    "scope": "Actual loopback HTTP, WordPress sessions, REST nonce checks and admin-post routing; no browser visual audit"
+  },
+  "benchmarks": {
+    "200": {
+      "seed": {
+        "mode": "seed200",
+        "seed_ms": 4703.900098800659,
+        "count": 200,
+        "first_id": 50,
+        "last_id": 249,
+        "body_words": {
+          "n": 200,
+          "min": 446,
+          "median": 535,
+          "p95": 624,
+          "max": 624,
+          "mean": 535
+        },
+        "retained_distinct_terms": {
+          "n": 200,
+          "min": 300,
+          "median": 300,
+          "p95": 300,
+          "max": 300,
+          "mean": 300
+        },
+        "weighted_vector_length": {
+          "n": 200,
+          "min": 356,
+          "median": 389.5,
+          "p95": 423,
+          "max": 423,
+          "mean": 389.5
+        },
+        "state": {
+          "last_id": 28,
+          "processed": 25,
+          "complete": false,
+          "stale": true,
+          "schema": 5
+        },
+        "note": "Seeded only; the real administrator scan must build the index separately.",
+        "process_wall_seconds": 5.190689100185409
+      },
+      "batches": [
+        {
+          "mode": "scan",
+          "pid": 27516,
+          "seconds": 0.426422119140625,
+          "queries": 287,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 74,
+            "processed": 25,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8924318999052048
+        },
+        {
+          "mode": "scan",
+          "pid": 39932,
+          "seconds": 0.4070899486541748,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 99,
+            "processed": 50,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8797863998916
+        },
+        {
+          "mode": "scan",
+          "pid": 40940,
+          "seconds": 0.42949914932250977,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 124,
+            "processed": 75,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8832360000815243
+        },
+        {
+          "mode": "scan",
+          "pid": 16844,
+          "seconds": 0.4086019992828369,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 149,
+            "processed": 100,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8918727999553084
+        },
+        {
+          "mode": "scan",
+          "pid": 40488,
+          "seconds": 0.5149681568145752,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 174,
+            "processed": 125,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9954974001739174
+        },
+        {
+          "mode": "scan",
+          "pid": 38696,
+          "seconds": 0.39960503578186035,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 199,
+            "processed": 150,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.90183120011352
+        },
+        {
+          "mode": "scan",
+          "pid": 40784,
+          "seconds": 0.3896369934082031,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 224,
+            "processed": 175,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.913896800018847
+        },
+        {
+          "mode": "scan",
+          "pid": 39640,
+          "seconds": 0.7299981117248535,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 249,
+            "processed": 200,
+            "complete": true,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 1.1780125999357551
+        }
+      ],
+      "scan_callback_ms": {
+        "n": 8,
+        "min": 389.6369934082031,
+        "median": 417.51205921173096,
+        "p95": 729.9981117248535,
+        "max": 729.9981117248535
+      },
+      "scan_callback_total_seconds": 3.7058215141296387,
+      "scan_process_wall_seconds": 7.536565100075677,
+      "scan_peak_bytes_max": 37748736,
+      "scan_queries_total": 2282,
+      "measure": {
+        "mode": "measure",
+        "stats": {
+          "published_posts": 200,
+          "published_pages": 0,
+          "synthetic_posts": 200,
+          "postings": 60000,
+          "indexed_documents": 200,
+          "state": {
+            "last_id": 249,
+            "processed": 200,
+            "complete": true,
+            "stale": false,
+            "schema": 5
+          },
+          "corpus": {
+            "count": 200,
+            "avgdl": 389.5
+          },
+          "sql_error": ""
+        },
+        "candidate_ms": {
+          "n": 10,
+          "min": 0.7126,
+          "median": 1.05665,
+          "p95": 11.6707,
+          "max": 11.6707,
+          "mean": 2.10777
+        },
+        "suggestion_ms": {
+          "n": 10,
+          "min": 85.798,
+          "median": 90.90535,
+          "p95": 101.3933,
+          "max": 101.3933,
+          "mean": 92.08381
+        },
+        "candidate_queries": {
+          "n": 10,
+          "min": 1,
+          "median": 1,
+          "p95": 2,
+          "max": 2,
+          "mean": 1.1
+        },
+        "suggestion_queries": {
+          "n": 10,
+          "min": 54,
+          "median": 54,
+          "p95": 93,
+          "max": 93,
+          "mean": 62.4
+        },
+        "memory_current_bytes": 35651584,
+        "memory_peak_bytes": 35651584,
+        "candidate_sql": "SELECT t.post_id FROM phasec_seo_tidy_link_terms t\n                INNER JOIN phasec_posts p ON p.ID=t.post_id\n                WHERE t.term IN ('garden','planning','uncategorized') AND t.post_id <> 50\n                  AND p.post_type IN ('post','page') AND p.post_status='publish'\n                GROUP BY t.post_id ORDER BY COUNT(*) DESC, t.post_id ASC LIMIT 30",
+        "candidate_explain": [
+          {
+            "id": "1",
+            "select_type": "SIMPLE",
+            "table": "t",
+            "type": "range",
+            "possible_keys": "PRIMARY,term",
+            "key": "term",
+            "key_len": "774",
+            "ref": null,
+            "rows": "122",
+            "Extra": "Using where; Using index; Using temporary; Using filesort"
+          },
+          {
+            "id": "1",
+            "select_type": "SIMPLE",
+            "table": "p",
+            "type": "eq_ref",
+            "possible_keys": "PRIMARY,type_status_date",
+            "key": "PRIMARY",
+            "key_len": "8",
+            "ref": "seo_tidy_phase_c.t.post_id",
+            "rows": "1",
+            "Extra": "Using where"
+          }
+        ],
+        "samples": [
+          {
+            "source_id": 50,
+            "source_title": "Garden planning 1",
+            "query_terms": [
+              "garden",
+              "planning",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 0.7875,
+            "candidate_queries": 1,
+            "suggestion_ms": 97.0258,
+            "suggestion_queries": 93,
+            "suggestion_ids": [
+              60,
+              70,
+              80,
+              90,
+              100
+            ],
+            "scores": [
+              5.177833661338765,
+              5.177833661338765,
+              5.177833661338765,
+              5.177833661338765,
+              5.177833661338765
+            ]
+          },
+          {
+            "source_id": 51,
+            "source_title": "Dārzs plānošana 1",
+            "query_terms": [
+              "dārzs",
+              "plānošana",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 11.6707,
+            "candidate_queries": 2,
+            "suggestion_ms": 85.798,
+            "suggestion_queries": 93,
+            "suggestion_ids": [
+              61,
+              71,
+              81,
+              91,
+              101
+            ],
+            "scores": [
+              5.30492135902713,
+              5.30492135902713,
+              5.30492135902713,
+              5.30492135902713,
+              5.30492135902713
+            ]
+          },
+          {
+            "source_id": 52,
+            "source_title": "Travel planning 1",
+            "query_terms": [
+              "travel",
+              "planning",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 0.7126,
+            "candidate_queries": 1,
+            "suggestion_ms": 90.4747,
+            "suggestion_queries": 54,
+            "suggestion_ids": [
+              62,
+              72,
+              82,
+              92,
+              102
+            ],
+            "scores": [
+              5.177833661338765,
+              5.177833661338765,
+              5.177833661338765,
+              5.177833661338765,
+              5.177833661338765
+            ]
+          },
+          {
+            "source_id": 53,
+            "source_title": "Ceļojums plānošana 1",
+            "query_terms": [
+              "ceļojums",
+              "plānošana",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 1.4703,
+            "candidate_queries": 1,
+            "suggestion_ms": 87.2178,
+            "suggestion_queries": 54,
+            "suggestion_ids": [
+              63,
+              73,
+              83,
+              93,
+              103
+            ],
+            "scores": [
+              5.30492135902713,
+              5.30492135902713,
+              5.30492135902713,
+              5.30492135902713,
+              5.30492135902713
+            ]
+          },
+          {
+            "source_id": 54,
+            "source_title": "Cycling planning 1",
+            "query_terms": [
+              "cycling",
+              "planning",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 1.082,
+            "candidate_queries": 1,
+            "suggestion_ms": 87.7095,
+            "suggestion_queries": 54,
+            "suggestion_ids": [
+              64,
+              74,
+              84,
+              94,
+              104
+            ],
+            "scores": [
+              5.177833661338765,
+              5.177833661338765,
+              5.177833661338765,
+              5.177833661338765,
+              5.177833661338765
+            ]
+          },
+          {
+            "source_id": 55,
+            "source_title": "Riteņbraukšana plānošana 1",
+            "query_terms": [
+              "riteņbraukšana",
+              "plānošana",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 0.9363,
+            "candidate_queries": 1,
+            "suggestion_ms": 87.0103,
+            "suggestion_queries": 54,
+            "suggestion_ids": [
+              65,
+              75,
+              85,
+              95,
+              105
+            ],
+            "scores": [
+              5.30492135902713,
+              5.30492135902713,
+              5.30492135902713,
+              5.30492135902713,
+              5.30492135902713
+            ]
+          },
+          {
+            "source_id": 56,
+            "source_title": "Baking planning 1",
+            "query_terms": [
+              "baking",
+              "planning",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 1.2979,
+            "candidate_queries": 1,
+            "suggestion_ms": 96.7098,
+            "suggestion_queries": 54,
+            "suggestion_ids": [
+              66,
+              76,
+              86,
+              96,
+              106
+            ],
+            "scores": [
+              5.177833661338765,
+              5.177833661338765,
+              5.177833661338765,
+              5.177833661338765,
+              5.177833661338765
+            ]
+          },
+          {
+            "source_id": 57,
+            "source_title": "Cepšana plānošana 1",
+            "query_terms": [
+              "cepšana",
+              "plānošana",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 1.0738,
+            "candidate_queries": 1,
+            "suggestion_ms": 96.1629,
+            "suggestion_queries": 54,
+            "suggestion_ids": [
+              67,
+              77,
+              87,
+              97,
+              107
+            ],
+            "scores": [
+              5.30492135902713,
+              5.30492135902713,
+              5.30492135902713,
+              5.30492135902713,
+              5.30492135902713
+            ]
+          },
+          {
+            "source_id": 58,
+            "source_title": "Music planning 1",
+            "query_terms": [
+              "music",
+              "planning",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 1.0071,
+            "candidate_queries": 1,
+            "suggestion_ms": 91.336,
+            "suggestion_queries": 57,
+            "suggestion_ids": [
+              68,
+              78,
+              88,
+              98,
+              108
+            ],
+            "scores": [
+              5.177833661338765,
+              5.177833661338765,
+              5.177833661338765,
+              5.177833661338765,
+              5.177833661338765
+            ]
+          },
+          {
+            "source_id": 59,
+            "source_title": "Mūzika plānošana 1",
+            "query_terms": [
+              "mūzika",
+              "plānošana",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 1.0395,
+            "candidate_queries": 1,
+            "suggestion_ms": 101.3933,
+            "suggestion_queries": 57,
+            "suggestion_ids": [
+              69,
+              79,
+              89,
+              99,
+              109
+            ],
+            "scores": [
+              5.30492135902713,
+              5.30492135902713,
+              5.30492135902713,
+              5.30492135902713,
+              5.30492135902713
+            ]
+          }
+        ],
+        "conditions": {
+          "sources": "first 10 deterministic EN/LV posts",
+          "repetitions": 1,
+          "cache": "one CLI process; initial runtime cache and subsequent warmed objects mixed; no persistent object cache asserted",
+          "scope": "production methods in PHP; excludes HTTP and WordPress bootstrap time",
+          "score": "BM25 ranking signal only, not accuracy percentage"
+        },
+        "process_wall_seconds": 1.4512213000562042
+      },
+      "scan_timing_scope": "Post-bootstrap scan execution including administrator lookup and nonce setup. Process wall time also includes startup/bootstrap."
+    },
+    "1000": {
+      "seed": {
+        "mode": "seed1000",
+        "seed_ms": 17314.00203704834,
+        "count": 1000,
+        "first_id": 50,
+        "last_id": 1049,
+        "body_words": {
+          "n": 1000,
+          "min": 446,
+          "median": 535,
+          "p95": 624,
+          "max": 624,
+          "mean": 535
+        },
+        "retained_distinct_terms": {
+          "n": 1000,
+          "min": 300,
+          "median": 300,
+          "p95": 300,
+          "max": 300,
+          "mean": 300
+        },
+        "weighted_vector_length": {
+          "n": 1000,
+          "min": 356,
+          "median": 389.5,
+          "p95": 423,
+          "max": 423,
+          "mean": 389.5
+        },
+        "state": {
+          "last_id": 249,
+          "processed": 200,
+          "complete": true,
+          "stale": true,
+          "schema": 5
+        },
+        "note": "Seeded only; the real administrator scan must build the index separately.",
+        "process_wall_seconds": 17.783138799946755
+      },
+      "batches": [
+        {
+          "mode": "scan",
+          "pid": 40052,
+          "seconds": 0.6346249580383301,
+          "queries": 287,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 74,
+            "processed": 25,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 1.1217279999982566
+        },
+        {
+          "mode": "scan",
+          "pid": 32664,
+          "seconds": 0.43250513076782227,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 99,
+            "processed": 50,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9167811998631805
+        },
+        {
+          "mode": "scan",
+          "pid": 18904,
+          "seconds": 0.38161611557006836,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 124,
+            "processed": 75,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8450509998947382
+        },
+        {
+          "mode": "scan",
+          "pid": 38444,
+          "seconds": 0.37649083137512207,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 149,
+            "processed": 100,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8603168001864105
+        },
+        {
+          "mode": "scan",
+          "pid": 3600,
+          "seconds": 0.3894350528717041,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 174,
+            "processed": 125,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8462338000535965
+        },
+        {
+          "mode": "scan",
+          "pid": 38928,
+          "seconds": 0.36582493782043457,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 199,
+            "processed": 150,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8211390001233667
+        },
+        {
+          "mode": "scan",
+          "pid": 38620,
+          "seconds": 0.376025915145874,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 224,
+            "processed": 175,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9065344000700861
+        },
+        {
+          "mode": "scan",
+          "pid": 40228,
+          "seconds": 0.41528797149658203,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 249,
+            "processed": 200,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.925295899854973
+        },
+        {
+          "mode": "scan",
+          "pid": 32204,
+          "seconds": 0.3846251964569092,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 274,
+            "processed": 225,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9503737001214176
+        },
+        {
+          "mode": "scan",
+          "pid": 40800,
+          "seconds": 0.4284169673919678,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 299,
+            "processed": 250,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9306692001409829
+        },
+        {
+          "mode": "scan",
+          "pid": 40704,
+          "seconds": 0.36721110343933105,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 324,
+            "processed": 275,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.83258350007236
+        },
+        {
+          "mode": "scan",
+          "pid": 40512,
+          "seconds": 0.41621899604797363,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 349,
+            "processed": 300,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8882981999777257
+        },
+        {
+          "mode": "scan",
+          "pid": 7112,
+          "seconds": 0.3679511547088623,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 374,
+            "processed": 325,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8262762997765094
+        },
+        {
+          "mode": "scan",
+          "pid": 6192,
+          "seconds": 0.42883920669555664,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 399,
+            "processed": 350,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8836438001599163
+        },
+        {
+          "mode": "scan",
+          "pid": 39468,
+          "seconds": 0.39534902572631836,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 424,
+            "processed": 375,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9201648000162095
+        },
+        {
+          "mode": "scan",
+          "pid": 40896,
+          "seconds": 0.39131593704223633,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 449,
+            "processed": 400,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8594410999212414
+        },
+        {
+          "mode": "scan",
+          "pid": 40400,
+          "seconds": 0.3932211399078369,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 474,
+            "processed": 425,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9354938000906259
+        },
+        {
+          "mode": "scan",
+          "pid": 35060,
+          "seconds": 0.39949488639831543,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 499,
+            "processed": 450,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8657668000087142
+        },
+        {
+          "mode": "scan",
+          "pid": 21408,
+          "seconds": 0.3847391605377197,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 524,
+            "processed": 475,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8762564000207931
+        },
+        {
+          "mode": "scan",
+          "pid": 27356,
+          "seconds": 0.40419888496398926,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 549,
+            "processed": 500,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8590609999373555
+        },
+        {
+          "mode": "scan",
+          "pid": 9824,
+          "seconds": 0.46787285804748535,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 574,
+            "processed": 525,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9142243999522179
+        },
+        {
+          "mode": "scan",
+          "pid": 39436,
+          "seconds": 0.43608808517456055,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 599,
+            "processed": 550,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9275468999985605
+        },
+        {
+          "mode": "scan",
+          "pid": 2612,
+          "seconds": 0.3964698314666748,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 624,
+            "processed": 575,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9017950999550521
+        },
+        {
+          "mode": "scan",
+          "pid": 39572,
+          "seconds": 0.3762388229370117,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 649,
+            "processed": 600,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.839553700061515
+        },
+        {
+          "mode": "scan",
+          "pid": 23500,
+          "seconds": 0.38492298126220703,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 674,
+            "processed": 625,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8561396000441164
+        },
+        {
+          "mode": "scan",
+          "pid": 19732,
+          "seconds": 0.3695378303527832,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 699,
+            "processed": 650,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8756971000693738
+        },
+        {
+          "mode": "scan",
+          "pid": 900,
+          "seconds": 0.39501118659973145,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 724,
+            "processed": 675,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8939096999820322
+        },
+        {
+          "mode": "scan",
+          "pid": 26176,
+          "seconds": 0.38436317443847656,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 749,
+            "processed": 700,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9200460999272764
+        },
+        {
+          "mode": "scan",
+          "pid": 3264,
+          "seconds": 0.4068119525909424,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 774,
+            "processed": 725,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9033773001283407
+        },
+        {
+          "mode": "scan",
+          "pid": 1536,
+          "seconds": 0.4079921245574951,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 799,
+            "processed": 750,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.870409700088203
+        },
+        {
+          "mode": "scan",
+          "pid": 40784,
+          "seconds": 0.4489009380340576,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 824,
+            "processed": 775,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9202097998932004
+        },
+        {
+          "mode": "scan",
+          "pid": 24616,
+          "seconds": 0.4270029067993164,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 849,
+            "processed": 800,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9010278999339789
+        },
+        {
+          "mode": "scan",
+          "pid": 12668,
+          "seconds": 0.3688230514526367,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 874,
+            "processed": 825,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8451086999848485
+        },
+        {
+          "mode": "scan",
+          "pid": 18292,
+          "seconds": 0.45012784004211426,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 899,
+            "processed": 850,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9127529000397772
+        },
+        {
+          "mode": "scan",
+          "pid": 26032,
+          "seconds": 0.39484119415283203,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 924,
+            "processed": 875,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8545087999664247
+        },
+        {
+          "mode": "scan",
+          "pid": 39136,
+          "seconds": 0.3999199867248535,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 949,
+            "processed": 900,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8649453998077661
+        },
+        {
+          "mode": "scan",
+          "pid": 21352,
+          "seconds": 0.380295991897583,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 974,
+            "processed": 925,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.9021344999782741
+        },
+        {
+          "mode": "scan",
+          "pid": 14148,
+          "seconds": 0.4027669429779053,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 999,
+            "processed": 950,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8880040999501944
+        },
+        {
+          "mode": "scan",
+          "pid": 22800,
+          "seconds": 0.3752939701080322,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 1024,
+            "processed": 975,
+            "complete": false,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8589148998726159
+        },
+        {
+          "mode": "scan",
+          "pid": 40600,
+          "seconds": 0.39813899993896484,
+          "queries": 285,
+          "peak_bytes": 37748736,
+          "state": {
+            "last_id": 1049,
+            "processed": 1000,
+            "complete": true,
+            "stale": false,
+            "schema": 5
+          },
+          "redirect": "http://127.0.0.1:8896/wp-admin/admin.php?page=seo-tidy&section=linking&scan_status=1",
+          "database_error": "",
+          "fatal": null,
+          "process_wall_seconds": 0.8762440998107195
+        }
+      ],
+      "scan_callback_ms": {
+        "n": 40,
+        "min": 365.82493782043457,
+        "median": 395.1801061630249,
+        "p95": 450.12784004211426,
+        "max": 634.6249580383301
+      },
+      "scan_callback_total_seconds": 16.204813241958618,
+      "scan_process_wall_seconds": 35.59765939973295,
+      "scan_peak_bytes_max": 37748736,
+      "scan_queries_total": 11402,
+      "measure": {
+        "mode": "measure",
+        "stats": {
+          "published_posts": 1000,
+          "published_pages": 0,
+          "synthetic_posts": 1000,
+          "postings": 300000,
+          "indexed_documents": 1000,
+          "state": {
+            "last_id": 1049,
+            "processed": 1000,
+            "complete": true,
+            "stale": false,
+            "schema": 5
+          },
+          "corpus": {
+            "count": 1000,
+            "avgdl": 389.5
+          },
+          "sql_error": ""
+        },
+        "candidate_ms": {
+          "n": 10,
+          "min": 1.738,
+          "median": 1.9300000000000002,
+          "p95": 8.0915,
+          "max": 8.0915,
+          "mean": 2.5700399999999997
+        },
+        "suggestion_ms": {
+          "n": 10,
+          "min": 156.3881,
+          "median": 169.25485,
+          "p95": 238.8767,
+          "max": 238.8767,
+          "mean": 174.51361
+        },
+        "candidate_queries": {
+          "n": 10,
+          "min": 1,
+          "median": 1,
+          "p95": 2,
+          "max": 2,
+          "mean": 1.1
+        },
+        "suggestion_queries": {
+          "n": 10,
+          "min": 93,
+          "median": 93,
+          "p95": 93,
+          "max": 93,
+          "mean": 93
+        },
+        "memory_current_bytes": 37748736,
+        "memory_peak_bytes": 37748736,
+        "candidate_sql": "SELECT t.post_id FROM phasec_seo_tidy_link_terms t\n                INNER JOIN phasec_posts p ON p.ID=t.post_id\n                WHERE t.term IN ('garden','planning','uncategorized') AND t.post_id <> 50\n                  AND p.post_type IN ('post','page') AND p.post_status='publish'\n                GROUP BY t.post_id ORDER BY COUNT(*) DESC, t.post_id ASC LIMIT 30",
+        "candidate_explain": [
+          {
+            "id": "1",
+            "select_type": "SIMPLE",
+            "table": "t",
+            "type": "range",
+            "possible_keys": "PRIMARY,term",
+            "key": "term",
+            "key_len": "774",
+            "ref": null,
+            "rows": "602",
+            "Extra": "Using where; Using index; Using temporary; Using filesort"
+          },
+          {
+            "id": "1",
+            "select_type": "SIMPLE",
+            "table": "p",
+            "type": "eq_ref",
+            "possible_keys": "PRIMARY,type_status_date",
+            "key": "PRIMARY",
+            "key_len": "8",
+            "ref": "seo_tidy_phase_c.t.post_id",
+            "rows": "1",
+            "Extra": "Using where"
+          }
+        ],
+        "samples": [
+          {
+            "source_id": 50,
+            "source_title": "Garden planning 1",
+            "query_terms": [
+              "garden",
+              "planning",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 1.8591,
+            "candidate_queries": 1,
+            "suggestion_ms": 171.4822,
+            "suggestion_queries": 93,
+            "suggestion_ids": [
+              60,
+              70,
+              80,
+              90,
+              100
+            ],
+            "scores": [
+              5.207074975976388,
+              5.207074975976388,
+              5.207074975976388,
+              5.207074975976388,
+              5.207074975976388
+            ]
+          },
+          {
+            "source_id": 51,
+            "source_title": "Dārzs plānošana 1",
+            "query_terms": [
+              "dārzs",
+              "plānošana",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 8.0915,
+            "candidate_queries": 2,
+            "suggestion_ms": 182.109,
+            "suggestion_queries": 93,
+            "suggestion_ids": [
+              61,
+              71,
+              81,
+              91,
+              101
+            ],
+            "scores": [
+              5.3347200031859385,
+              5.3347200031859385,
+              5.3347200031859385,
+              5.3347200031859385,
+              5.3347200031859385
+            ]
+          },
+          {
+            "source_id": 52,
+            "source_title": "Travel planning 1",
+            "query_terms": [
+              "travel",
+              "planning",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 2.3428,
+            "candidate_queries": 1,
+            "suggestion_ms": 175.8362,
+            "suggestion_queries": 93,
+            "suggestion_ids": [
+              62,
+              72,
+              82,
+              92,
+              102
+            ],
+            "scores": [
+              5.207074975976388,
+              5.207074975976388,
+              5.207074975976388,
+              5.207074975976388,
+              5.207074975976388
+            ]
+          },
+          {
+            "source_id": 53,
+            "source_title": "Ceļojums plānošana 1",
+            "query_terms": [
+              "ceļojums",
+              "plānošana",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 2.1032,
+            "candidate_queries": 1,
+            "suggestion_ms": 156.3881,
+            "suggestion_queries": 93,
+            "suggestion_ids": [
+              63,
+              73,
+              83,
+              93,
+              103
+            ],
+            "scores": [
+              5.3347200031859385,
+              5.3347200031859385,
+              5.3347200031859385,
+              5.3347200031859385,
+              5.3347200031859385
+            ]
+          },
+          {
+            "source_id": 54,
+            "source_title": "Cycling planning 1",
+            "query_terms": [
+              "cycling",
+              "planning",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 1.738,
+            "candidate_queries": 1,
+            "suggestion_ms": 167.0275,
+            "suggestion_queries": 93,
+            "suggestion_ids": [
+              64,
+              74,
+              84,
+              94,
+              104
+            ],
+            "scores": [
+              5.207074975976388,
+              5.207074975976388,
+              5.207074975976388,
+              5.207074975976388,
+              5.207074975976388
+            ]
+          },
+          {
+            "source_id": 55,
+            "source_title": "Riteņbraukšana plānošana 1",
+            "query_terms": [
+              "riteņbraukšana",
+              "plānošana",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 1.7829,
+            "candidate_queries": 1,
+            "suggestion_ms": 164.323,
+            "suggestion_queries": 93,
+            "suggestion_ids": [
+              65,
+              75,
+              85,
+              95,
+              105
+            ],
+            "scores": [
+              5.3347200031859385,
+              5.3347200031859385,
+              5.3347200031859385,
+              5.3347200031859385,
+              5.3347200031859385
+            ]
+          },
+          {
+            "source_id": 56,
+            "source_title": "Baking planning 1",
+            "query_terms": [
+              "baking",
+              "planning",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 1.9431,
+            "candidate_queries": 1,
+            "suggestion_ms": 173.4644,
+            "suggestion_queries": 93,
+            "suggestion_ids": [
+              66,
+              76,
+              86,
+              96,
+              106
+            ],
+            "scores": [
+              5.207074975976388,
+              5.207074975976388,
+              5.207074975976388,
+              5.207074975976388,
+              5.207074975976388
+            ]
+          },
+          {
+            "source_id": 57,
+            "source_title": "Cepšana plānošana 1",
+            "query_terms": [
+              "cepšana",
+              "plānošana",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 1.9169,
+            "candidate_queries": 1,
+            "suggestion_ms": 157.6924,
+            "suggestion_queries": 93,
+            "suggestion_ids": [
+              67,
+              77,
+              87,
+              97,
+              107
+            ],
+            "scores": [
+              5.3347200031859385,
+              5.3347200031859385,
+              5.3347200031859385,
+              5.3347200031859385,
+              5.3347200031859385
+            ]
+          },
+          {
+            "source_id": 58,
+            "source_title": "Music planning 1",
+            "query_terms": [
+              "music",
+              "planning",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 2.0288,
+            "candidate_queries": 1,
+            "suggestion_ms": 238.8767,
+            "suggestion_queries": 93,
+            "suggestion_ids": [
+              68,
+              78,
+              88,
+              98,
+              108
+            ],
+            "scores": [
+              5.207074975976388,
+              5.207074975976388,
+              5.207074975976388,
+              5.207074975976388,
+              5.207074975976388
+            ]
+          },
+          {
+            "source_id": 59,
+            "source_title": "Mūzika plānošana 1",
+            "query_terms": [
+              "mūzika",
+              "plānošana",
+              "uncategorized"
+            ],
+            "candidate_count": 30,
+            "candidate_ms": 1.8941,
+            "candidate_queries": 1,
+            "suggestion_ms": 157.9366,
+            "suggestion_queries": 93,
+            "suggestion_ids": [
+              69,
+              79,
+              89,
+              99,
+              109
+            ],
+            "scores": [
+              5.3347200031859385,
+              5.3347200031859385,
+              5.3347200031859385,
+              5.3347200031859385,
+              5.3347200031859385
+            ]
+          }
+        ],
+        "conditions": {
+          "sources": "first 10 deterministic EN/LV posts",
+          "repetitions": 1,
+          "cache": "one CLI process; initial runtime cache and subsequent warmed objects mixed; no persistent object cache asserted",
+          "scope": "production methods in PHP; excludes HTTP and WordPress bootstrap time",
+          "score": "BM25 ranking signal only, not accuracy percentage"
+        },
+        "process_wall_seconds": 2.4430605999659747
+      },
+      "scan_timing_scope": "Post-bootstrap scan execution including administrator lookup and nonce setup. Process wall time also includes startup/bootstrap."
+    }
+  },
+  "concurrency": {
+    "race_prepare": {
+      "mode": "race-prepare",
+      "published_synthetic": 25,
+      "transitioned_to_draft": 975,
+      "first_post_id": 50,
+      "last_post_id": 74,
+      "duration_ms": 21688.84801864624,
+      "state": {
+        "last_id": 1049,
+        "processed": 1000,
+        "complete": true,
+        "stale": true,
+        "schema": 5
+      },
+      "smart_topics_preserved": true,
+      "note": "Disposable fixture preparation after both benchmarks; no rebuild performed.",
+      "process_wall_seconds": 22.16940369992517
+    },
+    "race_findings": {
+      "overlapping_scans_duplicate_key": true,
+      "two_scan_failure_marks_stale": false,
+      "edit_marks_stale_before_release": true,
+      "completed_ready_index_contains_obsolete_vector": true,
+      "concurrency_acceptance_passed": false
+    },
+    "concurrent_scans": {
+      "ready_a": {
+        "worker": "scan-a-1792332420904251400",
+        "post_id": 50,
+        "stage": "before first posting INSERT, after state/read/delete",
+        "state": {
+          "last_id": 1049,
+          "processed": 1000,
+          "complete": true,
+          "stale": true,
+          "schema": 5
+        },
+        "snapshot_content_sha256": "a54464169218c5bf2b9ccbf738fa9ad033b76bc9fd37095b8fd3845a5d00ec78",
+        "time": 1792332429.932242,
+        "captured_distinct_term_count": 300
+      },
+      "ready_b": {
+        "worker": "scan-b-1792332420904251400",
+        "post_id": 50,
+        "stage": "before first posting INSERT, after state/read/delete",
+        "state": {
+          "last_id": 1049,
+          "processed": 1000,
+          "complete": true,
+          "stale": true,
+          "schema": 5
+        },
+        "snapshot_content_sha256": "a54464169218c5bf2b9ccbf738fa9ad033b76bc9fd37095b8fd3845a5d00ec78",
+        "time": 1792332432.293382,
+        "captured_distinct_term_count": 300
+      },
+      "worker_a": {
+        "worker": "scan-a-1792332420904251400",
+        "paused": true,
+        "duration_ms": 20532.688856124878,
+        "queries": 295,
+        "last_db_error": "",
+        "captured_db_errors": [],
+        "last_php_error": null,
+        "stats": {
+          "published_posts": 25,
+          "published_pages": 0,
+          "synthetic_posts": 25,
+          "postings": 7500,
+          "indexed_documents": 25,
+          "state": {
+            "last_id": 74,
+            "processed": 25,
+            "complete": true,
+            "stale": false,
+            "schema": 5
+          },
+          "corpus": {
+            "count": 25,
+            "avgdl": 390.84
+          },
+          "sql_error": ""
+        }
+      },
+      "worker_b": {
+        "worker": "scan-b-1792332420904251400",
+        "paused": true,
+        "duration_ms": 10057.179927825928,
+        "queries": 21,
+        "last_db_error": "Duplicate entry '50-planning' for key 'PRIMARY'",
+        "captured_db_errors": [],
+        "last_php_error": null,
+        "stats": {
+          "published_posts": 25,
+          "published_pages": 0,
+          "synthetic_posts": 25,
+          "postings": 7500,
+          "indexed_documents": 25,
+          "state": {
+            "last_id": 1049,
+            "processed": 1000,
+            "complete": true,
+            "stale": true,
+            "schema": 5
+          },
+          "corpus": {
+            "count": 0,
+            "avgdl": 1
+          },
+          "sql_error": ""
+        }
+      },
+      "report": {
+        "mode": "race-report",
+        "post_id": 50,
+        "stats": {
+          "published_posts": 25,
+          "published_pages": 0,
+          "synthetic_posts": 25,
+          "postings": 7500,
+          "indexed_documents": 25,
+          "state": {
+            "last_id": 74,
+            "processed": 25,
+            "complete": true,
+            "stale": false,
+            "schema": 5
+          },
+          "corpus": {
+            "count": 25,
+            "avgdl": 390.84
+          },
+          "sql_error": ""
+        },
+        "snapshot": {
+          "version": 2,
+          "updated": 1792332266
+        },
+        "current_content_sha256": "a54464169218c5bf2b9ccbf738fa9ad033b76bc9fd37095b8fd3845a5d00ec78",
+        "stored_matches_current_vector": true,
+        "duplicate_primary_keys": [],
+        "sql_error": "",
+        "process_wall_seconds": 0.5304306000471115,
+        "missing_current_terms_count": 0,
+        "missing_current_terms_names": [],
+        "obsolete_stored_terms_count": 0
+      }
+    },
+    "edit_during_scan": {
+      "ready": {
+        "worker": "edit-1792332592750781200",
+        "post_id": 50,
+        "stage": "before first posting INSERT, after state/read/delete",
+        "state": {
+          "last_id": 74,
+          "processed": 25,
+          "complete": true,
+          "stale": true,
+          "schema": 5
+        },
+        "snapshot_content_sha256": "a54464169218c5bf2b9ccbf738fa9ad033b76bc9fd37095b8fd3845a5d00ec78",
+        "time": 1792332593.896171,
+        "captured_distinct_term_count": 300
+      },
+      "edit": {
+        "mode": "race-edit",
+        "post_id": 50,
+        "before_sha256": "a54464169218c5bf2b9ccbf738fa9ad033b76bc9fd37095b8fd3845a5d00ec78",
+        "after_sha256": "b18a79a62a0b5002e27b12343a1f2592be93f96e9aac4f50f7f1afc03dcc908c",
+        "state": {
+          "last_id": 74,
+          "processed": 25,
+          "complete": true,
+          "stale": true,
+          "schema": 5
+        },
+        "snapshot": [],
+        "process_wall_seconds": 0.6979853000957519
+      },
+      "worker": {
+        "worker": "edit-1792332592750781200",
+        "paused": true,
+        "duration_ms": 1236.772060394287,
+        "queries": 295,
+        "last_db_error": "",
+        "captured_db_errors": [],
+        "last_php_error": null,
+        "stats": {
+          "published_posts": 25,
+          "published_pages": 0,
+          "synthetic_posts": 25,
+          "postings": 7500,
+          "indexed_documents": 25,
+          "state": {
+            "last_id": 74,
+            "processed": 25,
+            "complete": true,
+            "stale": false,
+            "schema": 5
+          },
+          "corpus": {
+            "count": 25,
+            "avgdl": 390.84
+          },
+          "sql_error": ""
+        }
+      },
+      "report": {
+        "mode": "race-report",
+        "post_id": 50,
+        "stats": {
+          "published_posts": 25,
+          "published_pages": 0,
+          "synthetic_posts": 25,
+          "postings": 7500,
+          "indexed_documents": 25,
+          "state": {
+            "last_id": 74,
+            "processed": 25,
+            "complete": true,
+            "stale": false,
+            "schema": 5
+          },
+          "corpus": {
+            "count": 25,
+            "avgdl": 390.84
+          },
+          "sql_error": ""
+        },
+        "snapshot": {
+          "version": 2,
+          "updated": 1792332592
+        },
+        "current_content_sha256": "b18a79a62a0b5002e27b12343a1f2592be93f96e9aac4f50f7f1afc03dcc908c",
+        "stored_matches_current_vector": false,
+        "duplicate_primary_keys": [],
+        "sql_error": "",
+        "process_wall_seconds": 0.5162681001238525,
+        "missing_current_terms_count": 2,
+        "missing_current_terms_names": [
+          "phasecconcurrencynewtoken",
+          "revisedcontent"
+        ],
+        "obsolete_stored_terms_count": 296
+      }
+    }
+  },
+  "acceptance": {
+    "concurrency_passed": false,
+    "release_ready": false
+  },
+  "execution_notes": [
+    "Contracts executed once; HTTP executed once after a Windows UTF-8 reader setup error before requests.",
+    "Each measured corpus indexed once: 8 batches at 200; grew to 1000 then 40 batches.",
+    "After measurement, 975 synthetic posts moved to draft while preserving Smart Topics, leaving 25 for races.",
+    "Paired scans executed once. Edit stage initially skipped because persisted index remained complete; a subsequent overlong worker name was rejected before scan start. Only the edit probe was resumed with explicit preflight save and a valid name.",
+    "Edit probe exits 1 for the observed freshness violation. The completed benchmark and contract results do not imply concurrency acceptance.",
+    "Full-corpus integration pair negatives may be affected by caps. The earlier standalone suite also checks isolated pairs; direct integration eligibility/zero-posting assertions are independent of ranking.",
+    "Scan durations exclude WordPress bootstrap but include administrator/nonce setup. Memory peak includes bootstrap. Ten source measurements are single samples with mixed request-local cache warmth; p95 of ten uses nearest rank and equals maximum.",
+    "Core update checks produced expected external-HTTP-blocked warnings. No plugin PHP fatal was observed in the completed contract/benchmark runs."
+  ],
+  "test_file_sha256": {
+    "tests/integration/internal-linking-phase-c.php": "bdfdce2db44533b164364507369a1414f9025d4405e6a2047f2d23bc9aa5487c",
+    "tests/integration/internal-linking-phase-c-performance.php": "aecb7a9dfea1f10770aa3ae87284de1bc00749809bbab044f36c89e207f12965",
+    "tests/integration/run-internal-linking-phase-c.py": "70c6b768e11b6d528e5dbd2d878306219ae7a12336efcde627e4033000839737"
+  }
+}

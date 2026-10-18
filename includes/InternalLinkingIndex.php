@@ -7,6 +7,7 @@ defined('ABSPATH') || exit;
 final class InternalLinkingIndex
 {
     private const STATE = 'seo_tidy_link_index_state_v1';
+    private const GENERATION = 'seo_tidy_link_index_generation_v1';
     private const META = '_seo_tidy_link_index_v1';
     private const SIZE = 25;
     // Snapshot/scoring revision; the existing database table and meta keys are unchanged.
@@ -32,11 +33,11 @@ final class InternalLinkingIndex
 
     public static function state(): array
     {
-        $state = get_option(self::STATE, []);
-        if (!is_array($state)) {
-            return [];
-        }
-        if ($state && (int) ($state['schema'] ?? 0) !== self::SCHEMA) {
+        $state = self::rawState();
+        $generation = self::generation();
+        if ($state && ((int) ($state['schema'] ?? 0) !== self::SCHEMA ||
+            !empty($state['in_progress']) || $generation === null ||
+            (string) ($state['generation'] ?? '') !== $generation)) {
             $state['stale'] = true;
             $state['complete'] = false;
         }
@@ -67,9 +68,78 @@ final class InternalLinkingIndex
 
     private static function markStale(): void
     {
-        $state = self::state();
+        global $wpdb;
+        // A monotonic database value survives request-local option caches and races.
+        $changed = $wpdb->query($wpdb->prepare(
+            "INSERT INTO {$wpdb->options} (option_name,option_value,autoload) VALUES (%s,'1','no')
+             ON DUPLICATE KEY UPDATE option_value=CAST(option_value AS UNSIGNED)+1",
+            self::GENERATION
+        ));
+        if ($changed === false) {
+            // The reader also fails closed when coordination cannot be read.
+            self::writeState(['complete' => false, 'stale' => true]);
+            return;
+        }
+        $state = self::rawState();
         $state['stale'] = true;
-        update_option(self::STATE, $state, false);
+        $state['complete'] = false;
+        self::writeState($state);
+    }
+
+    private static function rawState(): array
+    {
+        global $wpdb;
+        $value = $wpdb->get_var($wpdb->prepare(
+            "SELECT option_value FROM {$wpdb->options} WHERE option_name=%s", self::STATE
+        ));
+        if (!empty($wpdb->last_error)) {
+            return ['complete' => false, 'stale' => true];
+        }
+        $state = maybe_unserialize($value);
+        return is_array($state) ? $state : [];
+    }
+
+    private static function generation(): ?string
+    {
+        global $wpdb;
+        $value = $wpdb->get_var($wpdb->prepare(
+            "SELECT option_value FROM {$wpdb->options} WHERE option_name=%s", self::GENERATION
+        ));
+        return empty($wpdb->last_error) && is_string($value) && ctype_digit($value) ? $value : null;
+    }
+
+    private static function writeState(array $state): bool
+    {
+        global $wpdb;
+        $result = $wpdb->query($wpdb->prepare(
+            "INSERT INTO {$wpdb->options} (option_name,option_value,autoload) VALUES (%s,%s,'no')
+             ON DUPLICATE KEY UPDATE option_value=VALUES(option_value),autoload='no'",
+            self::STATE, maybe_serialize($state)
+        ));
+        self::clearStateCache();
+        return $result !== false;
+    }
+
+    private static function clearStateCache(): void
+    {
+        wp_cache_delete(self::STATE, 'options');
+        wp_cache_delete(self::GENERATION, 'options');
+        wp_cache_delete('alloptions', 'options');
+        wp_cache_delete('notoptions', 'options');
+    }
+
+    private static function lockName(): string
+    {
+        global $wpdb;
+        return 'seo_tidy_link_' . md5(DB_NAME . ':' . $wpdb->prefix);
+    }
+
+    private static function ownsLock(): bool
+    {
+        global $wpdb;
+        return (string) $wpdb->get_var($wpdb->prepare(
+            'SELECT IS_USED_LOCK(%s)=CONNECTION_ID()', self::lockName()
+        )) === '1';
     }
 
     /** Keep retrieval, document frequencies and scoring on the same bounded query. */
@@ -207,21 +277,58 @@ final class InternalLinkingIndex
         $returnUrl = isset($_POST['return_to']) && $_POST['return_to'] === 'dashboard'
             ? admin_url('admin.php?page=seo-tidy&section=linking')
             : admin_url('admin.php?page=seo-tidy-linking-preview');
+        global $wpdb;
+        $locked = $wpdb->get_var($wpdb->prepare('SELECT GET_LOCK(%s,0)', self::lockName()));
+        if ((string) $locked === '0') {
+            wp_safe_redirect(add_query_arg('scan_status', 'busy', $returnUrl));
+            exit;
+        }
+        if ((string) $locked !== '1') {
+            wp_die(esc_html__('Could not update the link index. The scan has stopped.', 'seo-tidy'));
+        }
+        $release = static function (): void {
+            global $wpdb;
+            $wpdb->get_var($wpdb->prepare('SELECT RELEASE_LOCK(%s)', self::lockName()));
+        };
+        // wp_die/exit bypass finally; killed/disconnected workers release their DB lock.
+        register_shutdown_function($release);
+        try {
+            $status = self::scanBatch();
+        } finally {
+            $release();
+        }
+        wp_safe_redirect(add_query_arg('scan_status', $status, $returnUrl));
+        exit;
+    }
+
+    private static function scanBatch(): string
+    {
+        global $wpdb;
+        if ($wpdb->query($wpdb->prepare(
+            "INSERT IGNORE INTO {$wpdb->options} (option_name,option_value,autoload) VALUES (%s,'0','no')",
+            self::GENERATION
+        )) === false || ($generation = self::generation()) === null) {
+            wp_die(esc_html__('Could not update the link index. The scan has stopped.', 'seo-tidy'));
+        }
         $state = self::state();
         if (!self::ensureTable()) {
             self::markStale();
             wp_die(esc_html__('Internal linking index table could not be created.', 'seo-tidy'));
         }
-        if (!empty($_POST['restart'])) {
-            $state = [];
-            self::clearSnapshots();
-        }
         if (!empty($state['complete']) && empty($state['stale']) && empty($_POST['restart'])) {
-            wp_safe_redirect(add_query_arg('scan_status', 'complete', $returnUrl));
-            exit;
+            return 'complete';
         }
-        if (!empty($state['stale'])) {
+        $rebuild = !empty($_POST['restart']) || !empty($state['stale']) || !empty($state['in_progress']);
+        if ($rebuild) {
             $state = [];
+        }
+        // Persist before any destructive work. A hard interruption leaves this marker.
+        $working = array_merge($state, ['complete' => false, 'stale' => true,
+            'in_progress' => true, 'generation' => $generation, 'schema' => self::SCHEMA]);
+        if (!self::ownsLock() || !self::writeState($working)) {
+            wp_die(esc_html__('Could not update the link index. The scan has stopped.', 'seo-tidy'));
+        }
+        if ($rebuild) {
             self::clearSnapshots();
         }
         $last = isset($state['last_id']) ? absint($state['last_id']) : 0;
@@ -247,7 +354,7 @@ final class InternalLinkingIndex
                 continue;
             }
             if (!InternalLinkingPreview::eligible($post)) {
-                if ($wpdb->delete(self::table(), ['post_id' => $id], ['%d']) === false) {
+                if (self::deletePostings($id) === false) {
                     self::markStale();
                     wp_die(esc_html__('Could not update the link index. The scan has stopped.', 'seo-tidy'));
                 }
@@ -255,7 +362,7 @@ final class InternalLinkingIndex
                 continue;
             }
             $tokens = InternalLinkingPreview::indexTerms($post);
-            if ($wpdb->delete(self::table(), ['post_id' => $id], ['%d']) === false) {
+            if (self::deletePostings($id) === false) {
                 self::markStale();
                 wp_die(esc_html__('Could not update the link index. The scan has stopped.', 'seo-tidy'));
             }
@@ -264,12 +371,15 @@ final class InternalLinkingIndex
                 $values = [];
                 $params = [];
                 foreach ($chunk as $term => $frequency) {
-                    $values[] = '(%d,%s,%d)';
+                    $values[] = $values ? 'SELECT %d,%s,%d' : 'SELECT %d AS post_id,%s AS term,%d AS frequency';
                     array_push($params, $id, (string) $term, max(1, (int) $frequency));
                 }
+                // Fence writes inside SQL: wpdb can reconnect and lose GET_LOCK.
                 $sql = 'INSERT INTO ' . self::table() .
-                    ' (post_id,term,frequency) VALUES ' . implode(',', $values);
-                if ($wpdb->query($wpdb->prepare($sql, ...$params)) === false) {
+                    ' (post_id,term,frequency) SELECT batch.post_id,batch.term,batch.frequency FROM (' .
+                    implode(' UNION ALL ', $values) . ') batch WHERE IS_USED_LOCK(%s)=CONNECTION_ID()';
+                $params[] = self::lockName();
+                if ($wpdb->query($wpdb->prepare($sql, ...$params)) !== count($chunk)) {
                     self::markStale();
                     wp_die(esc_html__('Could not update the link index. The scan has stopped.', 'seo-tidy'));
                 }
@@ -283,21 +393,41 @@ final class InternalLinkingIndex
             'processed' => $processed + count($ids),
             'complete' => !$hasMore,
             'stale' => false,
+            'in_progress' => false,
+            'generation' => $generation,
             'schema' => self::SCHEMA,
         ];
-        update_option(self::STATE, $state, false);
-        wp_safe_redirect(add_query_arg('scan_status', '1', $returnUrl));
-        exit;
+        // Publish only if no edit invalidated this batch, on the lock-owning connection.
+        $published = $wpdb->query($wpdb->prepare(
+            "UPDATE {$wpdb->options} s INNER JOIN {$wpdb->options} g ON g.option_name=%s
+             SET s.option_value=%s WHERE s.option_name=%s AND g.option_value=%s
+             AND IS_USED_LOCK(%s)=CONNECTION_ID()",
+            self::GENERATION, maybe_serialize($state), self::STATE, $generation, self::lockName()
+        ));
+        self::clearStateCache();
+        if ($published !== 1) {
+            self::markStale();
+            wp_die(esc_html__('Could not update the link index. The scan has stopped.', 'seo-tidy'));
+        }
+        return '1';
+    }
+
+    private static function deletePostings(int $id)
+    {
+        global $wpdb;
+        return $wpdb->query($wpdb->prepare('DELETE FROM ' . self::table() .
+            ' WHERE post_id=%d AND IS_USED_LOCK(%s)=CONNECTION_ID()', $id, self::lockName()));
     }
 
     private static function clearSnapshots(): void
     {
         global $wpdb;
-        // A failed clear must never leave a previously complete scan usable.
-        self::markStale();
         // Remove only our private, regenerable index snapshots.
-        if ($wpdb->query('DELETE FROM ' . self::table()) === false ||
-            $wpdb->delete($wpdb->postmeta, ['meta_key' => self::META], ['%s']) === false) {
+        if ($wpdb->query($wpdb->prepare('DELETE FROM ' . self::table() .
+            ' WHERE IS_USED_LOCK(%s)=CONNECTION_ID()', self::lockName())) === false ||
+            $wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->postmeta}
+                WHERE meta_key=%s AND IS_USED_LOCK(%s)=CONNECTION_ID()", self::META, self::lockName())) === false ||
+            !self::ownsLock()) {
             wp_die(esc_html__('Could not clear the link index. The scan has stopped.', 'seo-tidy'));
         }
     }
