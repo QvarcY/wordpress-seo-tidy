@@ -9,6 +9,7 @@ final class InternalLinkingIndex
     private const STATE = 'seo_tidy_link_index_state_v1';
     private const META = '_seo_tidy_link_index_v1';
     private const SIZE = 25;
+    private const SCHEMA = 4;
 
     public static function init(): void
     {
@@ -28,7 +29,7 @@ final class InternalLinkingIndex
         if (!is_array($state)) {
             return [];
         }
-        if (!empty($state['complete']) && (int) ($state['schema'] ?? 0) !== 3) {
+        if (!empty($state['complete']) && (int) ($state['schema'] ?? 0) !== self::SCHEMA) {
             $state['stale'] = true;
             $state['complete'] = false;
         }
@@ -54,14 +55,29 @@ final class InternalLinkingIndex
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         $table = self::table();
         $collation = $wpdb->get_charset_collate();
+        // Keep Latvian words with and without diacritics as separate terms
+        $charset = $wpdb->charset === 'utf8' ? 'utf8' : 'utf8mb4';
+        $termCollation = $charset . '_bin';
         dbDelta("CREATE TABLE {$table} (
             post_id bigint(20) unsigned NOT NULL,
-            term varchar(191) NOT NULL,
+            term varchar(191) CHARACTER SET {$charset} COLLATE {$termCollation} NOT NULL,
             frequency int(10) unsigned NOT NULL DEFAULT 0,
             PRIMARY KEY  (post_id,term),
             KEY term (term)
         ) {$collation};");
-        return $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($table))) === $table;
+        if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($table))) !== $table) {
+            return false;
+        }
+        $column = $wpdb->get_row($wpdb->prepare("SHOW FULL COLUMNS FROM {$table} LIKE %s", 'term'), ARRAY_A);
+        if (!is_array($column)) {
+            return false;
+        }
+        // dbDelta does not migrate an existing column's collation
+        if (($column['Collation'] ?? '') !== $termCollation) {
+            return $wpdb->query("ALTER TABLE {$table} MODIFY term varchar(191)
+                CHARACTER SET {$charset} COLLATE {$termCollation} NOT NULL") !== false;
+        }
+        return true;
     }
 
     public static function corpusStats(): array
@@ -188,6 +204,14 @@ final class InternalLinkingIndex
                     $tokens[$term] = ($tokens[$term] ?? 0) + 3;
                 }
             }
+            // Merge long terms that become identical at the storage limit
+            $storedTokens = [];
+            foreach ($tokens as $term => $frequency) {
+                $term = function_exists('mb_substr')
+                    ? mb_substr((string) $term, 0, 191, 'UTF-8') : substr((string) $term, 0, 191);
+                $storedTokens[$term] = ($storedTokens[$term] ?? 0) + max(1, (int) $frequency);
+            }
+            $tokens = $storedTokens;
             if ($wpdb->delete(self::table(), ['post_id' => $id], ['%d']) === false) {
                 wp_die(esc_html__('Could not update the link index. The scan has stopped.', 'seo-tidy'));
             }
@@ -198,7 +222,7 @@ final class InternalLinkingIndex
                 $params = [];
                 foreach ($chunk as $term => $frequency) {
                     $values[] = '(%d,%s,%d)';
-                    array_push($params, $id, (function_exists('mb_substr') ? mb_substr($term, 0, 191, 'UTF-8') : $term), max(1, (int) $frequency));
+                    array_push($params, $id, (string) $term, max(1, (int) $frequency));
                 }
                 $sql = 'INSERT INTO ' . self::table() .
                     ' (post_id,term,frequency) VALUES ' . implode(',', $values);
@@ -217,7 +241,7 @@ final class InternalLinkingIndex
             'processed' => $processed + count($ids),
             'complete' => !$hasMore,
             'stale' => false,
-            'schema' => 3,
+            'schema' => self::SCHEMA,
         ];
         update_option(self::STATE, $state, false);
         wp_safe_redirect(add_query_arg('scan_status', '1', $returnUrl));

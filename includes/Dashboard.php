@@ -113,7 +113,7 @@ final class Dashboard
             $id = (int) $row['ID'];
             $items[] = [
                 'id' => $id,
-                'title' => get_the_title($id),
+                'title' => html_entity_decode(get_the_title($id), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
                 'type' => $row['post_type'],
                 'seoTitle' => (string) get_post_meta(
                     $id, '_seo_tidy_title', true

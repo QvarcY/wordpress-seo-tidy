@@ -652,7 +652,7 @@ final class SEOAudit
 
             $items[] = [
                 'id' => $id,
-                'title' => get_the_title($id),
+                'title' => html_entity_decode(get_the_title($id), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
                 'type' => $post->post_type,
                 'issues' => $issues,
                 'category' => self::classifyIssues($issues),
