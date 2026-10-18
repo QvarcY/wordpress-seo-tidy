@@ -18,7 +18,7 @@
 - Substantive Codex concurrency fix: `6b54576b1012d8b60f8c7dc05cf05cd52b716abc` (parent of the empty `[skip ci]` head commit).
 - Files include `includes/InternalLinkingIndex.php`, the [Phase C report](https://github.com/QvarcY/wordpress-seo-tidy/blob/feature/issue-29-smart-topics-prototype/docs/internal-linking-phase-c.md), [concurrency evidence JSON](https://github.com/QvarcY/wordpress-seo-tidy/blob/feature/issue-29-smart-topics-prototype/docs/evidence/internal-linking-phase-c-concurrency.json), and [concurrency harness](https://github.com/QvarcY/wordpress-seo-tidy/blob/feature/issue-29-smart-topics-prototype/tests/integration/run-internal-linking-concurrency.py).
 - Targeted local concurrency run: **87 / 87 assertions reported passed** on an isolated 25-published-post dataset (WordPress 6.8, PHP 8.2.6, MariaDB 11.4.12); Smart Topics metadata remained intact. Final wider benchmark and regression suites were not rerun.
-- The user's local checkout was last reported clean following the push. Common local Windows working directory at the time: `C:\Users\mail\Desktop\CODEX\wordpress-seo-tidy`. **Do not assume this folder, worktree, branches or status will remain unchanged; verify before any commands.**
+- The local development working tree was last reported clean following the push. **No private workstation paths are needed in this public handoff.** Contributors should clone the repository to a directory of their choice; verify the current working tree, branch and remote before running commands.
 - At verification time, the `[skip ci]` head push created no GitHub Actions workflow runs. **No merge, release tag, deployment or production indexing** was performed.
 
 ## Outstanding review and acceptance gates
