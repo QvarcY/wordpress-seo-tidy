@@ -162,6 +162,14 @@ Wall of Fame is optional. Owners submit their website for verification and moder
 Site owners remain responsible for providing appropriate privacy
 information to their visitors.
 
+## Contributing
+
+SEO-TidY welcomes international WordPress developers, testers, designers, translators and documentation contributors. Please see the [**help wanted contributor hub (Issue #32)**](https://github.com/QvarcY/wordpress-seo-tidy/issues/32), choose one scoped task and comment with your proposed approach before starting substantial work.
+
+Open opportunities include [installation and WordPress update testing (#33)](https://github.com/QvarcY/wordpress-seo-tidy/issues/33), [improving the existing incoming-link audit for larger sites (#34)](https://github.com/QvarcY/wordpress-seo-tidy/issues/34), and [contributor guidelines and issue templates (#36)](https://github.com/QvarcY/wordpress-seo-tidy/issues/36). The release-pipeline preparation task (#35) is completed.
+
+The [experimental internal-linking PR #31](https://github.com/QvarcY/wordpress-seo-tidy/pull/31) remains **Draft** and is not part of v1.0.0. Read the [maintainer development handoff](docs/DEVELOPMENT-HANDOFF.md) for the latest checkpoint, remaining release blockers and a safe resumption path. Contributors should coordinate before changing this draft implementation.
+
 ## Development
 
 Install dependencies with `npm ci` and build with `npm run build`.
